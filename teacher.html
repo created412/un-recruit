@@ -69,6 +69,10 @@ tbody tr[aria-selected="true"]{background:var(--sky)}
 .detail pre{margin:0;padding:14px 18px 18px;white-space:pre-wrap;word-break:break-word;font-family:var(--sans);font-size:.9rem;overflow:auto;flex:1}
 .detail .empty{padding:40px 18px;text-align:center;color:var(--mute)}
 .detail .acts{display:flex;gap:8px;padding:0 18px 14px;flex-wrap:wrap}
+.switch{display:flex;gap:6px;margin-top:24px}
+.switch button{border:1px solid var(--line);background:var(--paper);border-radius:30px;padding:8px 18px;font-weight:700;cursor:pointer}
+.switch button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.switch b{display:inline-block;min-width:1.6em;margin-left:6px;padding:0 6px;border-radius:20px;background:var(--red);color:#fff;font-size:.8rem;text-align:center}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:30px;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.on{opacity:1}
 </style>
@@ -89,6 +93,11 @@ tbody tr[aria-selected="true"]{background:var(--sky)}
 
   <!-- 대시보드 -->
   <section id="dash" hidden>
+    <div class="switch" role="group" aria-label="보기 선택">
+      <button data-page="progress" aria-pressed="true">진행 기록</button>
+      <button data-page="inbox" aria-pressed="false">제출함<b id="inboxCount">0</b></button>
+    </div>
+    <div id="pageProgress">
     <h1>반 전체 진행 상황</h1>
     <p class="mute" id="updated"></p>
     <div class="stats" id="stats"></div>
@@ -111,6 +120,29 @@ tbody tr[aria-selected="true"]{background:var(--sky)}
         </table>
       </div>
       <aside class="detail" id="detail"><div class="empty">왼쪽 표에서 학생을 누르면 쓴 내용이 여기에 나옵니다.</div></aside>
+    </div>
+    </div>
+
+    <div id="pageInbox" hidden>
+      <h1>제출함</h1>
+      <p class="mute">학생이 <a href="submit.html" target="_blank" rel="noopener">최종 결과물 제출 페이지</a>에 붙여 넣은 글입니다. 한 학생당 한 번만 낼 수 있고 고칠 수 없습니다.</p>
+      <div class="stats" id="inboxStats" style="grid-template-columns:repeat(3,1fr)"></div>
+      <div class="tools">
+        <div class="grow"><input type="search" id="iq" placeholder="학번, 이름으로 찾기"></div>
+        <button class="btn line" id="reload2">지금 새로 고침</button>
+        <button class="btn" id="csv2">제출함 CSV 받기</button>
+      </div>
+      <div class="grid">
+        <div class="tablebox">
+          <table>
+            <thead><tr><th>제출 시각</th><th>학번</th><th>이름</th><th>글자 수</th><th>확인</th></tr></thead>
+            <tbody id="irows"></tbody>
+          </table>
+        </div>
+        <aside class="detail" id="idetail"><div class="empty">왼쪽 표에서 제출물을 누르면 내용이 여기에 나옵니다.</div></aside>
+      </div>
+      <h3 style="margin:26px 0 8px">아직 제출하지 않은 학생 <span class="mute" id="missingCount"></span></h3>
+      <p class="mute" id="missing" style="margin-top:0"></p>
     </div>
   </section>
 </main>
@@ -145,6 +177,10 @@ async function load(first) {
     const r = await (await fetch(API, { method: "POST", body: JSON.stringify({ action: "list", key: KEY }) })).json();
     if (!r.ok) throw new Error(r.error);
     ROWS = r.rows.map(x => Object.assign(x, { level: level(x) }));
+    try {
+      const s = await (await fetch(API, { method: "POST", body: JSON.stringify({ action: "submissions", key: KEY }) })).json();
+      if (s.ok) SUBS = s.rows;
+    } catch (e) {}
     ss.set("un-key", KEY); if (!CFG.API_URL) ss.set("un-api", API);
     $("#login").hidden = true; $("#dash").hidden = false;
     $("#updated").textContent = `불러온 시각 ${new Date().toLocaleTimeString("ko-KR")} · 학생 ${ROWS.length}명`;
@@ -170,6 +206,13 @@ $("#enter").onclick = () => {
 };
 $("#key").addEventListener("keydown", e => { if (e.key === "Enter") $("#enter").click(); });
 $("#reload").onclick = () => load(false);
+$("#reload2").onclick = () => load(false);
+document.querySelectorAll(".switch button").forEach(b => b.onclick = () => {
+  const inbox = b.dataset.page === "inbox";
+  document.querySelectorAll(".switch button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  $("#pageProgress").hidden = inbox; $("#pageInbox").hidden = !inbox;
+});
+$("#iq").oninput = () => renderInbox();
 $("#q").oninput = render; $("#filter").onchange = render;
 $("#auto").onchange = startAuto;
 function startAuto() { clearInterval(timer); if ($("#auto").checked) timer = setInterval(() => { if (document.visibilityState === "visible") load(false); }, 30000); }
@@ -198,6 +241,7 @@ function render() {
   }).join("") || `<tr><td colspan="6" class="mute" style="text-align:center;padding:30px">해당하는 학생이 없습니다.</td></tr>`;
   document.querySelectorAll("#rows tr[data-id]").forEach(tr => tr.onclick = () => { sel = tr.dataset.id; render(); });
   renderDetail();
+  renderInbox();
 }
 
 const val = (st, k) => (st && st[k] ? String(st[k]).trim() : "");
@@ -213,6 +257,42 @@ function part(r) {
   if (view === "refl") return s >= 0 ? rest.slice(s).trim() : "(아직 없음)";
   return t;
 }
+/* ── 제출함 ── */
+let SUBS = [], isel = null;
+function renderInbox() {
+  $("#inboxCount").textContent = SUBS.length;
+  const subKeys = new Set(SUBS.map(x => x.sid + "|" + x.name));
+  const missing = ROWS.filter(r => !subKeys.has(r.sid + "|" + r.name));
+  const notInRecords = SUBS.filter(x => !ROWS.some(r => r.sid === x.sid && r.name === x.name));
+  $("#inboxStats").innerHTML = [["제출", SUBS.length], ["활동 기록 있는 학생", ROWS.length], ["아직 안 낸 학생", missing.length]]
+    .map(([n, v]) => `<div class="stat"><b>${v}</b><span>${n}</span></div>`).join("");
+  const q = $("#iq").value.trim().toLowerCase();
+  const list = SUBS.filter(x => !q || `${x.sid} ${x.name}`.toLowerCase().includes(q));
+  $("#irows").innerHTML = list.map(x => {
+    const t = x.text || "", odd = notInRecords.includes(x);
+    const flags = [!t.includes("[성찰]") ? "성찰 없음" : "", odd ? "활동 기록과 학번·이름 다름" : ""].filter(Boolean);
+    return `<tr data-iid="${x.id}" aria-selected="${isel === x.id}"><td>${esc(x.submittedAt)}</td><td>${esc(x.sid)}</td><td><b>${esc(x.name)}</b></td>
+      <td>${t.length.toLocaleString()}</td><td>${flags.length ? `<span class="tag s1">${esc(flags.join(", "))}</span>` : `<span class="tag s4">정상</span>`}</td></tr>`;
+  }).join("") || `<tr><td colspan="5" class="mute" style="text-align:center;padding:30px">아직 제출물이 없습니다.</td></tr>`;
+  document.querySelectorAll("#irows tr[data-iid]").forEach(tr => tr.onclick = () => { isel = +tr.dataset.iid; renderInbox(); });
+  $("#missingCount").textContent = `${missing.length}명`;
+  $("#missing").textContent = missing.length ? missing.sort((a, b) => String(a.sid).localeCompare(String(b.sid), "ko", { numeric: true })).map(r => `${r.sid} ${r.name}`).join(", ") : "모두 제출했습니다.";
+  const x = SUBS.find(s => s.id === isel), box = $("#idetail");
+  if (!x) { box.innerHTML = `<div class="empty">왼쪽 표에서 제출물을 누르면 내용이 여기에 나옵니다.</div>`; return; }
+  box.innerHTML = `<header><b>${esc(x.name)}</b> <span class="mute">${esc(x.sid)} · 제출 ${esc(x.submittedAt)}</span></header>
+    <pre id="itext"></pre><div class="acts"><button class="btn line" id="icopy">이 제출물 복사</button></div>`;
+  $("#itext").textContent = x.text;
+  $("#icopy").onclick = async () => { try { await navigator.clipboard.writeText(x.text); toast("복사했습니다"); } catch (e) { toast("복사하지 못했습니다"); } };
+}
+$("#csv2").onclick = () => {
+  const lines = [["제출 번호", "제출 시각", "학번", "이름", "글자 수", "제출물"]].concat(SUBS.map(x => [x.id, x.submittedAt, x.sid, x.name, (x.text || "").length, x.text]));
+  const csv = lines.map(l => l.map(c => { c = String(c == null ? "" : c); if (/^[=+\-@]/.test(c)) c = "'" + c; return `"${c.replace(/"/g, '""')}"`; }).join(",")).join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" }));
+  a.download = `UN채용_제출함_${new Date().toISOString().slice(0, 10)}.csv`; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+};
+
 function renderDetail() {
   const r = ROWS.find(x => x.sid + "|" + x.name === sel);
   const box = $("#detail");

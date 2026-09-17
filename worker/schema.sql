@@ -19,3 +19,12 @@ CREATE TABLE IF NOT EXISTS attempts (
   fails INTEGER NOT NULL DEFAULT 0,
   locked_until INTEGER NOT NULL DEFAULT 0
 );
+
+-- 학생이 복사해서 붙여 넣은 최종 결과물 (다시 내면 줄이 하나 더 쌓입니다)
+CREATE TABLE IF NOT EXISTS submissions (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  sid TEXT NOT NULL,
+  name TEXT NOT NULL,
+  text TEXT NOT NULL,
+  created_at TEXT NOT NULL
+);

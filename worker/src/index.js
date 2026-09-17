@@ -5,6 +5,8 @@
  * POST { action: "load", sid, name, pinHash }                  PIN이 맞으면 저장된 기록 반환
  * POST { action: "list", key }                                  교사 비밀번호(TEACHER_KEY)로 전체 기록 조회
  * POST { action: "resetPin", key, sid, name }                   교사가 학생 PIN 초기화
+ * POST { action: "submit", sid, name, text }                    학생이 복사한 최종 결과물 제출(학생당 한 번, 수정 불가)
+ * POST { action: "submissions", key }                           교사 비밀번호로 제출함 조회
  *
  * 보안: 학생별 PIN을 5번 틀리면 10분, 교사 비밀번호를 한 접속 주소에서 10번 틀리면 30분 잠급니다.
  */
@@ -48,6 +50,8 @@ export default {
       if (b.action === "load") return json(await load(env, b));
       if (b.action === "list") return json(await list(env, b));
       if (b.action === "resetPin") return json(await resetPin(env, b));
+      if (b.action === "submit") return json(await submit(env, b));
+      if (b.action === "submissions") return json(await submissions(env, b));
       return json({ ok: false, error: "action" }, 400);
     } catch (err) {
       console.error(err);
@@ -113,6 +117,28 @@ async function resetPin(env, b) {
   const sid = clean(b.sid), name = clean(b.name);
   const r = await env.DB.prepare("UPDATE records SET pin = '' WHERE sid = ? AND name = ?").bind(sid, name).run();
   return { ok: true, changed: r.meta.changes };
+}
+
+/* ── 제출함 ── */
+const MAX_SUBMIT = 60_000;
+async function submit(env, b) {
+  const sid = clean(b.sid), name = clean(b.name), text = String(b.text || "").trim();
+  if (!sid || !name) return { ok: false, error: "identity" };
+  if (text.length < 20) return { ok: false, error: "empty" };
+  if (text.length > MAX_SUBMIT) return { ok: false, error: "too_large" };
+  // 한 학생은 한 번만 낼 수 있고, 낸 글은 고칠 수 없습니다.
+  const prev = await env.DB.prepare("SELECT id, created_at FROM submissions WHERE sid = ? AND name = ? LIMIT 1").bind(sid, name).first();
+  if (prev) return { ok: false, error: "already", id: prev.id, submittedAt: kst(prev.created_at) };
+  const now = new Date().toISOString();
+  const r = await env.DB.prepare("INSERT INTO submissions (sid, name, text, created_at) VALUES (?, ?, ?, ?)")
+    .bind(sid, name, text, now).run();
+  return { ok: true, id: r.meta.last_row_id, submittedAt: kst(now) };
+}
+async function submissions(env, b) {
+  if (!env.TEACHER_KEY) return { ok: false, error: "nokey" };
+  if (!(await teacherOk(env, b))) return { ok: false, error: b.lockedOut ? "locked" : "key" };
+  const { results } = await env.DB.prepare("SELECT id, sid, name, text, created_at FROM submissions ORDER BY id DESC").all();
+  return { ok: true, rows: results.map(r => ({ id: r.id, sid: r.sid, name: r.name, text: r.text, submittedAt: kst(r.created_at) })) };
 }
 
 /* ── 시도 횟수 제한 ── */
