@@ -410,8 +410,9 @@ footer button{border:0;background:none;text-decoration:underline;color:var(--mut
   </div>
   <div class="q">
     <h3>수업 전 한 번만</h3>
-    <p>① 구글 시트에 기록 저장소(Apps Script)를 한 번 설치하고, 웹 앱 주소를 <code>config.js</code>의 <code>API_URL</code>에 넣습니다. 방법은 저장소 README의 「학생 기록 모으기」에 있습니다.<br>② 그러면 학생이 쓰는 내용이 몇 초마다 선생님 시트에 자동 저장됩니다. 학생은 학번, 이름, PIN 4자리로 다른 기기에서도 이어서 할 수 있습니다.<br>③ 수업 중에는 <a href="teacher.html">교사용 기록 보기</a>에서 교사 비밀번호로 반 전체 진행 상황과 글을 봅니다. 구글 시트에서 바로 봐도 됩니다.</p>
-    <p class="mute small">학생이 PIN을 잊었다면 구글 시트에서 그 학생 줄의 ‘PIN 확인값’ 칸을 지우세요. 학생이 새 PIN으로 다시 들어오면 기존 기록을 이어서 불러옵니다.</p>
+    <p>따로 준비할 것은 없습니다. 학생이 쓰는 내용은 몇 초마다 기록 저장소에 자동 저장되고, 학생은 학번, 이름, PIN 4자리로 다른 기기에서도 이어서 할 수 있습니다.</p>
+    <p>수업 중에는 <a href="teacher.html">교사용 기록 보기</a>에서 교사 비밀번호로 반 전체 진행 상황과 학생별 글을 봅니다.</p>
+    <p class="mute small">학생이 PIN을 잊었다면 교사용 기록 보기에서 그 학생을 누르고 ‘PIN 초기화’를 누르세요. 학생이 새 PIN으로 들어오면 기존 기록을 이어서 불러옵니다.</p>
   </div>
   <div class="q">
     <h3>2차시: 서류 전형 (50분)</h3>
@@ -430,7 +431,7 @@ footer button{border:0;background:none;text-decoration:underline;color:var(--mut
       <tr><th>37~47분</th><td>임명장 확인, 성찰 두 문항 작성. 원하는 학생 두세 명에게 임명 유형과 가장 어려웠던 판단을 마이크로 듣습니다.</td></tr>
       <tr><th>47~50분</th><td>최종 제출물 만들기, 복사, 제출.</td></tr>
     </table>
-    <p class="mute small">기록 저장소를 설치했다면 기기를 바꿔도 학번, 이름, PIN으로 이어서 할 수 있습니다. 설치하지 않았다면 같은 기기와 브라우저로 들어와야 합니다.</p>
+    <p class="mute small">기기를 바꿔도 학번, 이름, PIN으로 이어서 할 수 있습니다. 학번이나 이름을 다르게 쓰면 다른 사람으로 저장되니 처음에 정확히 쓰게 안내하세요.</p>
   </div>
   <div class="q">
     <h3>평가와 기록</h3>
@@ -835,7 +836,7 @@ if (SUBMIT_URL) $$(".submitLink").forEach(a => { a.href = SUBMIT_URL; a.hidden =
 
 $("#wipe").onclick = () => { if (confirm("이 기기에 저장된 지원서와 미션 기록을 모두 지웁니다. 계속할까요?")) { try { localStorage.removeItem(KEY); } catch(e) {} location.hash = ""; location.reload(); } };
 
-/* ── 선생님 기록부(구글 시트)와 동기화 ── */
+/* ── 기록 저장소(Cloudflare Worker)와 동기화 ── */
 async function pinHashOf(sid, name, pin) {
   const t = `un-recruit|${sid}|${name}|${pin}`;
   if (window.crypto && crypto.subtle) {

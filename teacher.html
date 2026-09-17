@@ -80,8 +80,8 @@ tbody tr[aria-selected="true"]{background:var(--sky)}
   <!-- 로그인 -->
   <section id="login" class="panel login">
     <h1 style="margin-top:0">교사 확인</h1>
-    <p class="mute">Apps Script 코드의 <code>TEACHER_KEY</code>에 적은 비밀번호를 넣으세요. 이 브라우저 탭을 닫으면 다시 물어봅니다.</p>
-    <label id="urlWrap" hidden>기록 저장소 주소 (Apps Script 웹 앱 URL)<input type="text" id="url" placeholder="https://script.google.com/macros/s/.../exec"></label>
+    <p class="mute">교사 비밀번호를 넣으세요. 이 브라우저 탭을 닫으면 다시 물어봅니다.</p>
+    <label id="urlWrap" hidden>기록 저장소 주소<input type="text" id="url" placeholder="https://...workers.dev"></label>
     <label>교사 비밀번호<input type="password" id="key" autocomplete="current-password"></label>
     <div id="loginAlert"></div>
     <div style="margin-top:18px"><button class="btn" id="enter">기록 불러오기</button></div>
@@ -152,8 +152,8 @@ async function load(first) {
     return true;
   } catch (e) {
     const msg = e.message === "key" ? "교사 비밀번호가 맞지 않습니다."
-      : e.message === "nokey" ? "Apps Script 코드의 TEACHER_KEY를 아직 바꾸지 않았습니다. 코드에서 비밀번호를 정하고 새 버전으로 다시 배포하세요."
-      : "기록 저장소에 연결하지 못했습니다. 주소와 배포 설정(액세스: 모든 사용자)을 확인하세요.";
+      : e.message === "nokey" ? "기록 저장소에 교사 비밀번호가 설정되지 않았습니다."
+      : "기록 저장소에 연결하지 못했습니다. 인터넷 연결을 확인하세요.";
     if (first || !$("#login").hidden) $("#loginAlert").innerHTML = `<div class="alert">${esc(msg)}</div>`;
     else toast(msg);
     return false;
@@ -220,9 +220,16 @@ function renderDetail() {
       <span class="tag s${r.level}">${LEVEL_NAME[r.level]}</span> <span class="mute">${esc(r.org || "기구 미선택")} · 마지막 저장 ${esc(r.savedAt || "-")}${r.finalAt ? ` · 최종 제출 ${esc(r.finalAt)}` : ""}</span></header>
     <div class="tabs">${[["all","전체"],["doc","지원서"],["mission","현장 미션"],["refl","성찰"]].map(([k, n]) => `<button data-v="${k}" aria-pressed="${view === k}">${n}</button>`).join("")}</div>
     <pre id="detailText"></pre>
-    <div class="acts"><button class="btn line" id="copyOne">이 학생 글 복사</button></div>`;
+    <div class="acts"><button class="btn line" id="copyOne">이 학생 글 복사</button><button class="btn line" id="resetPin">PIN 초기화</button></div>`;
   $("#detailText").textContent = part(r) || "(아직 쓴 내용이 없습니다)";
   box.querySelectorAll(".tabs button").forEach(b => b.onclick = () => { view = b.dataset.v; renderDetail(); });
+  $("#resetPin").onclick = async () => {
+    if (!confirm(`${r.name}(${r.sid}) 학생의 PIN을 초기화할까요? 학생이 다음에 새 PIN을 정해 들어오면 기존 기록을 이어서 불러옵니다.`)) return;
+    try {
+      const j = await (await fetch(API, { method: "POST", body: JSON.stringify({ action: "resetPin", key: KEY, sid: r.sid, name: r.name }) })).json();
+      toast(j.ok ? "PIN을 초기화했습니다. 학생에게 새 PIN으로 들어오라고 알려 주세요" : "초기화하지 못했습니다");
+    } catch (e) { toast("초기화하지 못했습니다"); }
+  };
   $("#copyOne").onclick = async () => { try { await navigator.clipboard.writeText(r.text || ""); toast("복사했습니다"); } catch (e) { toast("복사하지 못했습니다"); } };
 }
 

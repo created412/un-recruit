@@ -1,0 +1,8 @@
+{
+  "name": "un-recruit-api",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-01",
+  "d1_databases": [
+    { "binding": "DB", "database_name": "un-recruit-db", "database_id": "bc49dd7f-19da-44fc-9562-502f8c49e828" }
+  ]
+}
