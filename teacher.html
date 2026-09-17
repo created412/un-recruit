@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>학생 기록 보기 · UN 기구 공개 채용</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;900&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%2312284b'/><ellipse cx='16' cy='16' rx='6' ry='14' fill='none' stroke='white' stroke-width='1.5'/><path d='M2 16h28' stroke='white' stroke-width='1.5'/></svg>">
+<style>
+:root{--ink:#12284b;--ink2:#1d3a6b;--un:#1f7fc4;--sky:#dcebf7;--paper:#fff;--desk:#eef2f7;--red:#e0482f;--line:#cfdae6;--mute:#56667c;--ok:#1d8750;--amber:#b7791f;
+  --serif:"Noto Serif KR",serif;--sans:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--desk);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;word-break:keep-all}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--un);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+.bar{background:var(--ink);color:#fff}
+.bar .wrap{display:flex;align-items:center;gap:12px;min-height:56px}
+.bar b{font-family:var(--serif);font-weight:900}
+.bar a{margin-left:auto;color:#b8c8dd;font-size:.88rem}
+h1{font-family:var(--serif);font-weight:900;font-size:clamp(1.5rem,3.4vw,2rem);margin:28px 0 4px}
+.mute{color:var(--mute)}
+.panel{background:var(--paper);border-radius:10px;box-shadow:0 2px 10px rgba(18,40,75,.07);padding:20px}
+input[type=text],input[type=password],input[type=search],select{padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fbfcfe;min-height:42px}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--ink);background:var(--ink);color:#fff;padding:9px 18px;border-radius:40px;font-weight:700;cursor:pointer;min-height:42px}
+.btn.line{background:transparent;color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:wait}
+.login{max-width:520px;margin:30px auto}
+.login label{display:block;font-weight:700;margin-top:14px}
+.login input{width:100%;margin-top:6px}
+.alert{margin-top:14px;padding:12px 14px;background:#fff1ee;color:#8f2616;border-radius:8px}
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:18px 0 12px}
+.tools .grow{flex:1 1 220px}
+.tools input[type=search]{width:100%}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:18px}
+.stat{background:var(--paper);border-radius:10px;padding:12px 16px;box-shadow:0 2px 10px rgba(18,40,75,.05)}
+.stat b{display:block;font-family:var(--serif);font-weight:900;font-size:1.8rem;line-height:1.2;font-variant-numeric:tabular-nums}
+.stat span{font-size:.86rem;color:var(--mute)}
+@media (max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}}
+.grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:1fr}}
+.tablebox{background:var(--paper);border-radius:10px;box-shadow:0 2px 10px rgba(18,40,75,.07);overflow:auto;max-height:72vh}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{position:sticky;top:0;background:#f6f9fc;font-size:.82rem;color:var(--mute);cursor:pointer;user-select:none}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:#f4f8fc}
+tbody tr[aria-selected="true"]{background:var(--sky)}
+.tag{display:inline-block;padding:1px 9px;border-radius:20px;font-size:.8rem;font-weight:700;background:#eef2f7;color:var(--mute)}
+.tag.s1{background:#fff4df;color:var(--amber)}
+.tag.s2{background:#e3f0fb;color:#175e96}
+.tag.s3{background:#e8e4fb;color:#4a3aa6}
+.tag.s4{background:#e2f4ea;color:#17643c}
+.dots{display:inline-flex;gap:3px;vertical-align:middle}
+.dots i{width:9px;height:9px;border-radius:50%;background:#dfe6ee}
+.dots i.on{background:var(--ok)}
+.stale{color:var(--red);font-weight:700}
+.detail{background:var(--paper);border-radius:10px;box-shadow:0 2px 10px rgba(18,40,75,.07);position:sticky;top:12px;max-height:calc(100vh - 24px);display:flex;flex-direction:column}
+.detail header{padding:16px 18px;border-bottom:1px solid var(--line)}
+.detail header b{font-family:var(--serif);font-size:1.3rem}
+.detail .tabs{display:flex;gap:6px;padding:10px 18px 0;flex-wrap:wrap}
+.detail .tabs button{border:1px solid var(--line);background:#fff;border-radius:30px;padding:4px 12px;font-size:.85rem;cursor:pointer}
+.detail .tabs button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.detail pre{margin:0;padding:14px 18px 18px;white-space:pre-wrap;word-break:break-word;font-family:var(--sans);font-size:.9rem;overflow:auto;flex:1}
+.detail .empty{padding:40px 18px;text-align:center;color:var(--mute)}
+.detail .acts{display:flex;gap:8px;padding:0 18px 14px;flex-wrap:wrap}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:30px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:1}
+</style>
+</head>
+<body>
+<header class="bar"><div class="wrap"><b>학생 기록 보기</b><span class="mute" style="color:#b8c8dd">UN 기구 공개 채용</span><a href="index.html">학생 화면</a></div></header>
+
+<main class="wrap">
+  <!-- 로그인 -->
+  <section id="login" class="panel login">
+    <h1 style="margin-top:0">교사 확인</h1>
+    <p class="mute">Apps Script 코드의 <code>TEACHER_KEY</code>에 적은 비밀번호를 넣으세요. 이 브라우저 탭을 닫으면 다시 물어봅니다.</p>
+    <label id="urlWrap" hidden>기록 저장소 주소 (Apps Script 웹 앱 URL)<input type="text" id="url" placeholder="https://script.google.com/macros/s/.../exec"></label>
+    <label>교사 비밀번호<input type="password" id="key" autocomplete="current-password"></label>
+    <div id="loginAlert"></div>
+    <div style="margin-top:18px"><button class="btn" id="enter">기록 불러오기</button></div>
+  </section>
+
+  <!-- 대시보드 -->
+  <section id="dash" hidden>
+    <h1>반 전체 진행 상황</h1>
+    <p class="mute" id="updated"></p>
+    <div class="stats" id="stats"></div>
+    <div class="tools">
+      <div class="grow"><input type="search" id="q" placeholder="학번, 이름, 기구로 찾기"></div>
+      <select id="filter" aria-label="진행 단계로 거르기">
+        <option value="">모든 단계</option><option value="0">시작·작성 중</option><option value="1">지원서 접수</option><option value="2">현장 미션 중</option><option value="3">미션 완료</option><option value="4">최종 제출</option>
+      </select>
+      <label class="mute" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="auto" checked> 30초마다 새로 고침</label>
+      <button class="btn line" id="reload">지금 새로 고침</button>
+      <button class="btn" id="csv">엑셀용 CSV 받기</button>
+    </div>
+    <div class="grid">
+      <div class="tablebox">
+        <table>
+          <thead><tr>
+            <th data-sort="sid">학번</th><th data-sort="name">이름</th><th data-sort="org">지원 기구</th><th data-sort="level">진행</th><th data-sort="missions">미션</th><th data-sort="savedAt">마지막 저장</th>
+          </tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <aside class="detail" id="detail"><div class="empty">왼쪽 표에서 학생을 누르면 쓴 내용이 여기에 나옵니다.</div></aside>
+    </div>
+  </section>
+</main>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="config.js"></script>
+<script>
+const CFG = window.UN_CONFIG || {};
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let API = String(CFG.API_URL || "").trim(), KEY = "", ROWS = [], sel = null, sortBy = "sid", sortDir = 1, timer = null, view = "all";
+
+const ss = { get(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} } };
+if (!API) { $("#urlWrap").hidden = false; $("#url").value = ss.get("un-api") || ""; }
+
+function toast(m) { const t = $("#toast"); t.textContent = m; t.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("on"), 2200); }
+
+/* 단계: 0 시작·작성 중, 1 지원서 접수, 2 미션 중, 3 미션 완료, 4 최종 제출 */
+function level(r) {
+  if (r.finalAt) return 4;
+  if (r.missions >= 4) return 3;
+  if (r.missions > 0) return 2;
+  if (r.docAt) return 1;
+  return 0;
+}
+const LEVEL_NAME = ["작성 중", "지원서 접수", "미션 중", "미션 완료", "최종 제출"];
+
+async function load(first) {
+  const btn = first ? $("#enter") : $("#reload");
+  btn.disabled = true;
+  try {
+    const r = await (await fetch(API, { method: "POST", body: JSON.stringify({ action: "list", key: KEY }) })).json();
+    if (!r.ok) throw new Error(r.error);
+    ROWS = r.rows.map(x => Object.assign(x, { level: level(x) }));
+    ss.set("un-key", KEY); if (!CFG.API_URL) ss.set("un-api", API);
+    $("#login").hidden = true; $("#dash").hidden = false;
+    $("#updated").textContent = `불러온 시각 ${new Date().toLocaleTimeString("ko-KR")} · 학생 ${ROWS.length}명`;
+    render();
+    return true;
+  } catch (e) {
+    const msg = e.message === "key" ? "교사 비밀번호가 맞지 않습니다."
+      : e.message === "nokey" ? "Apps Script 코드의 TEACHER_KEY를 아직 바꾸지 않았습니다. 코드에서 비밀번호를 정하고 새 버전으로 다시 배포하세요."
+      : "기록 저장소에 연결하지 못했습니다. 주소와 배포 설정(액세스: 모든 사용자)을 확인하세요.";
+    if (first || !$("#login").hidden) $("#loginAlert").innerHTML = `<div class="alert">${esc(msg)}</div>`;
+    else toast(msg);
+    return false;
+  } finally { btn.disabled = false; }
+}
+
+$("#enter").onclick = () => {
+  KEY = $("#key").value.trim();
+  if (!API) API = $("#url").value.trim();
+  if (!API) { $("#loginAlert").innerHTML = `<div class="alert">기록 저장소 주소를 넣으세요.</div>`; return; }
+  if (!KEY) { $("#key").focus(); return; }
+  load(true).then(ok => ok && startAuto());
+};
+$("#key").addEventListener("keydown", e => { if (e.key === "Enter") $("#enter").click(); });
+$("#reload").onclick = () => load(false);
+$("#q").oninput = render; $("#filter").onchange = render;
+$("#auto").onchange = startAuto;
+function startAuto() { clearInterval(timer); if ($("#auto").checked) timer = setInterval(() => { if (document.visibilityState === "visible") load(false); }, 30000); }
+document.querySelectorAll("th[data-sort]").forEach(th => th.onclick = () => { const k = th.dataset.sort; sortDir = sortBy === k ? -sortDir : 1; sortBy = k; render(); });
+
+function minutesAgo(s) {
+  if (!s) return Infinity;
+  const d = new Date(s.replace(" ", "T") + ":00+09:00");
+  return isNaN(d) ? Infinity : (Date.now() - d) / 60000;
+}
+function render() {
+  const q = $("#q").value.trim().toLowerCase(), f = $("#filter").value;
+  const cnt = [0, 0, 0, 0, 0]; ROWS.forEach(r => cnt[r.level]++);
+  const reached = n => cnt.slice(n).reduce((a, b) => a + b, 0);
+  $("#stats").innerHTML = [["전체 학생", ROWS.length], ["지원서 접수", reached(1)], ["미션 진행·완료", reached(2)], ["미션 네 개 완료", reached(3)], ["최종 제출", cnt[4]]]
+    .map(([n, v]) => `<div class="stat"><b>${v}</b><span>${n}</span></div>`).join("");
+  const list = ROWS.filter(r => (!f || String(r.level) === f) && (!q || `${r.sid} ${r.name} ${r.org}`.toLowerCase().includes(q)))
+    .sort((a, b) => { const x = a[sortBy], y = b[sortBy]; return (typeof x === "number" ? x - y : String(x).localeCompare(String(y), "ko", { numeric: true })) * sortDir; });
+  $("#rows").innerHTML = list.map(r => {
+    const ago = minutesAgo(r.savedAt), stale = r.level < 4 && ago > 10 && ago < 600;
+    return `<tr data-id="${esc(r.sid + "|" + r.name)}" aria-selected="${sel === r.sid + "|" + r.name}">
+      <td>${esc(r.sid)}</td><td><b>${esc(r.name)}</b></td><td>${esc(r.org || "-")}</td>
+      <td><span class="tag s${r.level}">${LEVEL_NAME[r.level]}</span></td>
+      <td><span class="dots">${[0,1,2,3].map(i => `<i class="${i < r.missions ? "on" : ""}"></i>`).join("")}</span></td>
+      <td class="${stale ? "stale" : ""}" title="${stale ? "10분 넘게 저장이 없습니다" : ""}">${esc(r.savedAt ? r.savedAt.slice(5) : "-")}</td></tr>`;
+  }).join("") || `<tr><td colspan="6" class="mute" style="text-align:center;padding:30px">해당하는 학생이 없습니다.</td></tr>`;
+  document.querySelectorAll("#rows tr[data-id]").forEach(tr => tr.onclick = () => { sel = tr.dataset.id; render(); });
+  renderDetail();
+}
+
+const val = (st, k) => (st && st[k] ? String(st[k]).trim() : "");
+function part(r) {
+  const t = r.text || "";
+  if (view === "all") return t;
+  const i = t.indexOf("────────────────────");
+  const doc = i >= 0 ? t.slice(0, i).trim() : t;
+  const rest = i >= 0 ? t.slice(i) : "";
+  const m = rest.indexOf("[현장 미션]"), s = rest.indexOf("[성찰]");
+  if (view === "doc") return doc;
+  if (view === "mission") return m >= 0 ? rest.slice(m, s >= 0 ? rest.lastIndexOf("────────────────────", s) : undefined).trim() : "(아직 없음)";
+  if (view === "refl") return s >= 0 ? rest.slice(s).trim() : "(아직 없음)";
+  return t;
+}
+function renderDetail() {
+  const r = ROWS.find(x => x.sid + "|" + x.name === sel);
+  const box = $("#detail");
+  if (!r) { box.innerHTML = `<div class="empty">왼쪽 표에서 학생을 누르면 쓴 내용이 여기에 나옵니다.</div>`; return; }
+  box.innerHTML = `<header><b>${esc(r.name)}</b> <span class="mute">${esc(r.sid)}</span><br>
+      <span class="tag s${r.level}">${LEVEL_NAME[r.level]}</span> <span class="mute">${esc(r.org || "기구 미선택")} · 마지막 저장 ${esc(r.savedAt || "-")}${r.finalAt ? ` · 최종 제출 ${esc(r.finalAt)}` : ""}</span></header>
+    <div class="tabs">${[["all","전체"],["doc","지원서"],["mission","현장 미션"],["refl","성찰"]].map(([k, n]) => `<button data-v="${k}" aria-pressed="${view === k}">${n}</button>`).join("")}</div>
+    <pre id="detailText"></pre>
+    <div class="acts"><button class="btn line" id="copyOne">이 학생 글 복사</button></div>`;
+  $("#detailText").textContent = part(r) || "(아직 쓴 내용이 없습니다)";
+  box.querySelectorAll(".tabs button").forEach(b => b.onclick = () => { view = b.dataset.v; renderDetail(); });
+  $("#copyOne").onclick = async () => { try { await navigator.clipboard.writeText(r.text || ""); toast("복사했습니다"); } catch (e) { toast("복사하지 못했습니다"); } };
+}
+
+$("#csv").onclick = () => {
+  const head = ["학번","이름","지원 기구","진행","미션 완료","지원서 접수","최종 제출","마지막 저장",
+    "설립 목적","주로 하는 일","최근 활동","선택 이유","활동1","활동2","활동3","연결 사례","문제점","해결 방안","꿈과 비전",
+    "미션1 선택","미션1 근거","미션2 선택","미션2 근거","미션3 선택","미션3 근거","미션4 선택","미션4 근거","성찰1","성찰2","전체 텍스트"];
+  const keys = ["memoPurpose","memoWork","memoIssue","why","act1","act2","act3","caseName","problem","solution","vision"];
+  const pickOf = (st, i) => st && st.pick && st.pick[i] != null ? "ABCD"[st.pick[i]] : "";
+  const lines = [head].concat(ROWS.map(r => {
+    const st = r.state || {};
+    return [r.sid, r.name, r.org, LEVEL_NAME[r.level], r.missions, r.docAt, r.finalAt, r.savedAt]
+      .concat(keys.map(k => val(st, k)))
+      .concat([0,1,2,3].flatMap(i => [pickOf(st, i), val(st, "reason" + i)]))
+      .concat([val(st, "refl1"), val(st, "refl2"), r.text]);
+  }));
+  const csv = lines.map(l => l.map(c => { c = String(c == null ? "" : c); if (/^[=+\-@]/.test(c)) c = "'" + c; return `"${c.replace(/"/g, '""')}"`; }).join(",")).join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" }));
+  a.download = `UN채용_학생기록_${new Date().toISOString().slice(0, 10)}.csv`; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+};
+
+/* 같은 탭에서 새로 고침하면 다시 묻지 않습니다. */
+const savedKey = ss.get("un-key");
+if (savedKey && (API || ss.get("un-api"))) { KEY = savedKey; if (!API) API = ss.get("un-api"); load(true).then(ok => ok && startAuto()); }
+</script>
+</body>
+</html>

@@ -1,0 +1,907 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UN 기구 공개 채용</title>
+<meta name="description" content="국제관계와 국제기구 · 국제연맹과 국제연합 개인 활동">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;900&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%2312284b'/><ellipse cx='16' cy='16' rx='6' ry='14' fill='none' stroke='white' stroke-width='1.5'/><path d='M2 16h28' stroke='white' stroke-width='1.5'/></svg>">
+<style>
+:root{
+  --ink:#12284b;       /* 삽화의 남색 */
+  --ink2:#1d3a6b;
+  --un:#1f7fc4;        /* 삽화의 파랑 */
+  --sky:#dcebf7;
+  --paper:#ffffff;
+  --desk:#eef2f7;
+  --red:#e0482f;       /* 삽화의 주홍 포인트 */
+  --line:#cfdae6;
+  --mute:#56667c;
+  --ok:#1d8750;
+  --serif:"Noto Serif KR",serif;
+  --sans:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --r:10px;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--desk);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65;word-break:keep-all;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--un);outline-offset:2px}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px}
+.narrow{max-width:760px;margin:0 auto}
+h1,h2{font-family:var(--serif);font-weight:900;line-height:1.25;margin:0}
+h1{font-size:clamp(2rem,5.4vw,3.4rem)}
+h2{font-size:clamp(1.5rem,3.6vw,2.1rem)}
+h3{font-size:1.08rem;margin:0 0 .3em}
+p{margin:.45em 0}
+.mute{color:var(--mute)}
+.small{font-size:.9rem}
+
+/* 상단 진행 표시 */
+.bar{position:sticky;top:0;z-index:20;background:rgba(18,40,75,.97);color:#fff;backdrop-filter:blur(6px)}
+.bar .wrap{display:flex;align-items:center;gap:14px;min-height:56px}
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--serif);font-weight:900;white-space:nowrap;background:none;border:0;color:#fff;cursor:pointer;padding:0}
+.steps{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.steps::-webkit-scrollbar{display:none}
+.steps button{border:0;background:transparent;color:#b8c8dd;padding:6px 10px;border-radius:30px;font-size:.86rem;white-space:nowrap;cursor:pointer;display:flex;align-items:center;gap:6px}
+.steps button i{font-style:normal;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:.72rem;font-weight:700;background:rgba(255,255,255,.14)}
+.steps button.done i{background:var(--ok);color:#fff}
+.steps button[aria-current="true"]{background:#fff;color:var(--ink);font-weight:700}
+.steps button[aria-current="true"] i{background:var(--ink);color:#fff}
+.steps .sep{align-self:center;color:#6f86a6;font-size:.72rem;padding:0 4px;white-space:nowrap}
+.who{font-size:.82rem;color:#b8c8dd;white-space:nowrap}
+.sync{border:1px solid rgba(255,255,255,.28);background:transparent;color:#d6e2f0;border-radius:30px;padding:3px 11px;font-size:.78rem;white-space:nowrap;cursor:default;display:flex;align-items:center;gap:6px}
+.sync::before{content:"";width:7px;height:7px;border-radius:50%;background:#8aa0bb}
+.sync.ok::before{background:#5fd497}.sync.busy::before{background:#ffc46b}.sync.fail{border-color:#ff9d8a;color:#ffd2c9;cursor:pointer}.sync.fail::before{background:#ff7a61}
+@media (max-width:760px){.who{display:none}.brand span{display:none}}
+
+section.view{display:none;padding:0 0 80px}
+section.view.on{display:block}
+.head{padding:36px 0 8px}
+.head p{max-width:62ch}
+
+/* 표지 */
+.hero{position:relative;min-height:min(78vh,640px);display:flex;align-items:flex-end;color:#fff;overflow:hidden;background:var(--ink)}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,40,75,0) 25%,rgba(18,40,75,.72) 62%,rgba(12,28,54,.96) 100%)}
+.hero .wrap{position:relative;z-index:1;padding-bottom:40px;width:100%}
+.hero .no{display:inline-block;font-size:.85rem;border:1px solid rgba(255,255,255,.5);border-radius:30px;padding:3px 12px;margin-bottom:14px}
+.hero h1{max-width:17em;text-wrap:balance}
+.hero p{max-width:40em;color:#dfe9f5;font-size:1.05rem}
+.entry{display:grid;grid-template-columns:1.1fr 1fr;gap:18px;margin-top:-28px;position:relative;z-index:2}
+.panel{background:var(--paper);border-radius:var(--r);box-shadow:0 10px 30px rgba(18,40,75,.12);padding:clamp(20px,3.4vw,30px)}
+.schedule{list-style:none;margin:10px 0 0;padding:0}
+.schedule li{display:grid;grid-template-columns:4.2em 1fr;gap:10px;padding:12px 0;border-top:1px solid var(--line)}
+.schedule li:first-child{border-top:0}
+.schedule b{font-family:var(--serif);color:var(--un)}
+@media (max-width:760px){.entry{grid-template-columns:1fr}}
+
+/* 입력 */
+label.f{display:block;margin-top:16px;font-weight:700}
+label.f:first-child{margin-top:0}
+label.f small{display:block;font-weight:400;color:var(--mute);font-size:.88rem}
+input[type=text],input[type=password],textarea{width:100%;margin-top:6px;padding:12px 13px;border:1px solid var(--line);border-radius:8px;background:#fbfcfe;transition:border-color .15s}
+input[type=text]:focus,input[type=password]:focus,textarea:focus{border-color:var(--un);background:#fff}
+textarea{min-height:110px;resize:vertical;line-height:1.65}
+textarea.s{min-height:78px}
+.cnt{display:block;text-align:right;font-size:.8rem;color:var(--mute);margin-top:2px}
+.cnt.ok{color:var(--ok)}
+.bad{border-color:var(--red)!important;background:#fff5f3!important}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--ink);background:var(--ink);color:#fff;padding:12px 22px;border-radius:40px;font-weight:700;cursor:pointer;text-decoration:none;min-height:46px}
+.btn:hover{background:var(--ink2)}
+.btn.line{background:transparent;color:var(--ink)}
+.btn.line:hover{background:var(--sky)}
+.btn.red{background:var(--red);border-color:var(--red)}
+.btn.wide{width:100%}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.alert{margin-top:18px;padding:14px 16px;background:#fff1ee;color:#8f2616;border-radius:8px;font-size:.94rem}
+.alert ul{margin:.3em 0 0;padding-left:1.2em}
+
+/* 기구 */
+.orgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-top:22px}
+@media (max-width:560px){.orgs{grid-template-columns:1fr 1fr;gap:10px}.org>div{padding:10px}.org span{display:none}}
+.org{text-align:left;border:2px solid transparent;background:var(--paper);padding:0;border-radius:var(--r);cursor:pointer;overflow:hidden;box-shadow:0 2px 10px rgba(18,40,75,.07);transition:transform .15s,box-shadow .15s}
+.org:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(18,40,75,.14)}
+.org img{aspect-ratio:4/3;object-fit:cover;width:100%}
+.org>div{padding:12px 14px 14px}
+.org b{display:block;font-size:1.05rem}
+.org em{display:block;font-style:normal;color:var(--un);font-size:.86rem;font-weight:700}
+.org span{display:block;font-size:.9rem;color:var(--mute);margin-top:4px;line-height:1.5}
+.org[aria-pressed="true"]{border-color:var(--red);box-shadow:0 0 0 4px rgba(224,72,47,.18)}
+.org[aria-pressed="true"]>div{background:var(--ink);color:#fff}
+.org[aria-pressed="true"] span{color:#c8d6e8}
+.org[aria-pressed="true"] em{color:#9fd0f2}
+.pickbar{position:sticky;bottom:12px;z-index:10;margin-top:22px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--ink);color:#fff;border-radius:60px;padding:8px 8px 8px 22px;box-shadow:0 10px 30px rgba(18,40,75,.3)}
+.pickbar a{color:#9fd0f2;font-weight:700}
+.pickbar .btn{margin-left:auto;background:#fff;color:var(--ink);border-color:#fff}
+
+/* 지원서 */
+.formgrid{display:grid;grid-template-columns:260px 1fr;gap:22px;align-items:start;margin-top:22px}
+.side{position:sticky;top:76px;background:var(--paper);border-radius:var(--r);overflow:hidden;box-shadow:0 2px 10px rgba(18,40,75,.07)}
+.side img{aspect-ratio:4/3;object-fit:cover;width:100%}
+.side>div{padding:14px 16px}
+.side ol{margin:8px 0 0;padding-left:1.2em;font-size:.9rem}
+.side li.ok{color:var(--ok)}
+.q{background:var(--paper);border-radius:var(--r);padding:clamp(18px,3vw,28px);margin-bottom:16px;box-shadow:0 2px 10px rgba(18,40,75,.05)}
+.q .qn{font-family:var(--serif);font-weight:900;color:var(--un);font-size:1.5rem;line-height:1;margin-bottom:6px}
+@media (max-width:760px){.formgrid{grid-template-columns:1fr}.side{position:static;display:grid;grid-template-columns:110px 1fr}.side img{height:100%;aspect-ratio:auto}.side ol{display:none}}
+
+/* 접수증 */
+.receipt{display:grid;grid-template-columns:minmax(0,360px) 1fr;gap:24px;align-items:start;margin-top:22px}
+.badge{background:var(--paper);border-radius:16px;overflow:hidden;box-shadow:0 18px 40px rgba(18,40,75,.22);position:relative}
+.badge .top{position:relative;height:150px}
+.badge .top img{width:100%;height:100%;object-fit:cover}
+.badge .top::before{content:"";position:absolute;z-index:1;top:10px;left:50%;width:58px;height:10px;margin-left:-29px;border-radius:10px;background:var(--desk)}
+.badge .bd{padding:20px 22px 24px}
+.badge .kind{font-size:.8rem;color:var(--mute)}
+.badge .nm{font-family:var(--serif);font-weight:900;font-size:2.1rem;line-height:1.2}
+.badge .og{font-weight:700;color:var(--un)}
+.badge table{width:100%;margin-top:14px;border-collapse:collapse;font-size:.9rem}
+.badge td{padding:6px 0;border-top:1px dashed var(--line)}
+.badge td:first-child{color:var(--mute);width:5.4em}
+.stamp{position:absolute;right:16px;top:100px;width:98px;height:98px;border:4px double var(--red);border-radius:50%;color:var(--red);display:grid;place-items:center;text-align:center;font-family:var(--serif);font-weight:900;line-height:1.15;transform:rotate(-14deg);background:rgba(255,255,255,.55)}
+.stamp small{display:block;font-size:.62rem;font-weight:600}
+@media (prefers-reduced-motion:no-preference){.hit{animation:hit .5s cubic-bezier(.2,1.6,.4,1)}}
+@keyframes hit{from{transform:rotate(-14deg) scale(2.3);opacity:0}to{transform:rotate(-14deg) scale(1);opacity:1}}
+pre.out{white-space:pre-wrap;word-break:break-word;background:var(--paper);border:1px solid var(--line);padding:16px;border-radius:8px;font-family:var(--sans);font-size:.9rem;max-height:380px;overflow:auto;margin:0}
+@media (max-width:760px){.receipt{grid-template-columns:1fr}}
+
+/* 미션 */
+.mtabs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:22px}
+.mtab{border:0;border-radius:var(--r);overflow:hidden;background:var(--paper);padding:0;cursor:pointer;text-align:left;position:relative;box-shadow:0 2px 10px rgba(18,40,75,.07)}
+.mtab img{aspect-ratio:16/9;object-fit:cover;width:100%}
+.mtab span{display:block;padding:8px 10px;font-size:.85rem;font-weight:700}
+.mtab[disabled]{cursor:not-allowed}
+.mtab[disabled] img{filter:grayscale(1) brightness(.55)}
+.mtab[disabled]::after{content:"잠김";position:absolute;top:8px;left:8px;background:rgba(0,0,0,.6);color:#fff;font-size:.72rem;padding:2px 8px;border-radius:20px}
+.mtab.done::after{content:"완료";position:absolute;top:8px;left:8px;background:var(--ok);color:#fff;font-size:.72rem;padding:2px 8px;border-radius:20px}
+.mtab[aria-current="true"]{outline:3px solid var(--red);outline-offset:2px}
+.hud{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;background:var(--ink);color:#fff;border-radius:var(--r);padding:14px 18px}
+.hud div{font-size:.85rem}
+.hud b{float:right;font-variant-numeric:tabular-nums}
+.meter{height:8px;border-radius:8px;background:rgba(255,255,255,.16);margin-top:6px;overflow:hidden}
+.meter i{display:block;height:100%;border-radius:8px;transition:width .5s}
+.hud .d{font-weight:700;margin-left:4px}
+.hud .d.up{color:#7fe0a8}.hud .d.dn{color:#ff9d8a}
+@media (max-width:560px){.mtabs{grid-template-columns:repeat(2,1fr)}.hud{grid-template-columns:1fr;gap:8px}}
+
+.scene{margin-top:18px;background:var(--paper);border-radius:var(--r);overflow:hidden;box-shadow:0 4px 18px rgba(18,40,75,.1)}
+.scene .pic{position:relative}
+.scene .pic img{width:100%;aspect-ratio:16/8;object-fit:cover}
+.scene .pic .cap{position:absolute;left:0;right:0;bottom:0;padding:40px 24px 18px;background:linear-gradient(180deg,transparent,rgba(12,28,54,.9));color:#fff}
+.scene .pic .cap small{display:inline-block;background:var(--red);border-radius:20px;padding:2px 10px;font-weight:700;font-size:.78rem}
+.scene .pic .cap h2{margin-top:6px;font-size:clamp(1.35rem,3.4vw,2rem)}
+.scene .body{padding:clamp(18px,3.2vw,30px)}
+.brief{font-size:1.04rem;line-height:1.8}
+.mirror{display:grid;grid-template-columns:auto 1fr;gap:12px;background:var(--sky);border-radius:8px;padding:14px 16px;margin-top:16px}
+.mirror svg{margin-top:2px}
+.mirror b{display:block}
+.choices{display:grid;gap:10px;margin-top:20px}
+.choice{text-align:left;border:1.5px solid var(--line);background:#fbfcfe;border-radius:10px;padding:14px 16px;cursor:pointer;display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start}
+.choice:hover{border-color:var(--un)}
+.choice .k{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--sky);font-weight:900;font-family:var(--serif)}
+.choice .fx{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.choice .fx span{font-size:.76rem;padding:1px 8px;border-radius:20px;background:#eef2f7;color:var(--mute)}
+.choice .fx span.up{background:#e2f4ea;color:#17643c}
+.choice .fx span.dn{background:#fde9e5;color:#9b2c19}
+.choice[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:#fff}
+.choice[aria-pressed="true"] .k{background:var(--red);color:#fff}
+.result{margin-top:16px;border-radius:8px;padding:14px 16px;background:#fff8e8;border:1px solid #f1dfb5}
+.result b{display:block}
+.next{display:flex;justify-content:flex-end;gap:10px;margin-top:20px;flex-wrap:wrap}
+
+/* 임명 */
+.appoint{position:relative;border-radius:var(--r);overflow:hidden;margin-top:22px;background:var(--ink);color:#fff}
+.appoint img{width:100%;aspect-ratio:16/7;object-fit:cover;opacity:.9}
+.appoint .card{position:relative;margin:-90px auto 0;max-width:620px;background:var(--paper);color:var(--ink);border-radius:12px;padding:28px clamp(20px,4vw,40px) 30px;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,.25)}
+.appoint .card::before{content:"";position:absolute;inset:8px;border:1px solid var(--ink);border-radius:8px;opacity:.25;pointer-events:none}
+.appoint .ttl{font-size:.9rem;color:var(--mute)}
+.appoint .nm{font-family:var(--serif);font-weight:900;font-size:clamp(1.8rem,5vw,2.5rem)}
+.appoint .type{display:inline-block;margin-top:10px;background:var(--red);color:#fff;font-weight:700;border-radius:30px;padding:4px 16px}
+.appoint .desc{margin-top:12px;color:var(--mute)}
+.appoint .gauges{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px;text-align:left}
+.appoint .gauges div{font-size:.84rem}
+.appoint .gauges .meter{background:#e3eaf2}
+.appoint .pad{height:28px}
+
+/* 교사용 */
+table.plan{width:100%;border-collapse:collapse;font-size:.93rem;margin-top:8px}
+table.plan th,table.plan td{border-top:1px solid var(--line);padding:10px 8px;vertical-align:top;text-align:left}
+table.plan th{white-space:nowrap;color:var(--un);width:6em}
+code{background:var(--sky);padding:1px 6px;border-radius:4px;font-size:.9em}
+footer{padding:30px 0 50px;text-align:center;font-size:.86rem;color:var(--mute)}
+footer button{border:0;background:none;text-decoration:underline;color:var(--mute);cursor:pointer;padding:4px}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 20px;border-radius:30px;font-size:.92rem;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header class="bar"><div class="wrap">
+  <button class="brand" data-go="home" aria-label="처음으로">
+    <svg width="26" height="26" viewBox="0 0 34 34" fill="none" stroke="#fff" stroke-width="1.6" aria-hidden="true"><circle cx="17" cy="17" r="15"/><ellipse cx="17" cy="17" rx="6.5" ry="15"/><path d="M2 17h30M4.5 9.5h25M4.5 24.5h25"/></svg>
+    <span>UN 기구 공개 채용</span>
+  </button>
+  <nav class="steps" aria-label="진행 단계">
+    <span class="sep">2차시</span>
+    <button data-go="org"><i>1</i>기구 선택</button>
+    <button data-go="form"><i>2</i>지원서</button>
+    <button data-go="receipt"><i>3</i>접수증</button>
+    <span class="sep">3차시</span>
+    <button data-go="mission"><i>4</i>현장 미션</button>
+    <button data-go="appoint"><i>5</i>임명과 성찰</button>
+    <button data-go="final"><i>6</i>최종 제출</button>
+  </nav>
+  <span class="who" id="who"></span>
+  <button class="sync" id="sync" hidden></button>
+</div></header>
+
+<main>
+
+<!-- 표지 -->
+<section class="view" id="v-home">
+  <div class="hero">
+    <img src="img/hero.webp" alt="국제회의장 통로를 따라 연단으로 걸어가는 신입 직원">
+    <div class="wrap">
+      <span class="no">국제연합 인사 공고 제2026-04호</span>
+      <h1>세계 평화를 위해 일할 신입 직원을 찾습니다</h1>
+      <p>국제연맹은 전쟁을 막지 못했습니다. 국제연합은 그 실패 위에 세워졌지만 거부권, 주권의 벽, 재정난 앞에서 지금도 흔들립니다. 이 일을 해 보겠다면 지원하세요.</p>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="entry">
+      <div class="panel">
+        <h3>전형 일정</h3>
+        <ul class="schedule">
+          <li><b>2차시</b><div><strong>서류 전형</strong><br><span class="mute small">기구 한 곳을 골라 조사하고 지원서를 씁니다.</span></div></li>
+          <li><b>3차시</b><div><strong>현장 미션</strong><br><span class="mute small">파견된 곳에서 네 가지 위기를 판단하고 근거를 씁니다.</span></div></li>
+          <li><b>마무리</b><div><strong>임명과 성찰</strong><br><span class="mute small">나의 판단 성향을 확인하고 성찰을 써서 제출합니다.</span></div></li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>지원자 정보</h3>
+        <label class="f">학번<input type="text" data-k="sid" inputmode="numeric" placeholder="예: 20315" autocomplete="off"></label>
+        <label class="f">이름<input type="text" data-k="name" placeholder="예: 김유엔" autocomplete="off"></label>
+        <label class="f" id="pinWrap" hidden>PIN 숫자 4자리<small>처음이면 새로 정하세요. 다른 기기에서 이어서 할 때 필요하니 꼭 적어 두세요.</small><input type="password" id="pin" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="예: 0427"></label>
+        <div id="startAlert"></div>
+        <div class="row"><button class="btn wide" id="start">지원 시작하기</button></div>
+        <p class="mute small" style="margin-top:12px" id="saveNote">쓴 내용은 이 기기의 이 브라우저에 자동 저장됩니다. 3차시에도 같은 기기, 같은 브라우저로 들어오세요.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 기구 선택 -->
+<section class="view" id="v-org"><div class="wrap">
+  <div class="head">
+    <h2>어느 기구에 지원할까요</h2>
+    <p class="mute">한 곳을 고르면 공식 누리집 링크가 나옵니다. 10분 동안 둘러보며 설립 목적, 하는 일, 최근 활동을 찾으세요.</p>
+  </div>
+  <div class="orgs" id="orgs"></div>
+  <div class="pickbar" id="pickbar" hidden>
+    <span id="pickname"></span><a id="picklink" target="_blank" rel="noopener">공식 누리집 열기</a>
+    <button class="btn" data-go="form">지원서 쓰기</button>
+  </div>
+</div></section>
+
+<!-- 지원서 -->
+<section class="view" id="v-form"><div class="wrap">
+  <div class="head">
+    <h2>나의 UN 기구 지원서</h2>
+    <p class="mute">문항마다 글자 수 기준이 있습니다. 기준을 넘으면 초록색으로 바뀝니다.</p>
+  </div>
+  <div class="formgrid">
+    <aside class="side">
+      <img id="sideImg" alt="">
+      <div><b id="sideOrg"></b><div class="mute small" id="sideDesc"></div>
+        <ol id="sideList"><li>기구 조사 메모</li><li>선택한 이유</li><li>하고 싶은 활동</li><li>문제점과 해결 방안</li><li>꿈과 비전</li></ol>
+      </div>
+    </aside>
+    <div>
+      <div class="q" data-q="1">
+        <div class="qn">1</div><h3>내가 선택한 기구 조사 메모</h3>
+        <label class="f">설립 목적<textarea class="s" data-k="memoPurpose" data-min="20"></textarea></label>
+        <label class="f">주로 하는 일<textarea class="s" data-k="memoWork" data-min="20"></textarea></label>
+        <label class="f">최근 활동이나 이슈 한 가지<textarea class="s" data-k="memoIssue" data-min="20"></textarea></label>
+      </div>
+      <div class="q" data-q="2">
+        <div class="qn">2</div><h3>이 기구를 선택한 이유</h3>
+        <label class="f"><small>개인적 경험, 관심사, 가치관을 넣어 쓰세요.</small><textarea data-k="why" data-min="80"></textarea></label>
+      </div>
+      <div class="q" data-q="3">
+        <div class="qn">3</div><h3>이 기구에서 하고 싶은 구체적인 활동 세 가지</h3>
+        <p class="mute small">한 가지 이상은 실제 국제 분쟁이나 국제 문제 사례와 연결하세요. 이 활동들은 3차시 미션에 다시 등장합니다.</p>
+        <label class="f">활동 1<textarea class="s" data-k="act1" data-min="40"></textarea></label>
+        <label class="f">활동 2<textarea class="s" data-k="act2" data-min="40"></textarea></label>
+        <label class="f">활동 3<textarea class="s" data-k="act3" data-min="40"></textarea></label>
+        <label class="f">연결한 실제 분쟁·문제 사례<small>예: 시리아 내전 난민, 가자 지구, 우크라이나 전쟁, 수단 내전, 기후 난민</small><input type="text" data-k="caseName" data-min="2"></label>
+      </div>
+      <div class="q" data-q="4">
+        <div class="qn">4</div><h3>해당 분야의 현재 세계 문제점과 나의 해결 방안</h3>
+        <label class="f">문제점<textarea data-k="problem" data-min="60"></textarea></label>
+        <label class="f">나의 해결 방안<textarea data-k="solution" data-min="60"></textarea></label>
+      </div>
+      <div class="q" data-q="5">
+        <div class="qn">5</div><h3>이 활동을 통해 이루고 싶은 꿈과 비전</h3>
+        <label class="f"><textarea data-k="vision" data-min="60"></textarea></label>
+      </div>
+      <div id="formAlert"></div>
+      <div class="row"><button class="btn red" id="submitDoc">지원서 접수하기</button></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 접수증 -->
+<section class="view" id="v-receipt"><div class="wrap">
+  <div class="head">
+    <h2>서류가 접수되었습니다</h2>
+    <p class="mute">지원서 전체를 복사해 선생님이 알려 준 곳에 제출하세요. 3차시에는 이 기구의 직원으로 현장에 파견됩니다.</p>
+  </div>
+  <div class="receipt">
+    <div class="badge" id="badge"></div>
+    <div>
+      <pre class="out" id="docOut"></pre>
+      <div class="row">
+        <button class="btn" data-copy="doc">지원서 전체 복사</button>
+        <button class="btn line" data-save="doc">텍스트 파일로 저장</button>
+        <a class="btn red submitLink" target="_blank" rel="noopener" hidden>제출하러 가기</a>
+        <button class="btn line" data-go="form">지원서 고치기</button>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 현장 미션 -->
+<section class="view" id="v-mission"><div class="wrap">
+  <div class="head">
+    <h2>현장 미션</h2>
+    <p class="mute">당신은 <b id="mOrg"></b>의 신입 직원입니다. 네 가지 위기가 차례로 찾아옵니다. 정답은 없습니다. 선택지를 고르고, 왜 그 선택이 다른 선택보다 나은지 근거를 쓰면 다음 미션이 열립니다.</p>
+  </div>
+  <div class="mtabs" id="mtabs"></div>
+  <div class="hud" id="hud" aria-live="polite"></div>
+  <div id="scene"></div>
+</div></section>
+
+<!-- 임명과 성찰 -->
+<section class="view" id="v-appoint"><div class="wrap">
+  <div class="appoint" id="appoint"></div>
+  <div class="narrow" style="margin-top:26px">
+    <div class="q">
+      <div class="qn">성찰 1</div>
+      <h3>네 가지 미션 중 가장 판단하기 어려웠던 것은 무엇이었고, 왜 어려웠나요?</h3>
+      <label class="f"><small>포기한 선택지에서 잃은 것이 무엇인지도 함께 쓰세요.</small><textarea data-k="refl1" data-min="80"></textarea></label>
+    </div>
+    <div class="q">
+      <div class="qn">성찰 2</div>
+      <h3>국제연맹은 왜 실패했고, 국제연합은 그 실패에서 무엇을 바꾸었나요? 그럼에도 남은 한계를 내가 지원한 기구의 입장에서 쓰세요.</h3>
+      <label class="f"><small>미션에서 겪은 거부권, 주권, 재정, 강대국 탈퇴 가운데 하나 이상을 근거로 드세요.</small><textarea data-k="refl2" data-min="120"></textarea></label>
+    </div>
+    <div id="apAlert"></div>
+    <div class="row"><button class="btn red" id="submitFinal">최종 제출물 만들기</button></div>
+  </div>
+</div></section>
+
+<!-- 최종 제출 -->
+<section class="view" id="v-final"><div class="wrap narrow">
+  <div class="head">
+    <h2>최종 제출물</h2>
+    <p class="mute" id="finalNote">지원서, 미션 판단과 근거, 성찰이 모두 들어 있습니다. 전체를 복사해 선생님이 알려 준 곳에 붙여 넣으면 끝입니다.</p>
+  </div>
+  <pre class="out" id="finalOut" style="max-height:520px;margin-top:18px"></pre>
+  <div class="row">
+    <button class="btn" data-copy="final">최종 제출물 전체 복사</button>
+    <button class="btn line" data-save="final">텍스트 파일로 저장</button>
+    <a class="btn red submitLink" target="_blank" rel="noopener" hidden>제출하러 가기</a>
+  </div>
+</div></section>
+
+<!-- 교사용 -->
+<section class="view" id="v-teacher"><div class="wrap narrow">
+  <div class="head">
+    <h2>교사용 진행 안내</h2>
+    <p>Zoom 실시간 수업, 개인 활동입니다. 교사가 할 일은 링크를 채팅에 올리고, 시간을 알려 주고, 제출물을 받는 것뿐입니다.</p>
+  </div>
+  <div class="q">
+    <h3>수업 전 한 번만</h3>
+    <p>① 구글 시트에 기록 저장소(Apps Script)를 한 번 설치하고, 웹 앱 주소를 <code>config.js</code>의 <code>API_URL</code>에 넣습니다. 방법은 저장소 README의 「학생 기록 모으기」에 있습니다.<br>② 그러면 학생이 쓰는 내용이 몇 초마다 선생님 시트에 자동 저장됩니다. 학생은 학번, 이름, PIN 4자리로 다른 기기에서도 이어서 할 수 있습니다.<br>③ 수업 중에는 <a href="teacher.html">교사용 기록 보기</a>에서 교사 비밀번호로 반 전체 진행 상황과 글을 봅니다. 구글 시트에서 바로 봐도 됩니다.</p>
+    <p class="mute small">학생이 PIN을 잊었다면 구글 시트에서 그 학생 줄의 ‘PIN 확인값’ 칸을 지우세요. 학생이 새 PIN으로 다시 들어오면 기존 기록을 이어서 불러옵니다.</p>
+  </div>
+  <div class="q">
+    <h3>2차시: 서류 전형 (50분)</h3>
+    <table class="plan">
+      <tr><th>0~5분</th><td>화면 공유로 표지를 보여 주고 채팅에 링크를 올립니다. 학생은 학번과 이름을 넣고 시작합니다.</td></tr>
+      <tr><th>5~15분</th><td>기구 선택과 공식 누리집 조사. 채팅에 “학번 이름 / 기구”를 올리게 하면 출석 확인이 함께 됩니다.</td></tr>
+      <tr><th>15~45분</th><td>지원서 작성(자동 저장). 25분, 40분쯤 “3번까지 쓴 사람 반응 달기”로 진행을 확인합니다.</td></tr>
+      <tr><th>45~50분</th><td>지원서 접수, 복사, 제출. 다음 시간에도 같은 기기와 브라우저로 들어오라고 안내합니다.</td></tr>
+    </table>
+  </div>
+  <div class="q">
+    <h3>3차시: 현장 미션 (50분)</h3>
+    <table class="plan">
+      <tr><th>0~5분</th><td>현장 미션 화면을 공유해 방식을 1분 안내합니다. “정답은 없고, 근거가 점수입니다.”</td></tr>
+      <tr><th>5~37분</th><td>미션 네 개를 개인별로 해결합니다(한 미션에 약 8분). 8분마다 채팅으로 “지금쯤 미션 ○”를 알립니다.</td></tr>
+      <tr><th>37~47분</th><td>임명장 확인, 성찰 두 문항 작성. 원하는 학생 두세 명에게 임명 유형과 가장 어려웠던 판단을 마이크로 듣습니다.</td></tr>
+      <tr><th>47~50분</th><td>최종 제출물 만들기, 복사, 제출.</td></tr>
+    </table>
+    <p class="mute small">기록 저장소를 설치했다면 기기를 바꿔도 학번, 이름, PIN으로 이어서 할 수 있습니다. 설치하지 않았다면 같은 기기와 브라우저로 들어와야 합니다.</p>
+  </div>
+  <div class="q">
+    <h3>평가와 기록</h3>
+    <p>채점이 필요하면 세 가지만 상, 중, 하로 봅니다.</p>
+    <p>① 기구의 실제 역할을 정확히 조사하고 활동을 실제 사례와 연결했는가<br>② 미션 판단 근거에서 포기한 선택지와 비교하며 논리를 세웠는가<br>③ 성찰에서 국제연맹의 실패와 국제연합의 한계를 자신이 지원한 기구와 연결했는가</p>
+    <p class="mute small">미션 선택지와 게이지 점수는 학생의 판단 성향을 보여 줄 뿐 채점 대상이 아닙니다.</p>
+  </div>
+  <div class="row"><button class="btn line" data-go="home">학생 화면으로 돌아가기</button></div>
+</div></section>
+
+</main>
+
+<footer><div class="wrap">국제관계와 국제기구 · 국제연맹과 국제연합 · <button data-go="teacher">교사용 진행 안내</button> · <button id="wipe">내 기록 지우기</button></div></footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="config.js"></script>
+<script>
+/* 교사 설정은 config.js에서 합니다. */
+const CFG = window.UN_CONFIG || {};
+const API = String(CFG.API_URL || "").trim();
+const SUBMIT_URL = String(CFG.SUBMIT_URL || "").trim();
+
+const ORGS = [
+  {id:"unicef", en:"UNICEF", ko:"유엔아동기금", d:"분쟁·재난 지역 아동의 보건, 영양, 교육 지원", url:"https://www.unicef.or.kr/"},
+  {id:"unhcr", en:"UNHCR", ko:"유엔난민기구", d:"난민 보호와 귀환·정착 지원", url:"https://www.unhcr.org/kr/"},
+  {id:"who", en:"WHO", ko:"세계보건기구", d:"감염병 대응, 국제 보건 기준 마련", url:"https://www.who.int/"},
+  {id:"unesco", en:"UNESCO", ko:"유네스코", d:"교육·과학·문화 협력, 세계유산 보호", url:"https://www.unesco.or.kr/"},
+  {id:"wfp", en:"WFP", ko:"세계식량계획", d:"분쟁·재난 지역 긴급 식량 지원", url:"https://ko.wfp.org/"},
+  {id:"fao", en:"FAO", ko:"식량농업기구", d:"기아 퇴치, 농업과 식량 생산 개발", url:"https://www.fao.org/"},
+  {id:"ilo", en:"ILO", ko:"국제노동기구", d:"국제 노동 기준, 아동 노동과 강제 노동 근절", url:"https://www.ilo.org/"},
+  {id:"undp", en:"UNDP", ko:"유엔개발계획", d:"개발도상국 빈곤 퇴치와 개발 지원", url:"https://www.undp.org/"},
+  {id:"unep", en:"UNEP", ko:"유엔환경계획", d:"기후 변화와 환경 오염 대응 협력", url:"https://www.unep.org/"},
+  {id:"iaea", en:"IAEA", ko:"국제원자력기구", d:"핵의 평화적 이용 감시, 핵 사찰", url:"https://www.iaea.org/"},
+  {id:"unrwa", en:"UNRWA", ko:"팔레스타인 난민구호기구", d:"팔레스타인 난민 구호, 교육, 의료", url:"https://www.unrwa.org/"},
+  {id:"pko", en:"PKO", ko:"유엔 평화유지활동", d:"분쟁 지역 휴전 감시, 민간인 보호", url:"https://peacekeeping.un.org/"}
+];
+
+/* 게이지: 0 국제 신뢰, 1 현장 성과, 2 예산 여력 */
+const GAUGES = [["국제 신뢰","#9fd0f2"],["현장 성과","#7fe0a8"],["예산 여력","#ffc46b"]];
+const MISSIONS = [
+  { img:"img/m1-veto.webp", tag:"미션 1 · 거부권", title:"결의안이 거부권에 막혔다",
+    brief:"{org}이(가) 준비한 긴급 지원 결의안이 안전 보장 이사회 표결에 올랐습니다. 15개 이사국 가운데 13개국이 찬성했지만, 상임 이사국 한 나라가 자국의 동맹국이 불리해진다는 이유로 거부권을 행사했습니다. 현장에서는 지금도 도움을 기다리는 사람들이 있습니다.",
+    mirror:"국제연맹은 중요한 결정을 만장일치로 해야 해서 한 나라만 반대해도 아무것도 할 수 없었습니다. 국제연합은 다수결을 도입했지만, 강대국의 협력을 붙잡기 위해 안보리 상임 이사국에게 거부권을 남겼습니다.",
+    choices:[
+      {t:"총회로 가져간다", d:"안보리가 멈추면 총회가 권고할 수 있다는 선례(1950년 ‘평화를 위한 단결’ 결의)를 근거로 다수 국가의 지지를 모읍니다.", r:"총회 결의는 법적 강제력이 약하지만, 세계 다수의 뜻이 공식 기록으로 남아 거부권 국가를 외교적으로 압박합니다. 시간이 걸립니다.", fx:[2,-1,0]},
+      {t:"거부권 국가와 협상한다", d:"비공개 협상으로 결의안의 표현과 범위를 줄여 거부권 국가가 기권하도록 설득합니다.", r:"수정안이 통과되어 지원이 시작되지만, 원래 계획보다 범위가 좁아졌고 강대국의 눈치를 봤다는 비판을 받습니다.", fx:[-1,1,1]},
+      {t:"결의 없이 할 수 있는 일부터 한다", d:"안보리 결의가 필요 없는 기구 자체의 인도적 지원 권한 안에서 당장 가능한 지원을 시작합니다.", r:"현장에 빠르게 도움이 도착하지만, 결의라는 방패가 없어 활동 범위가 좁고 비용을 기구가 모두 떠안습니다.", fx:[0,2,-2]}
+    ]},
+  { img:"img/m2-sovereignty.webp", tag:"미션 2 · 주권의 벽", title:"국경에서 입국을 거부당했다",
+    brief:"{org}의 지원 팀이 국경 검문소에 도착했습니다. 그런데 그 나라 정부가 “국제기구의 활동은 명백한 내정 간섭”이라며 입국을 막았습니다. 물자를 실은 트럭은 먼지 속에서 사흘째 기다리고 있습니다.",
+    mirror:"국제연맹과 국제연합 모두 ‘평등한 주권’을 기본 원칙으로 삼습니다. 국제연합 헌장은 본질적으로 국내 문제에 간섭하지 않는다고 정해 두었습니다(제2조 7항). 국제기구는 한 나라의 문을 강제로 열 권한이 거의 없습니다.",
+    choices:[
+      {t:"중립을 약속하고 정부를 설득한다", d:"정치적 발언은 하지 않고 인도적 지원만 하겠다고 약속하며, 인접국 정부에 중재를 요청합니다.", r:"정부가 조건부로 입국을 허락합니다. 대신 정부가 지정한 지역에서만 활동할 수 있어 도움이 가장 필요한 곳에는 가지 못할 수 있습니다.", fx:[2,-1,0]},
+      {t:"국경 밖에 지원 거점을 세운다", d:"인접국의 협조를 얻어 국경 바로 바깥에 거점을 만들고, 넘어오는 사람들을 돕습니다.", r:"주권 충돌 없이 사람들을 도울 수 있지만, 국경을 넘을 수 없는 사람은 도움을 받지 못하고 거점 운영비가 크게 듭니다.", fx:[0,1,-2]},
+      {t:"상황을 국제 사회에 공개한다", d:"현장 상황을 보고서와 언론을 통해 공개해 국제 여론으로 정부를 압박합니다.", r:"국제 사회의 관심이 쏠리고 지원금이 들어옵니다. 하지만 정부는 기구를 적대 세력으로 보고 기존 협력 창구까지 닫아 버립니다.", fx:[-1,1,1]}
+    ]},
+  { img:"img/m3-budget.webp", tag:"미션 3 · 재정 위기", title:"예산이 절반으로 줄었다",
+    brief:"분담금을 가장 많이 내던 나라들이 납부를 미루면서 {org}의 올해 예산이 절반으로 줄었습니다. 당신이 지원서에 쓴 세 가지 활동을 모두 계속할 수는 없습니다. 무엇을 지킬지 결정해야 합니다.",
+    mirror:"국제연맹은 회원국의 자발적 분담금에 기대어 늘 돈이 부족했습니다. 국제연합도 평화 유지 활동 요청이 늘면서 재정 문제가 반복되고, 분담금을 늦게 내거나 줄이는 나라가 생길 때마다 활동이 흔들립니다.",
+    choices:"acts"},
+  { img:"img/m4-withdraw.webp", tag:"미션 4 · 강대국의 이탈", title:"강대국이 탈퇴를 선언했다",
+    brief:"가장 영향력 있는 회원국 가운데 하나가 “{org}은(는) 우리 국익에 도움이 되지 않는다”며 탈퇴와 분담금 중단을 선언했습니다. 다른 나라들도 따라 나갈지 눈치를 보고 있습니다.",
+    mirror:"국제연맹에는 제안국인 미국이 처음부터 참여하지 않았고, 1930년대에 일본과 독일, 이탈리아가 차례로 탈퇴하면서 국제연맹은 침략을 막을 힘을 잃었습니다. 국제연합이 강대국에게 거부권이라는 특권을 준 것도 이 경험 때문입니다.",
+    choices:[
+      {t:"남은 회원국끼리 연대한다", d:"남은 나라들과 분담금을 다시 나누고, 탈퇴가 잘못된 선택이었음을 성과로 보여 줍니다.", r:"기구가 흔들리지 않는다는 신호를 주어 추가 탈퇴를 막습니다. 하지만 각국의 부담이 늘어 일부 활동은 줄여야 합니다.", fx:[1,0,-1]},
+      {t:"요구를 일부 받아들여 복귀를 설득한다", d:"탈퇴국이 문제 삼은 운영 방식을 일부 고치겠다고 약속하고 복귀를 협상합니다.", r:"탈퇴국이 돌아오고 예산도 회복됩니다. 하지만 다른 회원국들은 강대국 한 나라가 기구를 좌우한다며 불만을 품습니다.", fx:[-1,0,2]},
+      {t:"그 나라의 시민 사회와 직접 손잡는다", d:"정부와 별개로 그 나라의 비정부 기구, 지방 정부, 대학, 시민과 협력 사업을 이어 갑니다.", r:"현장 활동은 이어지고 시민들의 지지가 쌓입니다. 하지만 정부 차원의 복귀는 멀어지고 사업을 유지할 인력과 돈이 듭니다.", fx:[1,1,-1]}
+    ]}
+];
+const TYPES = [
+  ["외교형 조정가","국가들 사이의 신뢰를 지키는 것을 가장 중요하게 여겼습니다. 느리더라도 합의가 오래간다고 판단하는 사람입니다."],
+  ["현장형 실행가","지금 도움을 기다리는 사람들에게 먼저 닿는 것을 중요하게 여겼습니다. 규칙보다 결과로 증명하려는 사람입니다."],
+  ["전략형 관리자","기구가 오래 살아남아야 더 많은 사람을 도울 수 있다고 보았습니다. 한정된 자원을 따지는 사람입니다."],
+  ["균형형 국제 공무원","신뢰, 성과, 예산 가운데 어느 하나에 치우치지 않고 상황마다 다른 답을 찾았습니다."]
+];
+
+const KEY = "un-recruit-v2";
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let S = {};
+try { S = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e) { S = {}; }
+S.pick = S.pick || {};
+const save = () => { S.updatedAt = Date.now(); try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {} queueSync(); };
+const val = k => (S[k] || "").trim();
+const len = k => val(k).replace(/\s/g, "").length;
+const org = () => ORGS.find(o => o.id === S.org);
+const orgName = () => org() ? `${org().en} ${org().ko}` : "";
+const orgShort = () => org() ? org().ko : "우리 기구";
+/* 받침에 따라 조사 고르기: {org}이(가), {org}은(는) */
+const fillOrg = t => { const n = orgShort(), c = n.charCodeAt(n.length - 1), bat = c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28 > 0;
+  return t.replaceAll("{org}이(가)", n + (bat ? "이" : "가")).replaceAll("{org}은(는)", n + (bat ? "은" : "는")).replaceAll("{org}", n); };
+
+/* ── 입력 바인딩 ── */
+function bindInputs(root=document) {
+  $$("input[data-k],textarea[data-k]", root).forEach(el => {
+    if (el.dataset.bound) return; el.dataset.bound = 1;
+    el.value = S[el.dataset.k] || "";
+    let cnt;
+    if (el.dataset.min && el.tagName === "TEXTAREA") { cnt = document.createElement("span"); cnt.className = "cnt"; el.after(cnt); }
+    const upd = () => {
+      if (!cnt) return;
+      const n = el.value.replace(/\s/g, "").length;
+      cnt.textContent = `${n}자 / 기준 ${el.dataset.min}자`;
+      cnt.classList.toggle("ok", n >= +el.dataset.min);
+    };
+    el.addEventListener("input", () => {
+      S[el.dataset.k] = el.value; save(); el.classList.remove("bad"); upd();
+      if (["sid","name"].includes(el.dataset.k)) who();
+      if (el.dataset.k.startsWith("reason")) missionGate();
+      sideList();
+    });
+    upd();
+  });
+}
+
+/* ── 기구 ── */
+$("#orgs").innerHTML = ORGS.map(o => `<button type="button" class="org" data-id="${o.id}" aria-pressed="false">
+  <img src="img/org-${o.id}.webp" alt="" loading="lazy"><div><b>${o.en}</b><em>${o.ko}</em><span>${o.d}</span></div></button>`).join("");
+$$(".org").forEach(b => b.onclick = () => { S.org = b.dataset.id; save(); paintOrg(); });
+function paintOrg() {
+  $$(".org").forEach(b => b.setAttribute("aria-pressed", b.dataset.id === S.org));
+  const o = org();
+  $("#pickbar").hidden = !o;
+  if (o) {
+    $("#pickname").textContent = `${o.en} ${o.ko}`;
+    $("#picklink").href = o.url;
+    $("#sideImg").src = `img/org-${o.id}.webp`; $("#sideImg").hidden = false;
+    $("#sideOrg").textContent = `${o.en} ${o.ko}`; $("#sideDesc").textContent = o.d;
+  } else {
+    $("#sideImg").hidden = true; $("#sideOrg").textContent = "기구를 아직 고르지 않았습니다"; $("#sideDesc").textContent = "";
+  }
+  marks();
+}
+function sideList() {
+  const groups = [["memoPurpose","memoWork","memoIssue"],["why"],["act1","act2","act3","caseName"],["problem","solution"],["vision"]];
+  $$("#sideList li").forEach((li, i) => li.classList.toggle("ok", groups[i].every(k => { const el = $(`[data-k="${k}"]`); return el && len(k) >= +el.dataset.min; })));
+}
+
+/* ── 화면 전환 ── */
+const VIEWS = ["home","org","form","receipt","mission","appoint","final","teacher"];
+function go(v) {
+  if (!VIEWS.includes(v)) v = "home";
+  if (API && !S.owner && !["home","teacher"].includes(v)) { v = "home"; toast("학번, 이름, PIN을 넣고 ‘지원 시작하기’를 누르세요"); }
+  if (S.owner && dirty) syncNow();
+  if (v === "receipt") renderReceipt(false);
+  if (v === "mission") renderMission();
+  if (v === "appoint") renderAppoint();
+  if (v === "final") $("#finalOut").textContent = finalText();
+  $$("section.view").forEach(s => s.classList.toggle("on", s.id === "v-" + v));
+  $$(".steps button").forEach(b => b.setAttribute("aria-current", b.dataset.go === v));
+  const cur = $(`.steps button[data-go="${v}"]`); if (cur) cur.scrollIntoView({inline:"center", block:"nearest"});
+  if (location.hash !== "#" + v) history.replaceState(null, "", "#" + v);
+  window.scrollTo(0, 0);
+}
+document.addEventListener("click", e => {
+  const g = e.target.closest("[data-go]"); if (g) { go(g.dataset.go); return; }
+  const c = e.target.closest("[data-copy]"); if (c) { copy(c.dataset.copy === "doc" ? docText() : finalText()); return; }
+  const s = e.target.closest("[data-save]"); if (s) download(s.dataset.save === "doc" ? docText() : finalText(), s.dataset.save === "doc" ? "지원서" : "최종제출");
+});
+function marks() {
+  const done = { org: !!org(), form: !!S.docAt, receipt: !!S.docAt, mission: missionsDone() === 4, appoint: !!S.finalAt, final: !!S.finalAt };
+  $$(".steps button").forEach(b => b.classList.toggle("done", !!done[b.dataset.go]));
+}
+function who() { $("#who").textContent = [val("sid"), val("name")].filter(Boolean).join(" "); }
+
+$("#start").onclick = async () => {
+  const btn = $("#start"), sid = val("sid"), name = val("name"), owner = `${sid}|${name}`, pin = $("#pin").value.trim();
+  $("#startAlert").innerHTML = "";
+  const miss = ["sid","name"].filter(k => !val(k));
+  miss.forEach(k => $(`[data-k="${k}"]`).classList.add("bad"));
+  if (miss.length) { toast("학번과 이름을 먼저 쓰세요"); $(`[data-k="${miss[0]}"]`).focus(); return; }
+  const target = () => S.finalAt ? "final" : S.docAt ? "mission" : S.org ? "form" : "org";
+  // 이 기기에 다른 학생의 기록이 남아 있으면 비웁니다.
+  if (S.owner && S.owner !== owner) { S = { sid, name, pick: {} }; }
+  if (!API) { S.owner = owner; save(); go(target()); return; }
+
+  const reuse = !pin && S.owner === owner && S.pinHash;
+  if (!reuse && !/^\d{4}$/.test(pin)) { $("#pin").classList.add("bad"); $("#pin").focus(); toast("PIN을 숫자 4자리로 정하세요"); return; }
+  btn.disabled = true; btn.textContent = "기록을 확인하는 중…";
+  const pinHash = reuse ? S.pinHash : await pinHashOf(sid, name, pin);
+  let r;
+  try { r = await (await fetch(API, { method: "POST", body: JSON.stringify({ action: "load", sid, name, pinHash }) })).json(); }
+  catch (e) { r = { ok: false, error: "network" }; }
+  btn.disabled = false; btn.textContent = "지원 시작하기";
+  if (!r.ok) {
+    const msg = r.error === "pin" ? "이미 등록된 학번과 이름입니다. 처음에 정한 PIN을 넣으세요. PIN을 잊었다면 선생님께 말씀드리세요."
+      : r.error === "network" ? "기록 저장소에 연결하지 못했습니다. 인터넷 연결을 확인하고 다시 누르세요."
+      : `기록 저장소 오류입니다 (${r.message || r.error}). 선생님께 알려 주세요.`;
+    $("#startAlert").innerHTML = `<div class="alert">${esc(msg)}</div>`;
+    if (r.error === "pin") { $("#pin").value = ""; $("#pin").classList.add("bad"); }
+    return;
+  }
+  let restored = false;
+  if (r.found && r.state && (S.owner !== owner || !S.updatedAt || (r.state.updatedAt || 0) > S.updatedAt)) {
+    S = Object.assign({ pick: {} }, r.state); restored = true;
+  }
+  S.sid = sid; S.name = name; S.owner = owner; S.pinHash = pinHash;
+  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+  await syncNow();
+  try { sessionStorage.setItem("un-toast", restored ? "저장된 기록을 불러왔습니다" : r.found ? "기록을 이어서 합니다" : "선생님 기록부에 등록되었습니다"); } catch (e) {}
+  history.replaceState(null, "", "#" + target());
+  location.reload();
+};
+
+/* ── 검증 ── */
+const LABEL = { memoPurpose:"1번 설립 목적", memoWork:"1번 주로 하는 일", memoIssue:"1번 최근 활동이나 이슈", why:"2번 선택한 이유", act1:"3번 활동 1", act2:"3번 활동 2", act3:"3번 활동 3", caseName:"3번 연결한 실제 사례", problem:"4번 문제점", solution:"4번 해결 방안", vision:"5번 꿈과 비전", refl1:"성찰 1", refl2:"성찰 2" };
+function check(view, extra) {
+  const lack = [...(extra || [])];
+  $$(`#v-${view} [data-min]`).forEach(el => {
+    const short = len(el.dataset.k) < +el.dataset.min;
+    el.classList.toggle("bad", short);
+    if (short) lack.push(`${LABEL[el.dataset.k]}: ${len(el.dataset.k)}자 (기준 ${el.dataset.min}자)`);
+  });
+  return lack;
+}
+function alertBox(id, lack) {
+  $(id).innerHTML = lack.length ? `<div class="alert"><b>아직 채워야 할 곳이 있습니다.</b><ul>${lack.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : "";
+  if (lack.length) $(id).scrollIntoView({block:"center"});
+}
+$("#submitDoc").onclick = () => {
+  const extra = [];
+  if (!val("sid") || !val("name")) extra.push("첫 화면에서 학번과 이름을 쓰세요");
+  if (!org()) extra.push("기구 선택 화면에서 지원할 기구를 고르세요");
+  const lack = check("form", extra); alertBox("#formAlert", lack);
+  if (lack.length) return;
+  S.docAt = new Date().toISOString(); save(); marks(); go("receipt"); renderReceipt(true);
+};
+
+/* ── 접수증 ── */
+const fmt = iso => iso ? new Date(iso).toLocaleString("ko-KR", {year:"numeric", month:"long", day:"numeric", hour:"2-digit", minute:"2-digit"}) : "";
+function receiptNo() { let h = 0; for (const ch of val("sid") + val("name") + (S.org || "")) h = (h * 31 + ch.charCodeAt(0)) % 9000; return `UN-2026-${h + 1000}`; }
+function renderReceipt(hit) {
+  const b = $("#badge");
+  if (!S.docAt) { b.innerHTML = `<div class="bd"><div class="nm" style="font-size:1.3rem">아직 접수한 지원서가 없습니다</div><p class="mute">지원서 단계에서 ‘지원서 접수하기’를 누르세요.</p></div>`; $("#docOut").textContent = ""; return; }
+  b.innerHTML = `<div class="top"><img src="img/org-${S.org}.webp" alt=""></div>
+    <div class="bd"><div class="kind">UN 기구 공개 채용 · 서류 접수증</div><div class="nm">${esc(val("name"))}</div><div class="og">${esc(orgName())}</div>
+    <table><tr><td>학번</td><td>${esc(val("sid"))}</td></tr><tr><td>접수 번호</td><td>${receiptNo()}</td></tr><tr><td>접수 일시</td><td>${fmt(S.docAt)}</td></tr></table></div>
+    <div class="stamp${hit ? " hit" : ""}"><div>서류<br>합격<small>현장 파견 대기</small></div></div>`;
+  $("#docOut").textContent = docText();
+}
+
+/* ── 현장 미션 ── */
+const cut = (s, n) => { s = (s || "").trim().replace(/\s+/g, " "); return s.length > n ? s.slice(0, n) + "…" : s; };
+function choicesOf(i) {
+  const m = MISSIONS[i];
+  if (m.choices !== "acts") return m.choices;
+  return [1,2,3].map(n => ({
+    t:`${["첫째","둘째","셋째"][n-1]} 활동만 지킨다`, d: cut(S["act" + n], 90) || `(지원서에 쓴 활동 ${n})`,
+    r:"한 가지 활동에 예산을 집중해 성과를 지키지만, 나머지 두 활동의 현장은 문을 닫습니다. 그곳에서 도움을 받던 사람들과 협력 국가들의 실망이 큽니다.", fx:[-1,1,1]
+  })).concat([{ t:"기업과 민간 기부로 부족분을 메운다", d:"세 활동을 모두 유지하기 위해 글로벌 기업의 후원과 개인 기부 캠페인으로 재원을 마련합니다.",
+    r:"활동은 모두 이어지지만, 후원 기업의 이해관계가 사업 방향에 끼어든다는 의심을 받고 모금에 인력이 묶입니다.", fx:[-1,0,2] }]);
+}
+const reasonMin = 60;
+const missionOk = i => S.pick[i] != null && len("reason" + i) >= reasonMin;
+const missionsDone = () => [0,1,2,3].filter(missionOk).length;
+const unlocked = i => i === 0 || missionOk(i - 1);
+function gauges(upto=4) {
+  const g = [5,5,5];
+  for (let i = 0; i < upto; i++) if (S.pick[i] != null) choicesOf(i)[S.pick[i]].fx.forEach((d, k) => g[k] = Math.max(0, Math.min(10, g[k] + d)));
+  return g;
+}
+function paintHud(delta) {
+  const g = gauges();
+  $("#hud").innerHTML = GAUGES.map(([n, c], k) => `<div>${n} <b>${g[k]} / 10${delta && delta[k] ? `<span class="d ${delta[k] > 0 ? "up" : "dn"}">${delta[k] > 0 ? "+" : ""}${delta[k]}</span>` : ""}</b>
+    <div class="meter"><i style="width:${g[k] * 10}%;background:${c}"></i></div></div>`).join("");
+}
+function renderMission() {
+  $("#mOrg").textContent = orgName() || "UN 기구";
+  if (S.mi == null || !unlocked(S.mi)) S.mi = Math.min(missionsDone(), 3);
+  $("#mtabs").innerHTML = MISSIONS.map((m, i) => `<button class="mtab${missionOk(i) ? " done" : ""}" data-mi="${i}" ${unlocked(i) ? "" : "disabled"} aria-current="${S.mi === i}">
+    <img src="${m.img}" alt=""><span>${m.tag.split(" · ")[1]}</span></button>`).join("");
+  $$(".mtab").forEach(b => b.onclick = () => { S.mi = +b.dataset.mi; save(); renderMission(); $("#mtabs").scrollIntoView({block:"start"}); });
+  paintHud();
+  const i = S.mi, m = MISSIONS[i], ch = choicesOf(i), p = S.pick[i];
+  const fxTag = fx => fx.map((d, k) => d ? `<span class="${d > 0 ? "up" : "dn"}">${GAUGES[k][0]} ${d > 0 ? "+" : ""}${d}</span>` : "").join("");
+  $("#scene").innerHTML = `<article class="scene">
+    <div class="pic"><img src="${m.img}" alt=""><div class="cap"><small>${m.tag}</small><h2>${m.title}</h2></div></div>
+    <div class="body">
+      <p class="brief">${esc(fillOrg(m.brief))}</p>
+      <div class="mirror"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#12284b" stroke-width="1.8" aria-hidden="true"><path d="M4 19V6a2 2 0 0 1 2-2h13v13H6a2 2 0 0 0-2 2Zm0 0a2 2 0 0 0 2 2h13"/><path d="M9 8h6M9 11h4"/></svg>
+        <div><b>역사의 거울</b>${m.mirror}</div></div>
+      <h3 style="margin-top:24px">당신의 결정은?</h3>
+      <div class="choices">${ch.map((c, k) => `<button type="button" class="choice" data-k="${k}" aria-pressed="${p === k}">
+        <span class="k">${"ABCD"[k]}</span><span><b>${esc(c.t)}</b><br><span class="small">${esc(c.d)}</span><span class="fx">${fxTag(c.fx)}</span></span></button>`).join("")}</div>
+      <div id="resultBox"></div>
+      <label class="f" style="margin-top:22px">판단 근거<small>왜 이 선택이 다른 선택지보다 나은지, 그리고 이 선택으로 무엇을 포기했는지 함께 쓰세요.</small>
+        <textarea data-k="reason${i}" data-min="${reasonMin}"></textarea></label>
+      <div class="next">${i > 0 ? `<button class="btn line" data-mnav="${i - 1}">이전 미션</button>` : ""}
+        ${i < 3 ? `<button class="btn" id="mNext" data-mnav="${i + 1}">다음 미션</button>` : `<button class="btn red" id="mNext" data-go="appoint">임명장 받기</button>`}</div>
+    </div></article>`;
+  const showResult = () => { const q = S.pick[i]; $("#resultBox").innerHTML = q == null ? "" : `<div class="result"><b>결과</b>${esc(ch[q].r)}</div>`; };
+  showResult();
+  $$(".choice").forEach(b => b.onclick = () => {
+    const before = gauges(); S.pick[i] = +b.dataset.k; save();
+    const after = gauges();
+    $$(".choice").forEach(x => x.setAttribute("aria-pressed", x === b));
+    paintHud(after.map((v, k) => v - before[k])); showResult(); missionGate();
+  });
+  $$("[data-mnav]").forEach(b => b.onclick = () => { if (b.getAttribute("aria-disabled") === "true") return; S.mi = +b.dataset.mnav; save(); renderMission(); $("#mtabs").scrollIntoView({block:"start"}); });
+  bindInputs($("#scene"));
+  missionGate();
+}
+function missionGate() {
+  const i = S.mi, btn = $("#mNext"); if (!btn || i == null) return;
+  const ok = missionOk(i);
+  btn.setAttribute("aria-disabled", !ok); btn.style.opacity = ok ? 1 : .45;
+  btn.title = ok ? "" : S.pick[i] == null ? "선택지를 먼저 고르세요" : `판단 근거를 ${reasonMin}자 이상 쓰세요`;
+  $$(".mtab").forEach(t => { const k = +t.dataset.mi; t.disabled = !unlocked(k); t.classList.toggle("done", missionOk(k)); });
+  marks();
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("#mNext"); if (b && b.getAttribute("aria-disabled") === "true") { e.stopImmediatePropagation(); e.preventDefault(); toast(b.title); }
+}, true);
+
+/* ── 임명 ── */
+function typeOf() {
+  const g = gauges(), mx = Math.max(...g);
+  if (g.filter(v => v === mx).length > 1 || mx - Math.min(...g) <= 1) return TYPES[3];
+  return TYPES[g.indexOf(mx)];
+}
+function renderAppoint() {
+  const done = missionsDone(), g = gauges(), t = typeOf();
+  $("#appoint").innerHTML = `<img src="img/ending.webp" alt="해가 뜨는 현장에서 난민촌과 학교를 내려다보는 직원">
+    <div class="card">${done < 4
+      ? `<div class="ttl">임명 보류</div><div class="nm" style="font-size:1.6rem">현장 미션 ${4 - done}개가 남았습니다</div><p class="desc">네 가지 미션을 모두 마치면 임명장이 발급됩니다.</p><div class="row" style="justify-content:center"><button class="btn" data-go="mission">현장 미션으로</button></div>`
+      : `<div class="ttl">임명장 · ${esc(orgName())}</div><div class="nm">${esc(val("name") || "이름 없음")}</div>
+         <p class="desc" style="margin-top:6px">위 사람은 네 가지 위기 속에서 스스로 판단하고 그 근거를 밝혔으므로 ${esc(orgShort())}의 직원으로 임명합니다.</p>
+         <div class="type">${t[0]}</div><p class="desc">${t[1]}</p>
+         <div class="gauges">${GAUGES.map(([n, c], k) => `<div>${n} <b style="float:right">${g[k]}</b><div class="meter"><i style="width:${g[k] * 10}%;background:${c === "#ffc46b" ? "#e8a33d" : c === "#7fe0a8" ? "#2fa86a" : "#1f7fc4"}"></i></div></div>`).join("")}</div>`}
+    </div><div class="pad"></div>`;
+}
+$("#submitFinal").onclick = async () => {
+  const extra = [];
+  if (!S.docAt) extra.push("지원서를 아직 접수하지 않았습니다 (다른 기기라면 2차시 지원서를 다시 붙여 넣으세요)");
+  const d = missionsDone(); if (d < 4) extra.push(`현장 미션 ${4 - d}개를 아직 마치지 않았습니다`);
+  const lack = check("appoint", extra); alertBox("#apAlert", lack);
+  if (lack.length) return;
+  S.finalAt = new Date().toISOString(); save(); marks(); go("final");
+  if (API) toast(await syncNow() ? "선생님 기록부에 최종 제출했습니다" : "제출 저장에 실패했습니다. 오른쪽 위 ‘저장 실패’를 눌러 다시 시도하세요");
+  else toast("최종 제출물을 만들었습니다");
+};
+
+/* ── 출력물 ── */
+function docText() {
+  return [
+`[UN 기구 공개 채용] 지원서`,
+`학번: ${val("sid")} / 이름: ${val("name")}`,
+`지원 기구: ${orgName()}`,
+`접수 번호: ${receiptNo()} / 접수: ${fmt(S.docAt)}`,
+``,
+`1. 기구 조사 메모`,
+`- 설립 목적: ${val("memoPurpose")}`,
+`- 주로 하는 일: ${val("memoWork")}`,
+`- 최근 활동·이슈: ${val("memoIssue")}`,
+``,
+`2. 이 기구를 선택한 이유`, val("why"),
+``,
+`3. 하고 싶은 구체적인 활동 (연결한 실제 사례: ${val("caseName")})`,
+`(1) ${val("act1")}`, `(2) ${val("act2")}`, `(3) ${val("act3")}`,
+``,
+`4. 현재 세계의 문제점과 나의 해결 방안`,
+`- 문제점: ${val("problem")}`,
+`- 해결 방안: ${val("solution")}`,
+``,
+`5. 이루고 싶은 꿈과 비전`, val("vision")
+  ].join("\n");
+}
+function finalText() {
+  const g = gauges(), t = typeOf();
+  const ms = MISSIONS.map((m, i) => {
+    const c = S.pick[i] != null ? choicesOf(i)[S.pick[i]] : null;
+    return `${m.tag}: ${m.title}\n- 선택: ${c ? `${"ABCD"[S.pick[i]]}. ${c.t}` : "(선택 안 함)"}\n- 판단 근거: ${val("reason" + i) || "(작성 안 함)"}`;
+  });
+  return [
+S.docAt ? docText() : `[UN 기구 공개 채용] 학번: ${val("sid")} / 이름: ${val("name")} / 지원 기구: ${orgName()}\n(이 기기에 접수된 지원서가 없습니다)`,
+``, `────────────────────`,
+`[현장 미션]`, ...ms.flatMap(x => [x, ""]),
+`최종 상황판: 국제 신뢰 ${g[0]} / 현장 성과 ${g[1]} / 예산 여력 ${g[2]} → ${t[0]}`,
+``, `────────────────────`,
+`[성찰]`,
+`1. 가장 판단하기 어려웠던 미션과 그 이유`, val("refl1"),
+``,
+`2. 국제연맹의 실패, 국제연합의 변화와 남은 한계`, val("refl2"),
+``, `최종 제출: ${fmt(S.finalAt || new Date().toISOString())}`
+  ].join("\n");
+}
+
+/* ── 복사·저장 ── */
+async function copy(text) {
+  try { await navigator.clipboard.writeText(text); }
+  catch(e) { const t = document.createElement("textarea"); t.value = text; document.body.append(t); t.select(); document.execCommand("copy"); t.remove(); }
+  toast("복사했습니다. 제출할 곳에 붙여 넣으세요");
+}
+function download(text, tag) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob(["﻿" + text], {type:"text/plain;charset=utf-8"}));
+  a.download = `${val("sid")}_${val("name")}_UN채용_${tag}.txt`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+let tt; function toast(m) { const t = $("#toast"); t.textContent = m; t.classList.add("on"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("on"), 2400); }
+if (SUBMIT_URL) $$(".submitLink").forEach(a => { a.href = SUBMIT_URL; a.hidden = false; });
+
+$("#wipe").onclick = () => { if (confirm("이 기기에 저장된 지원서와 미션 기록을 모두 지웁니다. 계속할까요?")) { try { localStorage.removeItem(KEY); } catch(e) {} location.hash = ""; location.reload(); } };
+
+/* ── 선생님 기록부(구글 시트)와 동기화 ── */
+async function pinHashOf(sid, name, pin) {
+  const t = `un-recruit|${sid}|${name}|${pin}`;
+  if (window.crypto && crypto.subtle) {
+    const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t));
+    return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join("");
+  }
+  let h = 5381; for (const c of t) h = ((h * 33) ^ c.charCodeAt(0)) >>> 0; return "d" + h.toString(16);
+}
+function stageLabel() {
+  const d = missionsDone();
+  if (S.finalAt) return "최종 제출";
+  if (S.docAt && d) return `현장 미션 ${d}/4`;
+  if (S.docAt) return "지원서 접수";
+  if (S.org) return "지원서 작성 중";
+  return "시작";
+}
+function syncPayload() {
+  const [sid, name] = S.owner.split("|");
+  const { pinHash, ...state } = S;
+  return { action: "save", sid, name, pinHash, state,
+    summary: { org: orgName(), stage: stageLabel(), missions: missionsDone(), docAt: S.docAt || "", finalAt: S.finalAt || "", text: finalText() } };
+}
+let syncT = null, syncing = false, syncAgain = false, dirty = false;
+function pill(kind, text) {
+  const p = $("#sync"); if (!API || !S.owner) { p.hidden = true; return; }
+  p.hidden = false; p.className = "sync " + kind; p.textContent = text;
+}
+function queueSync() {
+  if (!API || !S.owner || !S.pinHash) return;
+  dirty = true; clearTimeout(syncT); pill("", "저장 대기");
+  syncT = setTimeout(syncNow, 5000);
+}
+async function syncNow(keepalive) {
+  clearTimeout(syncT);
+  if (!API || !S.owner || !S.pinHash) return true;
+  if (syncing) { syncAgain = true; return true; }
+  syncing = true; dirty = false; pill("busy", "저장 중");
+  try {
+    const r = await fetch(API, { method: "POST", body: JSON.stringify(syncPayload()), keepalive: keepalive === true });
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.error || "server");
+    pill("ok", "저장됨 " + new Date().toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" }));
+    return true;
+  } catch (e) {
+    dirty = true;
+    pill("fail", e.message === "pin" ? "PIN 불일치 · 처음 화면에서 다시 시작" : "저장 실패 · 다시 시도");
+    return false;
+  } finally {
+    syncing = false;
+    if (syncAgain) { syncAgain = false; syncNow(); }
+  }
+}
+$("#sync").onclick = () => { if ($("#sync").classList.contains("fail")) syncNow(); };
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden" && dirty) syncNow(true); });
+if (API) {
+  $("#pinWrap").hidden = false;
+  if (S.pinHash) $("#pin").placeholder = "이 기기에서는 비워 두어도 됩니다";
+  $("#saveNote").textContent = "쓴 내용은 몇 초마다 선생님의 기록부에 자동 저장됩니다. 다른 기기에서도 학번, 이름, PIN으로 이어서 할 수 있습니다.";
+  $("#finalNote").textContent = "‘최종 제출물 만들기’를 누르면 선생님 기록부에 제출됩니다. 아래 내용은 보관용으로 복사하거나 저장해 두세요.";
+}
+try { const m = sessionStorage.getItem("un-toast"); if (m) { sessionStorage.removeItem("un-toast"); setTimeout(() => toast(m), 300); } } catch (e) {}
+
+bindInputs(); paintOrg(); sideList(); who(); marks();
+if (API && S.owner) pill("ok", "기록부 연결됨");
+go((location.hash || "#home").slice(1));
+window.addEventListener("hashchange", () => go(location.hash.slice(1)));
+</script>
+</body>
+</html>
