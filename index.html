@@ -619,6 +619,7 @@ $("#start").onclick = async () => {
   btn.disabled = false; btn.textContent = "지원 시작하기";
   if (!r.ok) {
     const msg = r.error === "pin" ? "이미 등록된 학번과 이름입니다. 처음에 정한 PIN을 넣으세요. PIN을 잊었다면 선생님께 말씀드리세요."
+      : r.error === "locked" ? "PIN을 여러 번 틀려 10분 동안 잠겼습니다. 잠시 뒤 다시 하거나 선생님께 PIN 초기화를 요청하세요."
       : r.error === "network" ? "기록 저장소에 연결하지 못했습니다. 인터넷 연결을 확인하고 다시 누르세요."
       : `기록 저장소 오류입니다 (${r.message || r.error}). 선생님께 알려 주세요.`;
     $("#startAlert").innerHTML = `<div class="alert">${esc(msg)}</div>`;

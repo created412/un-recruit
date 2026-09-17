@@ -12,3 +12,10 @@ CREATE TABLE IF NOT EXISTS records (
   state TEXT DEFAULT '{}',
   PRIMARY KEY (sid, name)
 );
+
+-- 틀린 PIN·교사 비밀번호 시도 횟수 (무차별 대입 방지)
+CREATE TABLE IF NOT EXISTS attempts (
+  k TEXT PRIMARY KEY,
+  fails INTEGER NOT NULL DEFAULT 0,
+  locked_until INTEGER NOT NULL DEFAULT 0
+);
