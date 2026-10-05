@@ -318,6 +318,7 @@ $("#enterBtn").onclick = async () => {
   if (!r.ok) {
     const msg = r.error === "taken"
       ? `이 학번은 이미 다른 기기에서 <b>${esc(r.role || "")}</b> 자리로 입장했습니다. 본인이라면 선생님께 자리를 풀어 달라고 하세요.`
+      : r.error === "nameMismatch" ? "이 학번으로 지난 활동에 등록된 이름과 다릅니다. 이름을 확인하거나 선생님께 말씀드리세요."
       : r.error === "network" ? "연결하지 못했습니다. 인터넷을 확인하고 다시 누르세요." : "입장하지 못했습니다.";
     $("#enterAlert").innerHTML = `<div class="warn">${msg}</div>`;
     return;

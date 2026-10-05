@@ -169,6 +169,9 @@ const text_ = x => String(x ?? "").trim().slice(0, MAX_TEXT);
 async function munJoin(env, b) {
   const sid = clean(b.sid), name = clean(b.name), role = clean(b.role);
   if (!sid || !name || !role) return { ok: false, error: "identity" };
+  // 이전 활동 기록이 있는 학번이면 그때 쓴 이름과 같아야 합니다(다른 이름으로 선점하는 것을 막습니다).
+  const known = await env.DB.prepare("SELECT name FROM records WHERE sid = ?").bind(sid).first();
+  if (known && known.name && known.name !== name) return { ok: false, error: "nameMismatch" };
   const row = await env.DB.prepare("SELECT token, name, role FROM mun_students WHERE sid = ?").bind(sid).first();
   if (row && row.token) {
     if (clean(b.token) === row.token) return { ok: true, token: row.token, role: row.role, name: row.name };
@@ -219,7 +222,7 @@ async function munCancel(env, b) {
 // 회의 상황판은 참가자(토큰)나 의장(비밀번호)만 볼 수 있습니다.
 async function munFeed(env, b) {
   const okSeat = await seat_(env, b);
-  const okChair = env.TEACHER_KEY && sameKey(b.key, env.TEACHER_KEY);
+  const okChair = !okSeat && b.key ? await teacherOk(env, b) : false;
   if (!okSeat && !okChair) return { ok: false, error: "seat" };
   const q = await env.DB.prepare(
     "SELECT id, sid, name, role, agenda, status, created_at, started_at FROM mun_queue WHERE status IN ('waiting','speaking') ORDER BY id"
