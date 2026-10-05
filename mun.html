@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>모의 UN · 기후 위기와 국제 평화·안보</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;900&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%2312284b'/><ellipse cx='16' cy='16' rx='6' ry='14' fill='none' stroke='white' stroke-width='1.5'/><path d='M2 16h28' stroke='white' stroke-width='1.5'/></svg>">
+<style>
+:root{--ink:#12284b;--ink2:#1d3a6b;--un:#1f7fc4;--sky:#dcebf7;--paper:#fff;--desk:#eef2f7;--red:#e0482f;--line:#cfdae6;--mute:#56667c;--ok:#1d8750;--amber:#b7791f;
+  --serif:"Noto Serif KR",serif;--sans:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif;--r:10px}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--desk);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65;word-break:keep-all;-webkit-font-smoothing:antialiased}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--un);outline-offset:2px}
+img{display:block;max-width:100%}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px}
+h1,h2{font-family:var(--serif);font-weight:900;line-height:1.25;margin:0}
+h2{font-size:1.4rem}
+h3{font-size:1.04rem;margin:0 0 .3em}
+p{margin:.4em 0}
+.mute{color:var(--mute)}
+.small{font-size:.9rem}
+
+.bar{position:sticky;top:0;z-index:30;background:rgba(18,40,75,.97);color:#fff;backdrop-filter:blur(6px)}
+.bar .wrap{display:flex;align-items:center;gap:12px;min-height:56px}
+.bar b{font-family:var(--serif);font-weight:900;white-space:nowrap}
+.bar .me{margin-left:auto;font-size:.86rem;color:#cfe0f1;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.bar .me button{border:1px solid rgba(255,255,255,.35);background:none;color:#fff;border-radius:20px;padding:3px 10px;font-size:.8rem;cursor:pointer}
+.tabs{display:flex;gap:4px;overflow-x:auto;background:var(--paper);border-bottom:1px solid var(--line);position:sticky;top:56px;z-index:29}
+.tabs button{flex:0 0 auto;border:0;background:none;padding:12px 14px;color:var(--mute);font-size:.93rem;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap}
+.tabs button[aria-current="true"]{color:var(--ink);font-weight:700;border-bottom-color:var(--un)}
+section.view{display:none;padding:24px 0 70px}
+section.view.on{display:block}
+
+/* 입장 */
+.hero{background:var(--ink);color:#fff;padding:34px 0 30px}
+.hero .wrap{display:grid;gap:8px}
+.hero h1{font-size:clamp(1.9rem,5vw,2.8rem)}
+.hero .ag{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.hero .ag div{background:rgba(255,255,255,.08);border-radius:8px;padding:12px 14px}
+.hero .ag b{display:block;color:#9fd0f2}
+@media (max-width:700px){.hero .ag{grid-template-columns:1fr}}
+.panel{background:var(--paper);border-radius:var(--r);box-shadow:0 2px 10px rgba(18,40,75,.07);padding:clamp(18px,3.4vw,28px);margin-top:18px}
+.who{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin-top:16px}
+.who button{text-align:left;border:1.5px solid var(--line);background:#fbfcfe;border-radius:10px;padding:12px 14px;cursor:pointer}
+.who button:hover{border-color:var(--un)}
+.who b{display:block}
+.who span{font-size:.86rem;color:var(--mute)}
+
+/* 역할 카드 */
+.card{background:var(--paper);border-radius:var(--r);box-shadow:0 2px 10px rgba(18,40,75,.07);overflow:hidden;margin-top:16px}
+.card .top{background:var(--ink);color:#fff;padding:18px 22px;display:flex;align-items:center;gap:14px}
+.card .top .fl{font-size:2rem}
+.card .top h2{font-size:1.5rem}
+.card .top span{color:#9fd0f2;font-size:.9rem}
+.card .bd{padding:20px 22px 24px}
+.card ul{margin:.3em 0 0;padding-left:1.1em}
+.card li{margin:3px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.grid2{grid-template-columns:1fr}}
+.stance{border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-top:8px}
+.stance b{color:var(--un)}
+.tag{display:inline-block;background:var(--sky);border-radius:20px;padding:2px 10px;font-size:.84rem;margin:3px 4px 0 0}
+.warn{background:#fff8e8;border:1px solid #f1dfb5;border-radius:8px;padding:12px 14px;margin-top:14px;font-size:.94rem}
+.quote{font-family:var(--serif);font-size:1.12rem;line-height:1.6;background:var(--sky);border-radius:8px;padding:14px 16px;margin-top:14px}
+
+label.f{display:block;margin-top:16px;font-weight:700}
+label.f small{display:block;font-weight:400;color:var(--mute);font-size:.88rem}
+textarea,input[type=text],input[type=password]{width:100%;margin-top:6px;padding:12px 13px;border:1px solid var(--line);border-radius:8px;background:#fbfcfe}
+textarea{min-height:150px;resize:vertical;line-height:1.7}
+.cnt{display:block;text-align:right;font-size:.82rem;color:var(--mute)}
+.cnt.ok{color:var(--ok)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--ink);background:var(--ink);color:#fff;padding:11px 20px;border-radius:40px;font-weight:700;cursor:pointer;min-height:46px}
+.btn.line{background:transparent;color:var(--ink)}
+.btn.red{background:var(--red);border-color:var(--red)}
+.btn.big{width:100%;font-size:1.05rem;min-height:56px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+
+/* 회의장 */
+.stage{background:var(--ink);color:#fff;border-radius:var(--r);padding:20px;text-align:center}
+.stage .lab{color:#9fd0f2;font-size:.88rem}
+.stage .nm{font-family:var(--serif);font-weight:900;font-size:clamp(1.4rem,4vw,2rem);margin-top:2px}
+.stage .tt{font-family:var(--serif);font-weight:900;font-size:clamp(2.6rem,10vw,4rem);line-height:1.1;font-variant-numeric:tabular-nums}
+.stage .tt.over{color:#ff9d8a}
+.stage .barline{height:7px;border-radius:7px;background:rgba(255,255,255,.18);overflow:hidden;margin:6px 0 2px}
+.stage .barline i{display:block;height:100%;background:var(--un);width:0;transition:width .4s linear}
+.myturn{background:var(--red);border-radius:var(--r);color:#fff;padding:16px;text-align:center;font-weight:700;margin-top:12px;font-size:1.1rem}
+.queue{margin-top:16px}
+.qrow{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--paper);margin-top:8px}
+.qrow .n{width:26px;height:26px;border-radius:50%;background:var(--sky);display:grid;place-items:center;font-weight:700;font-size:.85rem;flex:none}
+.qrow.me{border-color:var(--red);background:#fff6f4}
+.qrow .ag{margin-left:auto;font-size:.82rem;color:var(--mute);white-space:nowrap}
+.counts{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{border:1px solid var(--line);border-radius:20px;padding:3px 11px;font-size:.84rem;background:var(--paper)}
+.chip.zero{border-color:var(--red);color:var(--red)}
+.chip.done{border-color:var(--ok);color:var(--ok)}
+.feed{margin-top:10px;max-height:260px;overflow:auto}
+.feed div{border-top:1px solid var(--line);padding:8px 0;font-size:.92rem}
+.feed b{color:var(--un)}
+.seg{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.seg button{border:1px solid var(--line);background:#fbfcfe;border-radius:20px;padding:7px 14px;cursor:pointer;font-size:.9rem}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+table{width:100%;border-collapse:collapse;font-size:.92rem;margin-top:10px}
+th,td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;vertical-align:top}
+th{color:var(--mute);font-size:.84rem;white-space:nowrap}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 20px;border-radius:30px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:50}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{.bar,.tabs,.btn,.row{display:none!important}body{background:#fff}}
+</style>
+</head>
+<body>
+
+<header class="bar"><div class="wrap">
+  <b>모의 UN 특별세션</b>
+  <span class="mute small" style="color:#9fd0f2">기후 위기와 국제 평화·안보</span>
+  <span class="me" id="me"></span>
+</div></header>
+
+<nav class="tabs" id="tabs" hidden>
+  <button data-go="role" aria-current="true">내 역할</button>
+  <button data-go="speech">기조연설 준비</button>
+  <button data-go="floor">회의장</button>
+  <button data-go="chair">의장석</button>
+</nav>
+
+<main>
+<!-- 입장 -->
+<section class="view on" id="v-enter">
+  <div class="hero"><div class="wrap">
+    <span class="small" style="color:#9fd0f2">UN 총회 특별세션 · 2차시 활동</span>
+    <h1>기후 위기와 국제 평화·안보</h1>
+    <p style="color:#dfe9f5;max-width:46em">여러분은 각자 다른 나라와 기구의 대표입니다. 같은 재난을 말하지만 지켜야 할 것이 서로 다릅니다. 오늘 회의에서 합의문을 만들어야 합니다.</p>
+    <div class="ag" id="agendas"></div>
+  </div></div>
+  <div class="wrap">
+    <div class="panel">
+      <h2>나는 누구입니까</h2>
+      <p class="mute">이름을 누르면 역할 카드가 열립니다. 역할은 여러분이 지난 시간에 조사한 기구와 관심사에 맞춰 배정했습니다.</p>
+      <div class="who" id="whoList"></div>
+      <p class="mute small" style="margin-top:14px">의장은 선생님이 맡습니다. 발언 순서와 시간은 이 화면이 관리합니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 내 역할 -->
+<section class="view" id="v-role"><div class="wrap">
+  <div id="roleCard"></div>
+  <div class="row"><button class="btn" data-go="speech">기조연설 준비하러 가기</button></div>
+</div></section>
+
+<!-- 기조연설 -->
+<section class="view" id="v-speech"><div class="wrap">
+  <div class="panel">
+    <h2>기조연설 원고 (1분)</h2>
+    <p class="mute">1분이면 300자 안팎입니다. 회의장에서 이 원고를 보며 읽을 수 있고, 쓰는 동안 자동 저장됩니다.</p>
+    <div class="quote" id="openingLine"></div>
+    <h3 style="margin-top:18px">이 순서로 쓰면 1분에 맞습니다</h3>
+    <ol class="small mute" style="margin:6px 0 0;padding-left:1.2em">
+      <li>인사와 입장 한 줄 — "의장님, ○○ 대표단입니다. 우리는 이 의제를 ~로 봅니다."</li>
+      <li>근거 한 가지 — 역할 카드의 사실 중 하나를 숫자와 함께</li>
+      <li>요구 한 가지 — 결의문에 넣고 싶은 문장을 구체적으로</li>
+      <li>협상 여지 한 줄 — "~를 보장한다면 우리는 ~를 수용할 수 있습니다."</li>
+    </ol>
+    <label class="f">내 기조연설<textarea id="keynote" placeholder="의장님, 그리고 각국 대표 여러분."></textarea></label>
+    <span class="cnt" id="keyCnt"></span>
+    <div class="row"><button class="btn" id="saveKey">저장</button><button class="btn line" data-go="floor">회의장으로</button></div>
+  </div>
+  <div class="panel">
+    <h3>내 역할 카드 요약</h3>
+    <div id="miniCard"></div>
+  </div>
+</div></section>
+
+<!-- 회의장 -->
+<section class="view" id="v-floor"><div class="wrap">
+  <div class="stage">
+    <div class="lab" id="stLab">지금은 발언자가 없습니다</div>
+    <div class="nm" id="stName">—</div>
+    <div class="tt" id="stTime">00:00</div>
+    <div class="barline"><i id="stBar"></i></div>
+  </div>
+  <div id="myTurn"></div>
+
+  <div class="panel">
+    <h3>발언 신청</h3>
+    <p class="mute small">어느 의제로 발언할지 고르고 손을 드세요. 의장이 순서대로 호명합니다.</p>
+    <div class="seg" id="agSeg"></div>
+    <div class="row">
+      <button class="btn red big" id="hand">✋ 발언 신청</button>
+    </div>
+    <div class="queue" id="queue"></div>
+  </div>
+
+  <div class="panel">
+    <h3>발언 요지 남기기</h3>
+    <p class="mute small">발언을 마치면 한두 문장으로 요지를 남기세요. 선생님의 기록에 그대로 들어갑니다.</p>
+    <textarea id="note" style="min-height:90px" placeholder="예) 손실과 피해 기금에 배출 책임 비례 분담을 요구하고, 집행 투명성 조항을 조건으로 제시함"></textarea>
+    <div class="row">
+      <button class="btn" id="saveNote">요지 기록</button>
+      <button class="btn line" id="saveMotion">수정안·동의 제안으로 기록</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>발언 현황</h3>
+    <p class="mute small">모든 대표가 최소 2회 발언하는 것이 목표입니다. 빨간색은 아직 한 번도 발언하지 않은 대표입니다.</p>
+    <div class="counts" id="counts"></div>
+    <div class="feed" id="feed"></div>
+  </div>
+</div></section>
+
+<!-- 의장석 -->
+<section class="view" id="v-chair"><div class="wrap">
+  <div class="panel" id="chairLogin">
+    <h2>의장석</h2>
+    <p class="mute">선생님용 화면입니다. 교사 비밀번호를 넣으면 발언 순서를 관리할 수 있습니다.</p>
+    <label class="f">교사 비밀번호<input type="password" id="ckey" autocomplete="current-password"></label>
+    <div id="chairAlert"></div>
+    <div class="row"><button class="btn" id="chairEnter">의장석 열기</button></div>
+  </div>
+
+  <div id="chairMain" hidden>
+    <div class="stage">
+      <div class="lab" id="cLab">대기 중</div>
+      <div class="nm" id="cName">—</div>
+      <div class="tt" id="cTime">00:00</div>
+      <div class="barline"><i id="cBar"></i></div>
+      <div class="row" style="justify-content:center">
+        <button class="btn" id="cNext" style="background:#fff;color:var(--ink);border-color:#fff">다음 발언자 호명</button>
+        <button class="btn line" id="cEnd" style="color:#fff;border-color:#fff">발언 종료</button>
+      </div>
+      <div class="seg" style="justify-content:center;margin-top:12px">
+        <button data-sec="60" aria-pressed="false" style="color:#fff;background:transparent;border-color:rgba(255,255,255,.4)">기조연설 60초</button>
+        <button data-sec="45" aria-pressed="true" style="color:#fff;background:transparent;border-color:rgba(255,255,255,.4)">토론 45초</button>
+        <button data-sec="90" aria-pressed="false" style="color:#fff;background:transparent;border-color:rgba(255,255,255,.4)">답변 90초</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>발언 대기 줄</h3>
+      <p class="mute small">아직 발언 횟수가 적은 대표를 먼저 호명하면 기회가 고르게 돌아갑니다.</p>
+      <div id="cQueue"></div>
+    </div>
+
+    <div class="panel">
+      <h3>학생별 발언 기록</h3>
+      <div style="overflow:auto"><table id="cTable"></table></div>
+      <div class="row">
+        <button class="btn line" id="cCsv">발언 기록 CSV 받기</button>
+        <button class="btn line" id="cReset">회의 기록 초기화</button>
+      </div>
+      <p class="mute small">초기화는 발언 기록과 대기 줄만 지웁니다. 학생이 쓴 기조연설 원고는 남습니다.</p>
+    </div>
+
+    <div class="panel">
+      <h3>진행 순서 (50분)</h3>
+      <table>
+        <tr><th>0~3분</th><td>개회 선언, 의제 확인</td></tr>
+        <tr><th>3~16분</th><td>기조연설 1분씩 — 전원. 의장이 명단 순서대로 호명합니다.</td></tr>
+        <tr><th>16~33분</th><td>의제별 자유 토론 45초. 신청 순서대로 호명하되 발언 수가 적은 대표를 우선합니다.</td></tr>
+        <tr><th>33~39분</th><td>비공식 협상 — 소회의실 3개(기후 취약국 / 주요 배출국·산유국 / 국제기구·시민사회)</td></tr>
+        <tr><th>39~46분</th><td>합의문 조항별 표결. 국가 대표만 표결, 기구·NGO는 발언만</td></tr>
+        <tr><th>46~50분</th><td>의장 정리, 발언 요지 제출 확인</td></tr>
+      </table>
+    </div>
+  </div>
+</div></section>
+</main>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="config.js"></script>
+<script src="mun-roles.js"></script>
+<script>
+const API = String((window.UN_CONFIG || {}).API_URL || "").trim();
+const M = window.MUN;
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const KEY = "un-mun-v1";
+let me = null, agenda = "A", feed = { queue: [], counts: [], notes: [], speaking: null }, chairKey = "", chairSec = 45, poll = null, tick = null;
+
+function toast(m) { const t = $("#toast"); t.textContent = m; t.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("on"), 2200); }
+async function api(payload) {
+  const r = await fetch(API, { method: "POST", body: JSON.stringify(payload) });
+  return r.json();
+}
+
+/* ── 입장 ── */
+$("#agendas").innerHTML = M.agendas.map(a => `<div><b>의제 ${a.id}. ${esc(a.name)}</b><span class="small">${esc(a.q)}</span></div>`).join("");
+$("#whoList").innerHTML = M.roles.map((r, i) =>
+  `<button data-i="${i}"><b>${esc(r.name)} <span class="mute small">${esc(r.sid)}</span></b><span>${r.flag} ${esc(r.role)}</span></button>`).join("");
+$$("#whoList button").forEach(b => b.onclick = () => pick(M.roles[+b.dataset.i]));
+
+function pick(r) {
+  me = r;
+  try { localStorage.setItem(KEY, r.sid); } catch (e) {}
+  $("#me").innerHTML = `${r.flag} <b>${esc(r.role)}</b> <span>${esc(r.name)}</span> <button id="logout">역할 바꾸기</button>`;
+  $("#logout").onclick = () => { try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); };
+  $("#tabs").hidden = false;
+  renderRole();
+  loadKeynote();
+  go("role");
+  startPolling();
+}
+
+/* ── 화면 전환 ── */
+function go(v) {
+  $$("section.view").forEach(s => s.classList.toggle("on", s.id === "v-" + v));
+  $$("#tabs button").forEach(b => b.setAttribute("aria-current", b.dataset.go === v));
+  window.scrollTo(0, 0);
+}
+document.addEventListener("click", e => { const g = e.target.closest("[data-go]"); if (g) go(g.dataset.go); });
+
+/* ── 역할 카드 ── */
+function roleCardHTML(r, mini) {
+  const ag = id => M.agendas.find(a => a.id === id);
+  const stances = Object.entries(r.stances).map(([id, s]) =>
+    `<div class="stance"><b>의제 ${id}. ${esc(ag(id).name)}</b><br>${esc(s)}</div>`).join("");
+  if (mini) return `<div>${stances}</div><div class="warn"><b>주의</b><br>${esc(r.watch)}</div>`;
+  return `<article class="card">
+    <div class="top"><span class="fl">${r.flag}</span><div><h2>${esc(r.role)}</h2><span>${esc(r.bloc)} · ${esc(r.name)}</span></div></div>
+    <div class="bd">
+      <p class="mute small">${esc(r.why)}</p>
+      <div class="quote">“${esc(r.opening)}”</div>
+      <div class="grid2" style="margin-top:18px">
+        <div><h3>알아 둘 사실</h3><ul class="small">${r.facts.map(f => `<li>${esc(f)}</li>`).join("")}</ul></div>
+        <div><h3>협상 카드</h3>${r.cards.map(c => `<span class="tag">${esc(c)}</span>`).join("")}
+          <div class="warn" style="margin-top:12px"><b>주의</b><br>${esc(r.watch)}</div></div>
+      </div>
+      <h3 style="margin-top:18px">의제별 입장</h3>${stances}
+    </div></article>`;
+}
+function renderRole() {
+  $("#roleCard").innerHTML = roleCardHTML(me, false);
+  $("#miniCard").innerHTML = roleCardHTML(me, true);
+  $("#openingLine").textContent = "“" + me.opening + "”";
+}
+
+/* ── 기조연설 ── */
+let keyT = null;
+function countKey() {
+  const n = $("#keynote").value.trim().length;
+  const c = $("#keyCnt");
+  c.textContent = `${n}자 — 1분 분량은 300자 안팎입니다`;
+  c.classList.toggle("ok", n >= 250);
+}
+async function loadKeynote() {
+  try { $("#keynote").value = localStorage.getItem(KEY + ":" + me.sid) || ""; } catch (e) {}
+  countKey();
+}
+function saveKeynote(quiet) {
+  const t = $("#keynote").value;
+  try { localStorage.setItem(KEY + ":" + me.sid, t); } catch (e) {}
+  api({ action: "munSave", sid: me.sid, name: me.name, role: me.role, keynote: t })
+    .then(() => { if (!quiet) toast("저장했습니다"); })
+    .catch(() => { if (!quiet) toast("저장하지 못했습니다. 인터넷을 확인하세요"); });
+}
+$("#keynote").addEventListener("input", () => { countKey(); clearTimeout(keyT); keyT = setTimeout(() => saveKeynote(true), 4000); });
+$("#saveKey").onclick = () => saveKeynote(false);
+
+/* ── 회의장 ── */
+$("#agSeg").innerHTML = M.agendas.map(a => `<button data-ag="${a.id}" aria-pressed="${a.id === agenda}">${a.id}. ${esc(a.name)}</button>`).join("");
+$$("#agSeg button").forEach(b => b.onclick = () => { agenda = b.dataset.ag; $$("#agSeg button").forEach(x => x.setAttribute("aria-pressed", x === b)); });
+
+$("#hand").onclick = async () => {
+  const mine = feed.queue.find(q => q.sid === me.sid) || (feed.speaking && feed.speaking.sid === me.sid);
+  if (mine) { await api({ action: "munCancel", sid: me.sid }); toast("발언 신청을 취소했습니다"); }
+  else { await api({ action: "munHand", sid: me.sid, name: me.name, role: me.role, agenda }); toast("발언을 신청했습니다"); }
+  refresh();
+};
+$("#saveNote").onclick = () => sendNote("speech");
+$("#saveMotion").onclick = () => sendNote("motion");
+async function sendNote(kind) {
+  const t = $("#note").value.trim();
+  if (t.length < 5) { toast("요지를 한 문장 이상 쓰세요"); return; }
+  const r = await api({ action: "munNote", sid: me.sid, name: me.name, role: me.role, kind, text: t });
+  if (r.ok) { $("#note").value = ""; toast(kind === "motion" ? "수정안으로 기록했습니다" : "발언 요지를 기록했습니다"); refresh(); }
+  else toast("기록하지 못했습니다");
+}
+
+function fmt(sec) { sec = Math.max(0, Math.round(sec)); return `${String(Math.floor(sec / 60)).padStart(2, "0")}:${String(sec % 60).padStart(2, "0")}`; }
+function paintStage() {
+  const sp = feed.speaking;
+  const limit = chairSec;
+  if (!sp) {
+    $("#stLab").textContent = "지금은 발언자가 없습니다";
+    $("#stName").textContent = "—"; $("#stTime").textContent = "00:00"; $("#stBar").style.width = "0";
+    $("#cLab").textContent = "대기 중"; $("#cName").textContent = "—"; $("#cTime").textContent = "00:00"; $("#cBar").style.width = "0";
+    $("#myTurn").innerHTML = "";
+    return;
+  }
+  const started = new Date(sp.started_at || sp.created_at).getTime();
+  const el = (Date.now() - started) / 1000;
+  const left = limit - el;
+  const label = `${sp.role} · 의제 ${sp.agenda || "-"}`;
+  ["#stLab", "#cLab"].forEach(s => $(s).textContent = label);
+  ["#stName", "#cName"].forEach(s => $(s).textContent = sp.name);
+  ["#stTime", "#cTime"].forEach(s => { $(s).textContent = fmt(Math.abs(left)); $(s).classList.toggle("over", left < 0); });
+  ["#stBar", "#cBar"].forEach(s => $(s).style.width = Math.min(100, el / limit * 100) + "%");
+  $("#myTurn").innerHTML = me && sp.sid === me.sid ? `<div class="myturn">지금 ${esc(me.role)}의 발언 차례입니다. 마이크를 켜고 말씀하세요.</div>` : "";
+}
+function paintQueue() {
+  const q = feed.queue;
+  $("#queue").innerHTML = q.length
+    ? q.map((r, i) => `<div class="qrow ${me && r.sid === me.sid ? "me" : ""}"><span class="n">${i + 1}</span>
+        <span><b>${esc(r.name)}</b> <span class="mute small">${esc(r.role)}</span></span><span class="ag">의제 ${esc(r.agenda || "-")}</span></div>`).join("")
+    : `<p class="mute small">대기 중인 발언 신청이 없습니다.</p>`;
+  const mine = q.findIndex(r => me && r.sid === me.sid);
+  $("#hand").textContent = mine >= 0 ? `✋ 신청 취소 (대기 ${mine + 1}번째)` : "✋ 발언 신청";
+
+  const byId = {};
+  feed.counts.forEach(c => byId[c.sid] = c);
+  $("#counts").innerHTML = M.roles.filter(r => r.name !== "(예비)").map(r => {
+    const c = byId[r.sid], n = c ? c.n : 0;
+    return `<span class="chip ${n === 0 ? "zero" : n >= M.rules.minSpeeches ? "done" : ""}">${esc(r.name)} ${n}회</span>`;
+  }).join("");
+  $("#feed").innerHTML = feed.notes.map(n =>
+    `<div><b>${esc(n.name)}</b> <span class="mute small">${esc(n.role)}${n.kind === "motion" ? " · 수정안" : ""}</span><br>${esc(n.text)}</div>`).join("")
+    || `<p class="mute small">아직 기록된 발언 요지가 없습니다.</p>`;
+}
+async function refresh() {
+  try { const r = await api({ action: "munFeed" }); if (r.ok) { feed = r; paintQueue(); paintStage(); paintChair(); } } catch (e) {}
+}
+function startPolling() {
+  refresh();
+  clearInterval(poll); poll = setInterval(() => { if (document.visibilityState === "visible") refresh(); }, 3000);
+  clearInterval(tick); tick = setInterval(paintStage, 500);
+}
+
+/* ── 의장석 ── */
+$("#chairEnter").onclick = async () => {
+  const k = $("#ckey").value.trim();
+  if (!k) return;
+  const r = await api({ action: "munReport", key: k });
+  if (!r.ok) { $("#chairAlert").innerHTML = `<div class="warn">${r.error === "key" ? "비밀번호가 맞지 않습니다." : "연결하지 못했습니다."}</div>`; return; }
+  chairKey = k;
+  try { sessionStorage.setItem("un-mun-key", k); } catch (e) {}
+  $("#chairLogin").hidden = true; $("#chairMain").hidden = false;
+  report = r; paintChair(); startPolling();
+};
+$$(".seg [data-sec]").forEach(b => b.onclick = () => {
+  chairSec = +b.dataset.sec;
+  $$(".seg [data-sec]").forEach(x => x.setAttribute("aria-pressed", x === b));
+});
+$("#cNext").onclick = async () => {
+  const next = feed.queue[0];
+  if (!next) { toast("대기 중인 발언자가 없습니다"); return; }
+  const sp = feed.speaking;
+  const secs = sp ? Math.round((Date.now() - new Date(sp.started_at || sp.created_at).getTime()) / 1000) : 0;
+  await api({ action: "munChair", key: chairKey, op: "call", id: next.id, seconds: secs });
+  refresh();
+};
+$("#cEnd").onclick = async () => {
+  const sp = feed.speaking;
+  if (!sp) return;
+  const secs = Math.round((Date.now() - new Date(sp.started_at || sp.created_at).getTime()) / 1000);
+  await api({ action: "munChair", key: chairKey, op: "end", seconds: secs });
+  refresh();
+};
+$("#cReset").onclick = async () => {
+  if (!confirm("발언 기록과 대기 줄을 모두 지웁니다. 계속할까요?")) return;
+  await api({ action: "munChair", key: chairKey, op: "reset" });
+  toast("초기화했습니다"); refresh();
+};
+let report = null;
+function paintChair() {
+  if (!chairKey) return;
+  $("#cQueue").innerHTML = feed.queue.length
+    ? feed.queue.map((r, i) => `<div class="qrow"><span class="n">${i + 1}</span>
+        <span><b>${esc(r.name)}</b> <span class="mute small">${esc(r.role)} · 의제 ${esc(r.agenda || "-")}</span></span>
+        <button class="btn line" style="margin-left:auto;min-height:34px;padding:4px 14px" data-call="${r.id}">호명</button>
+        <button class="btn line" style="min-height:34px;padding:4px 12px" data-drop="${r.id}">빼기</button></div>`).join("")
+    : `<p class="mute small">대기 중인 발언 신청이 없습니다.</p>`;
+  $$("#cQueue [data-call]").forEach(b => b.onclick = async () => {
+    const sp = feed.speaking;
+    const secs = sp ? Math.round((Date.now() - new Date(sp.started_at || sp.created_at).getTime()) / 1000) : 0;
+    await api({ action: "munChair", key: chairKey, op: "call", id: +b.dataset.call, seconds: secs }); refresh();
+  });
+  $$("#cQueue [data-drop]").forEach(b => b.onclick = async () => {
+    await api({ action: "munChair", key: chairKey, op: "drop", id: +b.dataset.drop }); refresh();
+  });
+
+  const byId = {};
+  feed.counts.forEach(c => byId[c.sid] = c);
+  const notesBy = {};
+  (report ? report.events : feed.notes).forEach(n => { (notesBy[n.sid] = notesBy[n.sid] || []).push(n.text); });
+  $("#cTable").innerHTML = `<tr><th>이름</th><th>역할</th><th>발언</th><th>총 시간</th><th>요지</th></tr>` +
+    M.roles.filter(r => r.name !== "(예비)" && r.name !== "(미배정)").map(r => {
+      const c = byId[r.sid] || { n: 0, secs: 0 };
+      const notes = (notesBy[r.sid] || []).slice(-2).join(" / ");
+      return `<tr><td><b>${esc(r.name)}</b></td><td class="small mute">${esc(r.role)}</td>
+        <td${c.n === 0 ? ' style="color:var(--red);font-weight:700"' : ""}>${c.n}회</td><td>${fmt(c.secs || 0)}</td>
+        <td class="small">${esc(notes)}</td></tr>`;
+    }).join("");
+}
+$("#cCsv").onclick = async () => {
+  const r = await api({ action: "munReport", key: chairKey });
+  if (!r.ok) { toast("불러오지 못했습니다"); return; }
+  const spoke = {};
+  r.queue.filter(q => q.status === "done").forEach(q => {
+    spoke[q.sid] = spoke[q.sid] || { n: 0, secs: 0 };
+    spoke[q.sid].n++; spoke[q.sid].secs += q.seconds || 0;
+  });
+  const head = ["학번", "이름", "역할", "발언 횟수", "총 발언 시간(초)", "기조연설 원고", "발언 요지와 수정안"];
+  const lines = [head].concat(M.roles.filter(x => x.name !== "(예비)" && x.name !== "(미배정)").map(x => {
+    const s = (r.students || []).find(y => y.sid === x.sid) || {};
+    const sp = spoke[x.sid] || { n: 0, secs: 0 };
+    const ev = r.events.filter(e => e.sid === x.sid).map(e => (e.kind === "motion" ? "[수정안] " : "") + e.text).join(" || ");
+    return [x.sid, x.name, x.role, sp.n, sp.secs, s.keynote || "", ev];
+  }));
+  const csv = lines.map(l => l.map(c => { c = String(c == null ? "" : c); if (/^[=+\-@]/.test(c)) c = "'" + c; return `"${c.replace(/"/g, '""')}"`; }).join(",")).join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" }));
+  a.download = `모의UN_발언기록_${new Date().toISOString().slice(0, 10)}.csv`; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+};
+
+/* ── 시작 ── */
+try {
+  const saved = localStorage.getItem(KEY);
+  const r = saved && M.roles.find(x => x.sid === saved);
+  if (r) pick(r);
+} catch (e) {}
+try {
+  const ck = sessionStorage.getItem("un-mun-key");
+  if (ck) { $("#ckey").value = ck; }
+} catch (e) {}
+if (!API) toast("기록 저장소 주소가 설정되지 않았습니다");
+</script>
+</body>
+</html>

@@ -52,6 +52,13 @@ export default {
       if (b.action === "resetPin") return json(await resetPin(env, b));
       if (b.action === "submit") return json(await submit(env, b));
       if (b.action === "submissions") return json(await submissions(env, b));
+      if (b.action === "munSave") return json(await munSave(env, b));
+      if (b.action === "munHand") return json(await munHand(env, b));
+      if (b.action === "munCancel") return json(await munCancel(env, b));
+      if (b.action === "munFeed") return json(await munFeed(env, b));
+      if (b.action === "munChair") return json(await munChair(env, b));
+      if (b.action === "munNote") return json(await munNote(env, b));
+      if (b.action === "munReport") return json(await munReport(env, b));
       return json({ ok: false, error: "action" }, 400);
     } catch (err) {
       console.error(err);
@@ -139,6 +146,103 @@ async function submissions(env, b) {
   if (!(await teacherOk(env, b))) return { ok: false, error: b.lockedOut ? "locked" : "key" };
   const { results } = await env.DB.prepare("SELECT id, sid, name, text, created_at FROM submissions ORDER BY id DESC").all();
   return { ok: true, rows: results.map(r => ({ id: r.id, sid: r.sid, name: r.name, text: r.text, submittedAt: kst(r.created_at) })) };
+}
+
+/* ── 모의 UN 회의 ──
+ * 의장(교사)만 TEACHER_KEY로 큐를 조작합니다. 학생 요청에는 비밀번호가 없습니다(수업 중 사용).
+ */
+const MAX_TEXT = 4000;
+const text_ = x => String(x ?? "").trim().slice(0, MAX_TEXT);
+
+async function munSave(env, b) {
+  const sid = clean(b.sid), name = clean(b.name);
+  if (!sid || !name) return { ok: false, error: "identity" };
+  await env.DB.prepare(
+    `INSERT INTO mun_students (sid, name, role, keynote, updated_at) VALUES (?1, ?2, ?3, ?4, ?5)
+     ON CONFLICT(sid) DO UPDATE SET name = ?2, role = ?3, keynote = ?4, updated_at = ?5`
+  ).bind(sid, name, clean(b.role), text_(b.keynote), new Date().toISOString()).run();
+  return { ok: true };
+}
+
+async function munHand(env, b) {
+  const sid = clean(b.sid), name = clean(b.name);
+  if (!sid || !name) return { ok: false, error: "identity" };
+  const dup = await env.DB.prepare("SELECT id FROM mun_queue WHERE sid = ? AND status IN ('waiting','speaking')").bind(sid).first();
+  if (dup) return { ok: true, id: dup.id, already: true };
+  const r = await env.DB.prepare("INSERT INTO mun_queue (sid, name, role, agenda, status, created_at) VALUES (?, ?, ?, ?, 'waiting', ?)")
+    .bind(sid, name, clean(b.role), clean(b.agenda), new Date().toISOString()).run();
+  return { ok: true, id: r.meta.last_row_id };
+}
+
+async function munCancel(env, b) {
+  const sid = clean(b.sid);
+  await env.DB.prepare("DELETE FROM mun_queue WHERE sid = ? AND status = 'waiting'").bind(sid).run();
+  return { ok: true };
+}
+
+async function munFeed(env) {
+  const q = await env.DB.prepare(
+    "SELECT id, sid, name, role, agenda, status, created_at, started_at FROM mun_queue WHERE status IN ('waiting','speaking') ORDER BY id"
+  ).all();
+  const counts = await env.DB.prepare(
+    "SELECT sid, name, COUNT(*) AS n, SUM(seconds) AS secs FROM mun_queue WHERE status = 'done' GROUP BY sid, name"
+  ).all();
+  const notes = await env.DB.prepare(
+    "SELECT sid, name, role, kind, text, created_at FROM mun_events ORDER BY id DESC LIMIT 40"
+  ).all();
+  return {
+    ok: true,
+    speaking: q.results.find(r => r.status === "speaking") || null,
+    queue: q.results.filter(r => r.status === "waiting"),
+    counts: counts.results,
+    notes: notes.results,
+  };
+}
+
+async function munChair(env, b) {
+  if (!env.TEACHER_KEY || !sameKey(b.key, env.TEACHER_KEY)) return { ok: false, error: "key" };
+  const now = new Date().toISOString();
+  if (b.op === "call") {
+    await env.DB.prepare("UPDATE mun_queue SET status = 'done', ended_at = ?, seconds = ? WHERE status = 'speaking'")
+      .bind(now, Number(b.seconds) || 0).run();
+    await env.DB.prepare("UPDATE mun_queue SET status = 'speaking', started_at = ? WHERE id = ?").bind(now, Number(b.id) || 0).run();
+    return { ok: true };
+  }
+  if (b.op === "end") {
+    await env.DB.prepare("UPDATE mun_queue SET status = 'done', ended_at = ?, seconds = ? WHERE status = 'speaking'")
+      .bind(now, Number(b.seconds) || 0).run();
+    return { ok: true };
+  }
+  if (b.op === "drop") {
+    await env.DB.prepare("DELETE FROM mun_queue WHERE id = ? AND status = 'waiting'").bind(Number(b.id) || 0).run();
+    return { ok: true };
+  }
+  if (b.op === "clear") {
+    await env.DB.prepare("DELETE FROM mun_queue").run();
+    return { ok: true };
+  }
+  if (b.op === "reset") { // 회의 전체 초기화 (기조연설 원고는 남김)
+    await env.DB.prepare("DELETE FROM mun_queue").run();
+    await env.DB.prepare("DELETE FROM mun_events").run();
+    return { ok: true };
+  }
+  return { ok: false, error: "op" };
+}
+
+async function munNote(env, b) {
+  const sid = clean(b.sid), name = clean(b.name), t = text_(b.text);
+  if (!sid || !name || !t) return { ok: false, error: "empty" };
+  await env.DB.prepare("INSERT INTO mun_events (sid, name, role, kind, text, created_at) VALUES (?, ?, ?, ?, ?, ?)")
+    .bind(sid, name, clean(b.role), clean(b.kind) || "speech", t, new Date().toISOString()).run();
+  return { ok: true };
+}
+
+async function munReport(env, b) {
+  if (!env.TEACHER_KEY || !sameKey(b.key, env.TEACHER_KEY)) return { ok: false, error: "key" };
+  const s = await env.DB.prepare("SELECT sid, name, role, keynote, updated_at FROM mun_students ORDER BY sid").all();
+  const q = await env.DB.prepare("SELECT sid, name, role, agenda, status, created_at, started_at, ended_at, seconds FROM mun_queue ORDER BY id").all();
+  const e = await env.DB.prepare("SELECT sid, name, role, kind, text, created_at FROM mun_events ORDER BY id").all();
+  return { ok: true, students: s.results, queue: q.results, events: e.results };
 }
 
 /* ── 시도 횟수 제한 ── */
