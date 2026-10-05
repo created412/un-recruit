@@ -280,9 +280,16 @@ function renderInbox() {
   const x = SUBS.find(s => s.id === isel), box = $("#idetail");
   if (!x) { box.innerHTML = `<div class="empty">왼쪽 표에서 제출물을 누르면 내용이 여기에 나옵니다.</div>`; return; }
   box.innerHTML = `<header><b>${esc(x.name)}</b> <span class="mute">${esc(x.sid)} · 제출 ${esc(x.submittedAt)}</span></header>
-    <pre id="itext"></pre><div class="acts"><button class="btn line" id="icopy">이 제출물 복사</button></div>`;
+    <pre id="itext"></pre><div class="acts"><button class="btn line" id="icopy">이 제출물 복사</button><button class="btn line" id="idel">제출 삭제</button></div>`;
   $("#itext").textContent = x.text;
   $("#icopy").onclick = async () => { try { await navigator.clipboard.writeText(x.text); toast("복사했습니다"); } catch (e) { toast("복사하지 못했습니다"); } };
+  $("#idel").onclick = async () => {
+    if (!confirm(`${x.name}(${x.sid}) 학생의 제출을 지웁니다. 그 학생이 다시 제출할 수 있게 됩니다. 계속할까요?`)) return;
+    try {
+      const j = await (await fetch(API, { method: "POST", body: JSON.stringify({ action: "submitDelete", key: KEY, id: x.id }) })).json();
+      if (j.ok) { isel = null; toast("제출을 지웠습니다"); load(false); } else toast("지우지 못했습니다");
+    } catch (e) { toast("지우지 못했습니다"); }
+  };
 }
 $("#csv2").onclick = () => {
   const lines = [["제출 번호", "제출 시각", "학번", "이름", "글자 수", "제출물"]].concat(SUBS.map(x => [x.id, x.submittedAt, x.sid, x.name, (x.text || "").length, x.text]));
