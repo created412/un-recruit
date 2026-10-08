@@ -42,7 +42,9 @@ section.view.on{display:block}
 .hero .wrap{display:grid;gap:8px}
 .hero h1{font-size:clamp(1.9rem,5vw,2.8rem)}
 .hero .ag{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
-.hero .ag div{background:rgba(255,255,255,.08);border-radius:8px;padding:12px 14px}
+.hero .ag div{background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden}
+.hero .ag img{width:100%;aspect-ratio:16/9;object-fit:cover}
+.hero .ag .tx{padding:12px 14px}
 .hero .ag b{display:block;color:#9fd0f2}
 @media (max-width:700px){.hero .ag{grid-template-columns:1fr}}
 .panel{background:var(--paper);border-radius:var(--r);box-shadow:0 2px 10px rgba(18,40,75,.07);padding:clamp(18px,3.4vw,28px);margin-top:18px}
@@ -51,6 +53,24 @@ section.view.on{display:block}
 .who button:hover{border-color:var(--un)}
 .who b{display:block}
 .who span{font-size:.86rem;color:var(--mute)}
+
+/* 역할 선택 카드 */
+.rolepick{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:6px}
+.rolepick button{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;text-align:left;border:1.5px solid var(--line);background:#fbfcfe;border-radius:10px;padding:11px 13px;cursor:pointer}
+.rolepick button:hover{border-color:var(--un)}
+.rolepick .fl{font-size:1.6rem;line-height:1}
+.rolepick b{display:block;font-size:1rem}
+.rolepick span{display:block;font-size:.82rem;color:var(--mute)}
+.rolepick button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.rolepick button[aria-pressed="true"] span{color:#b9d0e8}
+.rolepick button[data-bloc="기후 취약국(AOSIS)"]{border-left:6px solid #1f7fc4}
+.rolepick button[data-bloc="주요 배출국"]{border-left:6px solid #e0482f}
+.rolepick button[data-bloc="신흥 경제국"]{border-left:6px solid #b7791f}
+.rolepick button[data-bloc="산유국(OPEC)"]{border-left:6px solid #7a4b2a}
+.rolepick button[data-bloc="유럽연합"]{border-left:6px solid #3b5bb5}
+.rolepick button[data-bloc="아프리카 그룹"]{border-left:6px solid #1d8750}
+.rolepick button[data-bloc="국제기구"]{border-left:6px solid #6b4ea8}
+.rolepick button[data-bloc="시민사회"]{border-left:6px solid #c2407a}
 
 /* 역할 카드 */
 .card{background:var(--paper);border-radius:var(--r);box-shadow:0 2px 10px rgba(18,40,75,.07);overflow:hidden;margin-top:16px}
@@ -64,6 +84,9 @@ section.view.on{display:block}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media (max-width:760px){.grid2{grid-template-columns:1fr}}
 .stance{border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-top:8px}
+.stance-img{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:center}
+.stance-img img{width:96px;aspect-ratio:16/10;object-fit:cover;border-radius:6px}
+@media (max-width:560px){.stance-img{grid-template-columns:68px 1fr;gap:10px}.stance-img img{width:68px}}
 .stance b{color:var(--un)}
 .tag{display:inline-block;background:var(--sky);border-radius:20px;padding:2px 10px;font-size:.84rem;margin:3px 4px 0 0}
 .warn{background:#fff8e8;border:1px solid #f1dfb5;border-radius:8px;padding:12px 14px;margin-top:14px;font-size:.94rem}
@@ -103,6 +126,16 @@ textarea{min-height:150px;resize:vertical;line-height:1.7}
 .feed{margin-top:10px;max-height:260px;overflow:auto}
 .feed div{border-top:1px solid var(--line);padding:8px 0;font-size:.92rem}
 .feed b{color:var(--un)}
+.agpick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.agpick button{border:1.5px solid var(--line);background:var(--paper);border-radius:10px;overflow:hidden;cursor:pointer;padding:0;text-align:left}
+.agpick img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
+.agpick .tx{padding:8px 10px}
+.agpick b{display:block;font-size:.95rem}
+.agpick span{font-size:.8rem;color:var(--mute)}
+.agpick button[aria-pressed="true"]{border-color:var(--red);box-shadow:0 0 0 3px rgba(224,72,47,.18)}
+.agpick button[aria-pressed="true"] .tx{background:var(--ink);color:#fff}
+.agpick button[aria-pressed="true"] span{color:#b9d0e8}
+@media (max-width:620px){.agpick{grid-template-columns:1fr}.agpick img{aspect-ratio:21/9}}
 .seg{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
 .seg button{border:1px solid var(--line);background:#fbfcfe;border-radius:20px;padding:7px 14px;cursor:pointer;font-size:.9rem}
 .seg button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
@@ -149,7 +182,9 @@ th{color:var(--mute);font-size:.84rem;white-space:nowrap}
         <label class="f" style="margin-top:0">학번<input type="text" id="sid" inputmode="numeric" autocomplete="off" placeholder="예: 20315"></label>
         <label class="f" style="margin-top:0">이름<input type="text" id="name" autocomplete="off" placeholder="예: 김유엔"></label>
       </div>
-      <label class="f">내 역할<select id="roleSel" style="width:100%;margin-top:6px;padding:12px 13px;border:1px solid var(--line);border-radius:8px;background:#fbfcfe"></select></label>
+      <label class="f" style="margin-bottom:6px">내 역할<small>선생님이 알려 준 역할을 고르세요. 진영에 따라 색이 다릅니다.</small></label>
+      <div class="rolepick" id="rolePick"></div>
+      <select id="roleSel" hidden></select>
       <div id="enterAlert"></div>
       <div class="row"><button class="btn big" id="enterBtn">입장하기</button></div>
       <p class="mute small" style="margin-top:14px">한 번 입장하면 그 학번은 이 기기에 묶입니다. 다른 사람이 같은 학번으로 들어올 수 없고, 기기를 바꿔야 하면 선생님이 풀어 줍니다. 의장은 선생님이 맡습니다.</p>
@@ -246,7 +281,7 @@ th{color:var(--mute);font-size:.84rem;white-space:nowrap}
   <div class="panel">
     <h3>발언 신청</h3>
     <p class="mute small">어느 의제로 발언할지 고르고 손을 드세요. 의장이 순서대로 호명합니다.</p>
-    <div class="seg" id="agSeg"></div>
+    <div class="agpick" id="agSeg"></div>
     <div class="row">
       <button class="btn red big" id="hand">✋ 발언 신청</button>
     </div>
@@ -362,9 +397,17 @@ async function api(payload) {
 }
 
 /* ── 입장 ── */
-$("#agendas").innerHTML = M.agendas.map(a => `<div><b>의제 ${a.id}. ${esc(a.name)}</b><span class="small">${esc(a.q)}</span></div>`).join("");
+$("#agendas").innerHTML = M.agendas.map(a =>
+  `<div><img src="img/ag-${a.id.toLowerCase()}.webp" alt="" loading="lazy"><div class="tx"><b>의제 ${a.id}. ${esc(a.name)}</b><span class="small">${esc(a.q)}</span></div></div>`).join("");
 $("#roleSel").innerHTML = `<option value="">역할을 고르세요</option>` +
   M.roles.map((r, i) => `<option value="${i}">${r.flag} ${esc(r.role)} — ${esc(r.bloc)}</option>`).join("");
+$("#rolePick").innerHTML = M.roles.map((r, i) =>
+  `<button type="button" data-i="${i}" data-bloc="${esc(r.bloc)}" aria-pressed="false">
+     <span class="fl">${r.flag}</span><span><b>${esc(r.role)}</b><span>${esc(r.bloc)}</span></span></button>`).join("");
+$$("#rolePick button").forEach(b => b.onclick = () => {
+  $("#roleSel").value = b.dataset.i;
+  $$("#rolePick button").forEach(x => x.setAttribute("aria-pressed", x === b));
+});
 
 $("#enterBtn").onclick = async () => {
   const sid = $("#sid").value.trim(), name = $("#name").value.trim(), i = $("#roleSel").value;
@@ -417,7 +460,8 @@ document.addEventListener("click", e => { const g = e.target.closest("[data-go]"
 function roleCardHTML(r, mini) {
   const ag = id => M.agendas.find(a => a.id === id);
   const stances = Object.entries(r.stances).map(([id, s]) =>
-    `<div class="stance"><b>의제 ${id}. ${esc(ag(id).name)}</b><br>${esc(s)}</div>`).join("");
+    `<div class="stance stance-img"><img src="img/ag-${id.toLowerCase()}.webp" alt="" loading="lazy">
+       <div><b>의제 ${id}. ${esc(ag(id).name)}</b><br>${esc(s)}</div></div>`).join("");
   if (mini) return `<div>${stances}</div><div class="warn"><b>주의</b><br>${esc(r.watch)}</div>`;
   return `<article class="card">
     <div class="top"><span class="fl">${r.flag}</span><div><h2>${esc(r.role)}</h2><span>${esc(r.bloc)}</span></div></div>
@@ -462,7 +506,9 @@ $("#keynote").addEventListener("input", () => { countKey(); clearTimeout(keyT); 
 $("#saveKey").onclick = () => saveKeynote(false);
 
 /* ── 회의장 ── */
-$("#agSeg").innerHTML = M.agendas.map(a => `<button data-ag="${a.id}" aria-pressed="${a.id === agenda}">${a.id}. ${esc(a.name)}</button>`).join("");
+$("#agSeg").innerHTML = M.agendas.map(a =>
+  `<button data-ag="${a.id}" aria-pressed="${a.id === agenda}"><img src="img/ag-${a.id.toLowerCase()}.webp" alt="" loading="lazy">
+     <span class="tx"><b>${a.id}. ${esc(a.name)}</b><span>${esc(a.q)}</span></span></button>`).join("");
 $$("#agSeg button").forEach(b => b.onclick = () => { agenda = b.dataset.ag; $$("#agSeg button").forEach(x => x.setAttribute("aria-pressed", x === b)); });
 
 $("#hand").onclick = async () => {

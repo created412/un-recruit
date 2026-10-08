@@ -34,6 +34,11 @@ li{margin:.35em 0}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.5vw,34px)}
 .box{background:var(--sky);border-radius:12px;padding:clamp(14px,2vw,22px)}
 .box h3{margin:0 0 .3em;font-size:clamp(1.05rem,1.8vw,1.3rem)}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(12px,2vw,24px);margin-top:2vh}
+.three .box{padding:0;overflow:hidden;background:var(--sky)}
+.three .box img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
+.three .box h3{padding:clamp(10px,1.4vw,16px) clamp(12px,1.6vw,18px) 0}
+.three .box p{padding:0 clamp(12px,1.6vw,18px) clamp(12px,1.6vw,18px);font-size:clamp(.92rem,1.4vw,1.15rem);color:var(--mute)}
 .box.warn{background:#fff6ec}
 .box.bad{background:#fdeeea}
 .box.good{background:#e9f7ef}
@@ -74,11 +79,11 @@ th{color:var(--mute);white-space:nowrap;width:7.5em}
   <span class="eyebrow">의제</span>
   <h1>기후 위기와 국제 평화·안보</h1>
   <p class="lead">UN 총회 특별세션. 세 가지를 놓고 다툽니다.</p>
-  <div class="two" style="margin-top:2vh">
-    <div class="box"><h3>A. 손실과 피해 기금</h3><p>누가 얼마를 내고, 누가 받는가</p></div>
-    <div class="box"><h3>B. 기후 난민의 법적 지위</h3><p>난민 협약을 새로 만들 것인가</p></div>
+  <div class="three">
+    <div class="box"><img src="img/ag-a.webp" alt=""><h3>A. 손실과 피해 기금</h3><p>누가 얼마를 내고, 누가 받는가</p></div>
+    <div class="box"><img src="img/ag-b.webp" alt=""><h3>B. 기후 난민의 법적 지위</h3><p>난민 협약을 새로 만들 것인가</p></div>
+    <div class="box"><img src="img/ag-c.webp" alt=""><h3>C. 기후 재난과 평화유지</h3><p>물·식량 분쟁에 UN이 개입할 것인가</p></div>
   </div>
-  <div class="box" style="margin-top:2vh"><h3>C. 기후 재난과 평화유지</h3><p>물과 식량을 둘러싼 분쟁에 UN이 개입할 것인가</p></div>
 </section>
 
 <section class="slide">
