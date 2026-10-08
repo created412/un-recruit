@@ -174,7 +174,15 @@ async function munJoin(env, b) {
   if (known && known.name && known.name !== name) return { ok: false, error: "nameMismatch" };
   const row = await env.DB.prepare("SELECT token, name, role FROM mun_students WHERE sid = ?").bind(sid).first();
   if (row && row.token) {
-    if (clean(b.token) === row.token) return { ok: true, token: row.token, role: row.role, name: row.name };
+    if (clean(b.token) === row.token) {
+      // 본인 기기이면 회의 전에 역할을 바꿀 수 있습니다.
+      if (role && role !== row.role) {
+        await env.DB.prepare("UPDATE mun_students SET role = ?, name = ?, updated_at = ? WHERE sid = ?")
+          .bind(role, name, new Date().toISOString(), sid).run();
+        return { ok: true, token: row.token, role, name };
+      }
+      return { ok: true, token: row.token, role: row.role, name: row.name };
+    }
     return { ok: false, error: "taken", role: row.role };
   }
   const token = crypto.randomUUID();
