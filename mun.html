@@ -451,6 +451,7 @@ async function loadKeynote() {
   countKey();
 }
 function saveKeynote(quiet) {
+  if (!me) return;
   const t = $("#keynote").value;
   try { localStorage.setItem(KEY + ":" + me.sid, t); } catch (e) {}
   api({ action: "munSave", sid: me.sid, token: me.token, keynote: t })
@@ -465,16 +466,19 @@ $("#agSeg").innerHTML = M.agendas.map(a => `<button data-ag="${a.id}" aria-press
 $$("#agSeg button").forEach(b => b.onclick = () => { agenda = b.dataset.ag; $$("#agSeg button").forEach(x => x.setAttribute("aria-pressed", x === b)); });
 
 $("#hand").onclick = async () => {
+  if (!me) { toast("먼저 입장하세요"); return; }
   const mine = feed.queue.find(q => q.sid === me.sid) || (feed.speaking && feed.speaking.sid === me.sid);
   if (mine) { await api({ action: "munCancel", sid: me.sid, token: me.token }); toast("발언 신청을 취소했습니다"); }
   else { await api({ action: "munHand", sid: me.sid, token: me.token, agenda }); toast("발언을 신청했습니다"); }
   refresh();
 };
 $("#readyBtn").onclick = async () => {
+  if (!me) { toast("먼저 입장하세요"); return; }
   const r = await api({ action: "munNote", sid: me.sid, token: me.token, kind: "ready", text: "준비 완료" });
   if (r.ok) { toast("준비 완료로 표시했습니다"); refresh(); } else toast("표시하지 못했습니다");
 };
 $("#blocSend").onclick = async () => {
+  if (!me) { toast("먼저 입장하세요"); return; }
   const t = $("#blocText").value.trim();
   if (t.length < 5) { toast("제안을 한 문장 이상 쓰세요"); return; }
   const r = await api({ action: "munNote", sid: me.sid, token: me.token, kind: "bloc", text: `[${me.def.bloc}] ${t}` });
@@ -483,6 +487,7 @@ $("#blocSend").onclick = async () => {
 $("#saveNote").onclick = () => sendNote("speech");
 $("#saveMotion").onclick = () => sendNote("motion");
 async function sendNote(kind) {
+  if (!me) { toast("먼저 입장하세요"); return; }
   const t = $("#note").value.trim();
   if (t.length < 5) { toast("요지를 한 문장 이상 쓰세요"); return; }
   const r = await api({ action: "munNote", sid: me.sid, token: me.token, kind, text: t });
