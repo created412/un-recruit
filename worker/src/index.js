@@ -234,9 +234,14 @@ async function munFeed(env, b) {
     "SELECT sid, name, role, kind, text, created_at FROM mun_events ORDER BY id DESC LIMIT 40"
   ).all();
   const seats = await env.DB.prepare("SELECT sid, name, role FROM mun_students ORDER BY sid").all();
+  // 블록 공동 제안과 준비 완료 체크 (구글 미트에서 소회의실 없이 협상 단계를 돌리기 위한 보드)
+  const blocs = await env.DB.prepare("SELECT sid, name, role, text, created_at FROM mun_events WHERE kind = 'bloc' ORDER BY id DESC LIMIT 20").all();
+  const ready = await env.DB.prepare("SELECT DISTINCT sid FROM mun_events WHERE kind = 'ready'").all();
   return {
     ok: true,
     seats: seats.results,
+    blocs: blocs.results,
+    ready: ready.results.map(r => r.sid),
     speaking: q.results.find(r => r.status === "speaking") || null,
     queue: q.results.filter(r => r.status === "waiting"),
     counts: counts.results,

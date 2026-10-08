@@ -125,7 +125,8 @@ th{color:var(--mute);font-size:.84rem;white-space:nowrap}
 </div></header>
 
 <nav class="tabs" id="tabs" hidden>
-  <button data-go="role" aria-current="true">내 역할</button>
+  <button data-go="how" aria-current="true">진행 방법</button>
+  <button data-go="role">내 역할</button>
   <button data-go="speech">기조연설 준비</button>
   <button data-go="floor">회의장</button>
   <button data-go="chair">의장석</button>
@@ -155,6 +156,53 @@ th{color:var(--mute);font-size:.84rem;white-space:nowrap}
     </div>
   </div>
 </section>
+
+<!-- 진행 방법 -->
+<section class="view" id="v-how"><div class="wrap">
+  <div class="panel">
+    <h2>회의는 이렇게 진행됩니다</h2>
+    <p class="mute">구글 미트에 모두 모인 채로 진행합니다. 발언 순서는 미트의 손들기가 아니라 <b>이 화면의 발언 신청</b>으로 관리합니다.</p>
+    <ol style="padding-left:1.2em;margin-top:14px">
+      <li><b>기조연설</b> — 한 사람당 1분. 의장이 명단 순서대로 부릅니다. 신청하지 않아도 모두 한 번씩 합니다.</li>
+      <li><b>자유 토론</b> — 45초. 말하고 싶으면 이 화면에서 <b>발언 신청</b>을 누릅니다. 의장이 순서대로 호명합니다.</li>
+      <li><b>블록 협상</b> — 같은 진영끼리 공동 제안을 만들어 이 화면의 <b>블록 보드</b>에 올립니다.</li>
+      <li><b>표결</b> — 국가 대표만 표결합니다. 기구와 NGO 대표는 발언만 합니다.</li>
+    </ol>
+  </div>
+
+  <div class="panel">
+    <h2>구글 미트에서 지킬 것</h2>
+    <div class="grid2">
+      <div>
+        <h3>마이크</h3>
+        <p class="small">평소에는 <b>음소거</b>로 둡니다. 선생님이 여러분의 마이크를 대신 켜 줄 수 없으니, <b>호명되면 본인이 직접 켜야</b> 합니다. 발언이 끝나면 바로 다시 끕니다.</p>
+        <h3 style="margin-top:14px">카메라</h3>
+        <p class="small">발언할 때는 켜는 것을 권합니다. 회선이 느리면 꺼도 됩니다.</p>
+      </div>
+      <div>
+        <h3>이 화면</h3>
+        <p class="small">미트 창과 이 화면을 <b>나란히</b> 띄워 두세요. 휴대폰으로 미트에 들어오고 이 화면은 노트북으로 봐도 됩니다.</p>
+        <h3 style="margin-top:14px">소리가 안 될 때</h3>
+        <p class="small">마이크가 끝내 안 되면 <b>발언 요지</b> 칸에 쓰고 의장에게 채팅으로 알리세요. 의장이 대신 읽어 줍니다. 기록은 똑같이 남습니다.</p>
+      </div>
+    </div>
+    <div class="warn"><b>말하는 방식</b><br>
+      “의장님, ○○ 대표단입니다.”로 시작합니다. 다른 나라를 부를 때는 이름이 아니라 <b>“미국 대표”</b>처럼 역할로 부릅니다. 끼어들지 않고, 반박은 자기 차례에 합니다.</div>
+  </div>
+
+  <div class="panel">
+    <h2>오늘 준비할 것</h2>
+    <p class="mute small">네 가지를 마치면 아래 버튼을 누르세요. 선생님 화면에 준비 완료로 표시됩니다.</p>
+    <ul style="padding-left:1.2em">
+      <li>내 역할 카드를 끝까지 읽기</li>
+      <li>기조연설 1분 원고 쓰기 (300자 안팎)</li>
+      <li>발언 신청 버튼을 한 번 눌러 보고 취소하기</li>
+      <li>마이크 켜고 끄기를 미트에서 해 보기</li>
+    </ul>
+    <div id="readyBox"></div>
+    <div class="row"><button class="btn red" id="readyBtn">준비를 마쳤습니다</button><button class="btn line" data-go="role">역할 카드 보기</button></div>
+  </div>
+</div></section>
 
 <!-- 내 역할 -->
 <section class="view" id="v-role"><div class="wrap">
@@ -203,6 +251,14 @@ th{color:var(--mute);font-size:.84rem;white-space:nowrap}
       <button class="btn red big" id="hand">✋ 발언 신청</button>
     </div>
     <div class="queue" id="queue"></div>
+  </div>
+
+  <div class="panel">
+    <h3>블록 보드 — 같은 진영의 공동 제안</h3>
+    <p class="mute small">협상 시간에 같은 진영끼리 합의한 문장을 올립니다. 소회의실을 쓰지 않아도 됩니다. 모든 대표가 볼 수 있습니다.</p>
+    <textarea id="blocText" style="min-height:70px" placeholder="예) 기후 취약국 블록: 기금 분담은 누적 배출량 기준으로 하되, 최빈국은 면제한다"></textarea>
+    <div class="row"><button class="btn" id="blocSend">우리 블록 제안 올리기</button></div>
+    <div id="blocList" class="feed"></div>
   </div>
 
   <div class="panel">
@@ -267,15 +323,20 @@ th{color:var(--mute);font-size:.84rem;white-space:nowrap}
     </div>
 
     <div class="panel">
-      <h3>진행 순서 (50분)</h3>
+      <h3>진행 순서 (50분, 구글 미트)</h3>
       <table>
-        <tr><th>0~3분</th><td>개회 선언, 의제 확인</td></tr>
-        <tr><th>3~16분</th><td>기조연설 1분씩 — 전원. 의장이 명단 순서대로 호명합니다.</td></tr>
-        <tr><th>16~33분</th><td>의제별 자유 토론 45초. 신청 순서대로 호명하되 발언 수가 적은 대표를 우선합니다.</td></tr>
-        <tr><th>33~39분</th><td>비공식 협상 — 소회의실 3개(기후 취약국 / 주요 배출국·산유국 / 국제기구·시민사회)</td></tr>
-        <tr><th>39~46분</th><td>합의문 조항별 표결. 국가 대표만 표결, 기구·NGO는 발언만</td></tr>
-        <tr><th>46~50분</th><td>의장 정리, 발언 요지 제출 확인</td></tr>
+        <tr><th>0~3분</th><td>개회 선언, 의제 확인. 전원 음소거 확인, 이 화면을 함께 띄우게 안내</td></tr>
+        <tr><th>3~16분</th><td>기조연설 1분씩 — 전원. 명단 순서대로 호명. 호명하면 학생이 직접 마이크를 켭니다</td></tr>
+        <tr><th>16~33분</th><td>의제별 자유 토론 45초. 발언 수가 적은 대표를 우선 호명</td></tr>
+        <tr><th>33~39분</th><td>블록 협상 — 블록 보드에 진영별 공동 제안을 올립니다. 소회의실을 쓸 수 있으면 함께 써도 됩니다</td></tr>
+        <tr><th>39~46분</th><td>블록 제안을 놓고 표결. 국가 대표만 표결, 기구·NGO는 발언만</td></tr>
+        <tr><th>46~50분</th><td>의장 정리, 발언 요지 입력 확인</td></tr>
       </table>
+      <div class="warn" style="margin-top:12px"><b>구글 미트 운영 메모</b><br>
+        · 주최자는 학생 마이크를 켤 수 없습니다. 호명할 때 “마이크 켜세요”를 함께 말해 주세요.<br>
+        · 미트 채팅은 회의가 끝나면 사라집니다. 기록이 남아야 하는 내용은 이 화면의 발언 요지와 블록 보드에 쓰게 하세요.<br>
+        · 소리 문제가 생긴 학생은 발언 요지에 먼저 쓰게 하고 의장이 대신 읽어 주면 발언으로 인정합니다.<br>
+        · 발언 중인 학생을 미트에서 고정(핀)해 두면 화면이 덜 흔들립니다.</div>
     </div>
   </div>
 </div></section>
@@ -340,7 +401,7 @@ function pick(p) {
   $("#tabs").hidden = false;
   renderRole();
   loadKeynote();
-  go("role");
+  go("how");
   startPolling();
 }
 
@@ -409,6 +470,16 @@ $("#hand").onclick = async () => {
   else { await api({ action: "munHand", sid: me.sid, token: me.token, agenda }); toast("발언을 신청했습니다"); }
   refresh();
 };
+$("#readyBtn").onclick = async () => {
+  const r = await api({ action: "munNote", sid: me.sid, token: me.token, kind: "ready", text: "준비 완료" });
+  if (r.ok) { toast("준비 완료로 표시했습니다"); refresh(); } else toast("표시하지 못했습니다");
+};
+$("#blocSend").onclick = async () => {
+  const t = $("#blocText").value.trim();
+  if (t.length < 5) { toast("제안을 한 문장 이상 쓰세요"); return; }
+  const r = await api({ action: "munNote", sid: me.sid, token: me.token, kind: "bloc", text: `[${me.def.bloc}] ${t}` });
+  if (r.ok) { $("#blocText").value = ""; toast("블록 제안을 올렸습니다"); refresh(); } else toast("올리지 못했습니다");
+};
 $("#saveNote").onclick = () => sendNote("speech");
 $("#saveMotion").onclick = () => sendNote("motion");
 async function sendNote(kind) {
@@ -438,7 +509,7 @@ function paintStage() {
   ["#stName", "#cName"].forEach(s => $(s).textContent = sp.name);
   ["#stTime", "#cTime"].forEach(s => { $(s).textContent = fmt(Math.abs(left)); $(s).classList.toggle("over", left < 0); });
   ["#stBar", "#cBar"].forEach(s => $(s).style.width = Math.min(100, el / limit * 100) + "%");
-  $("#myTurn").innerHTML = me && sp.sid === me.sid ? `<div class="myturn">지금 ${esc(me.role)}의 발언 차례입니다. 마이크를 켜고 말씀하세요.</div>` : "";
+  $("#myTurn").innerHTML = me && sp.sid === me.sid ? `<div class="myturn">지금 ${esc(me.def.role)}의 발언 차례입니다. 구글 미트에서 <u>본인이 직접 마이크를 켜고</u> 말씀하세요.</div>` : "";
 }
 function paintQueue() {
   const q = feed.queue;
@@ -455,7 +526,15 @@ function paintQueue() {
     const c = byId[s.sid], n = c ? c.n : 0;
     return `<span class="chip ${n === 0 ? "zero" : n >= M.rules.minSpeeches ? "done" : ""}">${esc(s.name)} ${n}회</span>`;
   }).join("") || `<p class="mute small">아직 입장한 대표가 없습니다.</p>`;
-  $("#feed").innerHTML = feed.notes.map(n =>
+  const isReady = me && (feed.ready || []).includes(me.sid);
+  $("#readyBox").innerHTML = isReady
+    ? `<div class="warn" style="background:#e9f7ef;border-color:#bfe6cd"><b>준비 완료로 표시되었습니다.</b> 회의 시작 전까지 원고를 더 다듬어도 됩니다.</div>`
+    : "";
+  $("#readyBtn").textContent = isReady ? "다시 준비 완료로 표시" : "준비를 마쳤습니다";
+  $("#blocList").innerHTML = (feed.blocs || []).map(n =>
+    `<div><b>${esc(n.name)}</b> <span class="mute small">${esc(n.role)}</span><br>${esc(n.text)}</div>`).join("")
+    || `<p class="mute small">아직 올라온 블록 제안이 없습니다.</p>`;
+  $("#feed").innerHTML = feed.notes.filter(n => n.kind !== "ready" && n.kind !== "bloc").map(n =>
     `<div><b>${esc(n.name)}</b> <span class="mute small">${esc(n.role)}${n.kind === "motion" ? " · 수정안" : ""}</span><br>${esc(n.text)}</div>`).join("")
     || `<p class="mute small">아직 기록된 발언 요지가 없습니다.</p>`;
 }
@@ -528,15 +607,17 @@ function paintChair() {
   const notesBy = {};
   (report ? report.events : feed.notes).forEach(n => { (notesBy[n.sid] = notesBy[n.sid] || []).push(n.text); });
   const seats = feed.seats || [];
-  $("#cTable").innerHTML = `<tr><th>학번</th><th>이름</th><th>역할</th><th>발언</th><th>총 시간</th><th>요지</th><th></th></tr>` +
+  const readySet = new Set(feed.ready || []);
+  $("#cTable").innerHTML = `<tr><th>학번</th><th>이름</th><th>역할</th><th>준비</th><th>발언</th><th>총 시간</th><th>요지</th><th></th></tr>` +
     (seats.length ? seats.map(s => {
       const c = byId[s.sid] || { n: 0, secs: 0 };
       const notes = (notesBy[s.sid] || []).slice(-2).join(" / ");
       return `<tr><td class="small mute">${esc(s.sid)}</td><td><b>${esc(s.name)}</b></td><td class="small mute">${esc(s.role)}</td>
+        <td>${readySet.has(s.sid) ? "<span style=\"color:var(--ok);font-weight:700\">완료</span>" : "<span class=\"mute\">—</span>"}</td>
         <td${c.n === 0 ? ' style="color:var(--red);font-weight:700"' : ""}>${c.n}회</td><td>${fmt(c.secs || 0)}</td>
         <td class="small">${esc(notes)}</td>
         <td><button class="btn line" style="min-height:30px;padding:2px 10px;font-size:.82rem" data-release="${esc(s.sid)}">자리 풀기</button></td></tr>`;
-    }).join("") : `<tr><td colspan="7" class="mute small">아직 입장한 대표가 없습니다.</td></tr>`);
+    }).join("") : `<tr><td colspan="8" class="mute small">아직 입장한 대표가 없습니다.</td></tr>`);
   $$("#cTable [data-release]").forEach(b => b.onclick = async () => {
     if (!confirm("이 학생의 자리를 풀면 다른 기기에서 다시 입장할 수 있습니다. 계속할까요?")) return;
     await api({ action: "munChair", key: chairKey, op: "release", sid: b.dataset.release });

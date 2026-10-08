@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>모의 UN 안내 · 화면 공유용</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;900&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%2312284b'/><ellipse cx='16' cy='16' rx='6' ry='14' fill='none' stroke='white' stroke-width='1.5'/><path d='M2 16h28' stroke='white' stroke-width='1.5'/></svg>">
+<style>
+:root{--ink:#12284b;--un:#1f7fc4;--sky:#dcebf7;--paper:#fff;--desk:#eef2f7;--red:#e0482f;--line:#cfdae6;--mute:#56667c;--ok:#1d8750;
+  --serif:"Noto Serif KR",serif;--sans:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;background:#0b1830;color:var(--ink);font-family:var(--sans);display:flex;flex-direction:column;overflow:hidden;word-break:keep-all}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--un);outline-offset:2px}
+.deck{flex:1;display:grid;place-items:center;padding:2vh 2vw}
+.slide{display:none;width:min(1200px,96vw);height:min(86vh,760px);background:var(--paper);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.4);padding:clamp(28px,4vw,56px);overflow:auto;position:relative}
+.slide.on{display:block}
+.slide.dark{background:var(--ink);color:#fff}
+.eyebrow{color:var(--un);font-weight:700;font-size:clamp(.95rem,1.6vw,1.15rem)}
+.slide.dark .eyebrow{color:#9fd0f2}
+h1{font-family:var(--serif);font-weight:900;font-size:clamp(2rem,4.6vw,3.4rem);line-height:1.2;margin:.1em 0 .3em}
+h2{font-family:var(--serif);font-weight:900;font-size:clamp(1.5rem,3vw,2.2rem);margin:.1em 0 .4em}
+p,li{font-size:clamp(1.02rem,1.7vw,1.35rem);line-height:1.65}
+ul,ol{margin:.4em 0;padding-left:1.2em}
+li{margin:.35em 0}
+.lead{color:var(--mute);font-size:clamp(1.05rem,1.8vw,1.4rem)}
+.slide.dark .lead{color:#cfe0f1}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.5vw,34px)}
+.box{background:var(--sky);border-radius:12px;padding:clamp(14px,2vw,22px)}
+.box h3{margin:0 0 .3em;font-size:clamp(1.05rem,1.8vw,1.3rem)}
+.box.warn{background:#fff6ec}
+.box.bad{background:#fdeeea}
+.box.good{background:#e9f7ef}
+.big{font-family:var(--serif);font-weight:900;font-size:clamp(2.4rem,6vw,4.2rem);line-height:1;color:var(--un)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;margin:.5em 0}
+.steps li::before{content:counter(s);width:1.9em;height:1.9em;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:700;font-size:.9em}
+.slide.dark .steps li::before{background:#fff;color:var(--ink)}
+table{width:100%;border-collapse:collapse;margin-top:.4em}
+th,td{border-bottom:1px solid var(--line);padding:.5em .4em;text-align:left;font-size:clamp(.95rem,1.5vw,1.2rem);vertical-align:top}
+th{color:var(--mute);white-space:nowrap;width:7.5em}
+.quote{font-family:var(--serif);font-size:clamp(1.2rem,2.4vw,1.9rem);line-height:1.5;background:var(--sky);border-radius:12px;padding:clamp(16px,2.4vw,28px)}
+.slide.dark .quote{background:rgba(255,255,255,.1)}
+.pill{display:inline-block;background:var(--red);color:#fff;border-radius:30px;padding:.15em .8em;font-size:clamp(.9rem,1.5vw,1.1rem);font-weight:700}
+.mono{font-variant-numeric:tabular-nums}
+.bar{display:flex;align-items:center;gap:12px;padding:10px 16px;background:#0b1830;color:#cfe0f1;font-size:.9rem}
+.bar b{color:#fff;font-family:var(--serif)}
+.bar .nav{margin-left:auto;display:flex;gap:8px;align-items:center}
+.bar button{border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;border-radius:30px;padding:6px 16px;cursor:pointer}
+.bar .pg{min-width:5em;text-align:center}
+.hint{position:absolute;right:clamp(20px,3vw,40px);bottom:clamp(16px,2vw,28px);color:var(--mute);font-size:.85rem}
+.slide.dark .hint{color:#8fa6c4}
+@media print{body{overflow:visible;background:#fff}.bar{display:none}.deck{display:block;padding:0}.slide{display:block!important;height:auto;page-break-after:always;box-shadow:none;border-radius:0}}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<section class="slide dark on">
+  <span class="eyebrow">국제관계와 국제기구 · 오늘 수업</span>
+  <h1>모의 UN을 합니다</h1>
+  <p class="lead">다음 시간, 여러분은 각자 다른 나라와 기구의 대표가 되어 하나의 합의문을 만듭니다.<br>오늘은 그 준비를 합니다.</p>
+  <div class="quote" style="margin-top:3vh">“우리는 가해자가 아니라 피해자입니다.<br>그런데 왜 청구서는 우리에게 옵니까?”<br><span class="lead">— 투발루 대표의 첫 문장</span></div>
+  <div class="hint">→ 또는 Space 키로 넘깁니다</div>
+</section>
+
+<section class="slide">
+  <span class="eyebrow">의제</span>
+  <h1>기후 위기와 국제 평화·안보</h1>
+  <p class="lead">UN 총회 특별세션. 세 가지를 놓고 다툽니다.</p>
+  <div class="two" style="margin-top:2vh">
+    <div class="box"><h3>A. 손실과 피해 기금</h3><p>누가 얼마를 내고, 누가 받는가</p></div>
+    <div class="box"><h3>B. 기후 난민의 법적 지위</h3><p>난민 협약을 새로 만들 것인가</p></div>
+  </div>
+  <div class="box" style="margin-top:2vh"><h3>C. 기후 재난과 평화유지</h3><p>물과 식량을 둘러싼 분쟁에 UN이 개입할 것인가</p></div>
+</section>
+
+<section class="slide">
+  <span class="eyebrow">왜 이 의제인가</span>
+  <h2>지난 시간에 배운 것이 그대로 나옵니다</h2>
+  <table>
+    <tr><th>거부권</th><td>강대국이 반대하면 결의는 멈춥니다. 그래도 길이 있는지 찾아야 합니다.</td></tr>
+    <tr><th>주권의 벽</th><td>“내정 간섭”이라는 말 앞에서 국제기구는 무엇을 할 수 있습니까.</td></tr>
+    <tr><th>재정</th><td>분담금을 내지 않는 나라가 생기면 활동은 멈춥니다.</td></tr>
+    <tr><th>강대국 이탈</th><td>국제연맹은 그렇게 무너졌습니다. 국제연합은 다릅니까.</td></tr>
+  </table>
+  <p class="lead" style="margin-top:2vh">여러분이 맡은 나라는 이 네 가지 중 하나를 반드시 마주하게 됩니다.</p>
+</section>
+
+<section class="slide">
+  <span class="eyebrow">역할</span>
+  <h2>지난 시간 여러분이 조사한 기구에 맞춰 배정했습니다</h2>
+  <div class="two">
+    <div>
+      <p><b>국가 대표 9명</b> — 투발루, 미국, 중국, 사우디아라비아, 프랑스, 독일, 케냐, 남아프리카공화국, 브라질</p>
+      <p class="lead">표결권이 있습니다. 국익을 지켜야 합니다.</p>
+    </div>
+    <div>
+      <p><b>기구·시민사회 4명</b> — WHO, UNESCO, OHCHR, 국제 NGO 연합</p>
+      <p class="lead">표결권은 없습니다. 대신 증거와 현장의 목소리로 국가들을 움직입니다.</p>
+    </div>
+  </div>
+  <div class="box warn" style="margin-top:2vh"><b>중요</b> 여러분의 의견이 아니라 <b>맡은 나라의 입장</b>을 말합니다. 내 생각과 달라도 그 나라 사람으로 말해야 합니다.</div>
+</section>
+
+<section class="slide">
+  <span class="eyebrow">회의 흐름</span>
+  <h2>50분을 이렇게 씁니다</h2>
+  <table>
+    <tr><th>3~16분</th><td><b>기조연설</b> 1분씩 — 전원이 한 번씩 합니다. 신청하지 않아도 의장이 부릅니다.</td></tr>
+    <tr><th>16~33분</th><td><b>자유 토론</b> 45초 — 말하고 싶으면 화면에서 발언을 신청합니다.</td></tr>
+    <tr><th>33~39분</th><td><b>블록 협상</b> — 같은 진영끼리 공동 제안을 만들어 화면에 올립니다.</td></tr>
+    <tr><th>39~46분</th><td><b>표결</b> — 국가 대표만 표결합니다.</td></tr>
+  </table>
+  <p class="lead" style="margin-top:1.5vh">한 사람당 최소 두 번 발언합니다. 기조연설 한 번, 토론 한 번 이상.</p>
+</section>
+
+<section class="slide dark">
+  <span class="eyebrow">구글 미트에서 지킬 것</span>
+  <h1>마이크는 본인이 켭니다</h1>
+  <p class="lead">선생님은 여러분의 마이크를 대신 켤 수 없습니다. 호명되면 <b>직접 켜고</b>, 끝나면 바로 끕니다.</p>
+  <div class="two" style="margin-top:2vh">
+    <div class="box" style="background:rgba(255,255,255,.1)"><h3 style="color:#fff">평소</h3><p>음소거. 카메라는 자유.</p></div>
+    <div class="box" style="background:rgba(255,255,255,.1)"><h3 style="color:#fff">내 차례</h3><p>마이크 켜기 → “의장님,”으로 시작 → 끝나면 끄기</p></div>
+  </div>
+  <p class="lead" style="margin-top:2vh">미트 창과 회의 화면을 나란히 띄워 두세요. 휴대폰으로 미트에 들어오고 회의 화면은 노트북으로 봐도 됩니다.</p>
+</section>
+
+<section class="slide">
+  <span class="eyebrow">발언하는 법</span>
+  <h2>말은 이렇게 시작합니다</h2>
+  <div class="quote">“의장님, <b>케냐</b> 대표단입니다.”</div>
+  <ul style="margin-top:2vh">
+    <li>다른 나라는 이름이 아니라 <b>“미국 대표”</b>처럼 역할로 부릅니다.</li>
+    <li>끼어들지 않습니다. 반박은 내 차례에 합니다.</li>
+    <li>“저는 ~라고 생각합니다”가 아니라 <b>“우리 정부는 ~를 요구합니다”</b>로 말합니다.</li>
+    <li>45초는 생각보다 짧습니다. 주장 하나, 근거 하나면 충분합니다.</li>
+  </ul>
+  <div class="box bad" style="margin-top:1.5vh"><b>이런 발언은 점수가 되지 않습니다</b><br>“저도 같은 생각입니다” / “잘 모르겠습니다” / 자료를 그대로 읽기만 하는 발언</div>
+</section>
+
+<section class="slide">
+  <span class="eyebrow">1분 기조연설</span>
+  <h2>이 네 줄이면 1분입니다</h2>
+  <ol class="steps">
+    <li><b>인사와 입장</b> — “의장님, ○○ 대표단입니다. 우리는 이 의제를 ~로 봅니다.”</li>
+    <li><b>근거 하나</b> — 역할 카드의 사실 중 하나를 숫자와 함께</li>
+    <li><b>요구 하나</b> — 합의문에 넣고 싶은 문장을 구체적으로</li>
+    <li><b>협상 여지</b> — “~를 보장한다면 우리는 ~를 수용할 수 있습니다.”</li>
+  </ol>
+  <p class="lead">300자 안팎입니다. 회의 화면에 쓰면 자동 저장되고, 회의 중에 보면서 읽어도 됩니다.</p>
+</section>
+
+<section class="slide">
+  <span class="eyebrow">오늘 할 일</span>
+  <h2>이 네 가지를 마치고 ‘준비 완료’를 누르세요</h2>
+  <ol class="steps">
+    <li>회의 화면에 <b>학번·이름</b>을 넣고 <b>내 역할</b>을 골라 입장</li>
+    <li><b>역할 카드</b>를 끝까지 읽기 — 사실 3개, 협상 카드, 의제별 입장</li>
+    <li><b>기조연설 원고</b> 쓰기 (300자 안팎)</li>
+    <li><b>발언 신청</b> 버튼을 한 번 눌러 보고 취소하기</li>
+  </ol>
+  <div class="box good" style="margin-top:1.5vh"><b>학번과 이름은 정확하게</b> 넣으세요. 한 번 입장하면 그 자리는 여러분 기기에 묶입니다. 기기를 바꿔야 하면 선생님에게 말하세요.</div>
+</section>
+
+<section class="slide dark">
+  <span class="eyebrow">평가</span>
+  <h1>점수는 네 가지로 봅니다</h1>
+  <ol class="steps">
+    <li><b>국가 입장의 정확성</b> — 내 나라가 실제로 할 법한 말을 했는가</li>
+    <li><b>기조연설의 논리</b> — 주장에 근거가 붙어 있는가</li>
+    <li><b>협상 기여</b> — 수정안이나 타협안을 냈는가</li>
+    <li><b>역할 충실도</b> — 끝까지 그 나라 사람으로 말했는가</li>
+  </ol>
+  <p class="lead" style="margin-top:2vh">발언 횟수, 발언 시간, 발언 요지가 모두 자동으로 기록됩니다. 많이 말한 사람이 아니라 <b>근거를 댄 사람</b>이 좋은 점수를 받습니다.</p>
+</section>
+
+<section class="slide">
+  <span class="eyebrow">지금 접속</span>
+  <h1 style="font-size:clamp(1.6rem,3.4vw,2.6rem);word-break:break-all">created412.github.io/un-recruit/mun.html</h1>
+  <div class="two" style="margin-top:2vh">
+    <div class="box"><h3>들어가면</h3><p>학번, 이름, 역할을 고르고 <b>입장하기</b></p></div>
+    <div class="box"><h3>첫 화면</h3><p><b>진행 방법</b> 탭을 먼저 읽습니다</p></div>
+  </div>
+  <p class="lead" style="margin-top:2vh">역할은 선생님이 채팅으로 알려 줍니다. 모르면 지금 물어보세요.</p>
+  <div class="hint">화살표 키로 넘김 · 인쇄하면 유인물이 됩니다</div>
+</section>
+
+</div>
+
+<div class="bar">
+  <b>모의 UN 안내</b><span>화면 공유용 · 화살표 키로 넘기기</span>
+  <span class="nav">
+    <button id="prev">← 이전</button>
+    <span class="pg mono" id="pg"></span>
+    <button id="next">다음 →</button>
+  </span>
+</div>
+
+<script>
+const slides = [...document.querySelectorAll(".slide")];
+let i = 0;
+function show(n) {
+  i = Math.max(0, Math.min(slides.length - 1, n));
+  slides.forEach((s, k) => s.classList.toggle("on", k === i));
+  document.getElementById("pg").textContent = `${i + 1} / ${slides.length}`;
+  location.hash = String(i + 1);
+}
+document.getElementById("next").onclick = () => show(i + 1);
+document.getElementById("prev").onclick = () => show(i - 1);
+document.addEventListener("keydown", e => {
+  if (["ArrowRight", "PageDown", " ", "Enter"].includes(e.key)) { e.preventDefault(); show(i + 1); }
+  if (["ArrowLeft", "PageUp", "Backspace"].includes(e.key)) { e.preventDefault(); show(i - 1); }
+  if (e.key === "Home") show(0);
+  if (e.key === "End") show(slides.length - 1);
+});
+document.getElementById("deck").addEventListener("click", e => { if (!e.target.closest("a,button")) show(i + 1); });
+show(Math.max(0, (parseInt(location.hash.slice(1), 10) || 1) - 1));
+</script>
+</body>
+</html>
