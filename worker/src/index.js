@@ -239,8 +239,32 @@ async function munFeed(env, b) {
     "SELECT sid, name, COUNT(*) AS n, SUM(seconds) AS secs FROM mun_queue WHERE status = 'done' GROUP BY sid, name"
   ).all();
   const notes = await env.DB.prepare(
-    "SELECT sid, name, role, kind, text, created_at FROM mun_events ORDER BY id DESC LIMIT 40"
+    "SELECT sid, name, role, kind, text, created_at FROM mun_events WHERE kind IN ('speech','motion') ORDER BY id DESC LIMIT 40"
   ).all();
+  // 2차시 팀 회의: 학생은 자기 팀 대화와 결정문만, 의장은 모든 팀 결정문을 받습니다.
+  let team = null;
+  const tid = String(b.team || "");
+  if (okSeat && /^[a-z]{1,20}$/.test(tid)) {
+    const msgs = await env.DB.prepare(
+      "SELECT sid, name, role, text, created_at FROM mun_events WHERE kind = ? ORDER BY id DESC LIMIT 80"
+    ).bind("team:" + tid).all();
+    const plan = await env.DB.prepare(
+      "SELECT sid, name, role, text, created_at FROM mun_events WHERE kind = ? ORDER BY id DESC LIMIT 1"
+    ).bind("plan:" + tid).first();
+    const rebut = await env.DB.prepare(
+      "SELECT text, created_at FROM mun_events WHERE kind = 'rebut' AND sid = ? ORDER BY id DESC LIMIT 1"
+    ).bind(okSeat.sid).first();
+    team = { msgs: msgs.results.reverse(), plan: plan || null, rebut: rebut || null };
+  }
+  let plans = null;
+  if (okChair) {
+    const p = await env.DB.prepare(
+      `SELECT e.kind, e.sid, e.name, e.role, e.text, e.created_at FROM mun_events e
+       JOIN (SELECT kind, MAX(id) AS id FROM mun_events WHERE kind LIKE 'plan:%' GROUP BY kind) m ON e.id = m.id`
+    ).all();
+    const c = await env.DB.prepare("SELECT kind, COUNT(*) AS n FROM mun_events WHERE kind LIKE 'team:%' GROUP BY kind").all();
+    plans = { latest: p.results, counts: c.results };
+  }
   const seats = await env.DB.prepare("SELECT sid, name, role FROM mun_students ORDER BY sid").all();
   // 블록 공동 제안과 준비 완료 체크 (구글 미트에서 소회의실 없이 협상 단계를 돌리기 위한 보드)
   const blocs = await env.DB.prepare("SELECT sid, name, role, text, created_at FROM mun_events WHERE kind = 'bloc' ORDER BY id DESC LIMIT 20").all();
@@ -254,6 +278,8 @@ async function munFeed(env, b) {
     queue: q.results.filter(r => r.status === "waiting"),
     counts: counts.results,
     notes: notes.results,
+    team,
+    plans,
   };
 }
 
@@ -284,9 +310,9 @@ async function munChair(env, b) {
     await env.DB.prepare("UPDATE mun_students SET token = '' WHERE sid = ?").bind(clean(b.sid)).run();
     return { ok: true };
   }
-  if (b.op === "reset") { // 회의 전체 초기화 (기조연설 원고는 남김)
+  if (b.op === "reset") { // 회의 기록만 초기화 (기조연설 원고, 준비 완료, 팀 회의, 반론 대비는 남김)
     await env.DB.prepare("DELETE FROM mun_queue").run();
-    await env.DB.prepare("DELETE FROM mun_events").run();
+    await env.DB.prepare("DELETE FROM mun_events WHERE kind IN ('speech','motion','bloc','vote')").run();
     return { ok: true };
   }
   return { ok: false, error: "op" };
@@ -297,8 +323,10 @@ async function munNote(env, b) {
   if (!seat) return { ok: false, error: "seat" };
   const t = text_(b.text);
   if (!t) return { ok: false, error: "empty" };
+  const kind = clean(b.kind) || "speech";
+  if (!/^(speech|motion|bloc|vote|ready|rebut|(team|plan):[a-z]{1,20})$/.test(kind)) return { ok: false, error: "kind" };
   await env.DB.prepare("INSERT INTO mun_events (sid, name, role, kind, text, created_at) VALUES (?, ?, ?, ?, ?, ?)")
-    .bind(seat.sid, seat.name, seat.role, clean(b.kind) || "speech", t, new Date().toISOString()).run();
+    .bind(seat.sid, seat.name, seat.role, kind, t, new Date().toISOString()).run();
   return { ok: true };
 }
 

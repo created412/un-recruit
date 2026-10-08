@@ -143,6 +143,24 @@ textarea{min-height:150px;resize:vertical;line-height:1.7}
 table{width:100%;border-collapse:collapse;font-size:.92rem;margin-top:10px}
 th,td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;vertical-align:top}
 th{color:var(--mute);font-size:.84rem;white-space:nowrap}
+/* 팀 회의 */
+.teamhead{border-radius:var(--r);color:#fff;padding:18px 22px;background:var(--ink)}
+.teamhead h2{font-size:1.45rem}
+.teamhead p{color:#e4ecf6}
+.members{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.members span{background:rgba(255,255,255,.14);border-radius:20px;padding:3px 11px;font-size:.86rem}
+.members span.off{opacity:.55}
+.chat{max-height:320px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:4px 12px;background:#fbfcfe;margin-top:10px}
+.chat div{border-top:1px solid var(--line);padding:7px 0;font-size:.93rem}
+.chat div:first-child{border-top:0}
+.chat div.mine b{color:var(--red)}
+.chat b{color:var(--un)}
+.chat time{color:var(--mute);font-size:.78rem;margin-left:6px}
+.sendrow{display:flex;gap:8px;margin-top:8px}
+.sendrow input{flex:1;margin-top:0}
+.sendrow .btn{min-height:44px}
+.plan{border:1.5px solid var(--ok);background:#f2faf5;border-radius:8px;padding:12px 14px;margin-top:12px;font-size:.94rem;white-space:pre-wrap}
+select.f2{width:100%;margin-top:6px;padding:11px 12px;border:1px solid var(--line);border-radius:8px;background:#fbfcfe}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 20px;border-radius:30px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:50}
 .toast.on{opacity:1}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -160,6 +178,7 @@ th{color:var(--mute);font-size:.84rem;white-space:nowrap}
 <nav class="tabs" id="tabs" hidden>
   <button data-go="how" aria-current="true">진행 방법</button>
   <button data-go="role">내 역할</button>
+  <button data-go="team">팀 회의</button>
   <button data-go="speech">기조연설 준비</button>
   <button data-go="floor">회의장</button>
   <button data-go="chair">의장석</button>
@@ -171,7 +190,7 @@ th{color:var(--mute);font-size:.84rem;white-space:nowrap}
   <div class="hero"><div class="wrap">
     <span class="small" style="color:#9fd0f2">UN 총회 특별세션 · 2차시 활동</span>
     <h1>기후 위기와 국제 평화·안보</h1>
-    <p style="color:#dfe9f5;max-width:46em">여러분은 각자 다른 나라와 기구의 대표입니다. 같은 재난을 말하지만 지켜야 할 것이 서로 다릅니다. 오늘 회의에서 합의문을 만들어야 합니다.</p>
+    <p style="color:#dfe9f5;max-width:46em">여러분은 각자 다른 나라와 기구의 대표입니다. 같은 재난을 말하지만 지켜야 할 것이 서로 다릅니다. 오늘은 같은 팀끼리 작전을 짜고, 다음 시간 회의에서 합의문을 만듭니다.</p>
     <div class="ag" id="agendas"></div>
   </div></div>
   <div class="wrap">
@@ -229,13 +248,14 @@ th{color:var(--mute);font-size:.84rem;white-space:nowrap}
 
   <div class="panel">
     <h2>오늘 준비할 것</h2>
-    <p class="mute small">네 가지를 마치면 아래 버튼을 누르세요. 선생님 화면에 준비 완료로 표시됩니다.</p>
-    <ul style="padding-left:1.2em">
-      <li>내 역할 카드를 끝까지 읽기</li>
+    <p class="mute small">회의는 다음 시간에 합니다. 오늘은 아래 다섯 가지를 마치고 버튼을 누르세요. 선생님 화면에 준비 완료로 표시됩니다.</p>
+    <ol style="padding-left:1.2em">
+      <li><b>내 역할</b> 카드를 끝까지 읽기</li>
+      <li><b>팀 회의</b>에서 우리 팀의 작전 정하기 — 팀 결정문 올리기</li>
+      <li><b>기조연설 준비</b> 탭에서 반론 대비 쓰기 — 누가 나를 공격할지, 나는 뭐라고 답할지</li>
       <li>기조연설 1분 원고 쓰기 (300자 안팎)</li>
-      <li>발언 신청 버튼을 한 번 눌러 보고 취소하기</li>
-      <li>마이크 켜고 끄기를 미트에서 해 보기</li>
-    </ul>
+      <li>회의장 탭에서 발언 신청 버튼을 한 번 눌러 보고 취소하기</li>
+    </ol>
     <div id="readyBox"></div>
     <div class="row"><button class="btn red" id="readyBtn">준비를 마쳤습니다</button><button class="btn line" data-go="role">역할 카드 보기</button></div>
   </div>
@@ -244,7 +264,34 @@ th{color:var(--mute);font-size:.84rem;white-space:nowrap}
 <!-- 내 역할 -->
 <section class="view" id="v-role"><div class="wrap">
   <div id="roleCard"></div>
-  <div class="row"><button class="btn" data-go="speech">기조연설 준비하러 가기</button></div>
+  <div class="row"><button class="btn" data-go="team">팀 회의로 가기</button></div>
+</div></section>
+
+<!-- 팀 회의 -->
+<section class="view" id="v-team"><div class="wrap">
+  <div class="teamhead" id="teamHead"></div>
+
+  <div class="panel">
+    <h3>팀 대화</h3>
+    <p class="mute small">같은 팀만 봅니다. 미트에서 말로 하기 어려우니 여기에 짧게 주고받으세요. 내 역할 카드의 입장을 근거로 말합니다.</p>
+    <div class="chat" id="chat"></div>
+    <div class="sendrow"><input type="text" id="chatIn" maxlength="300" placeholder="예) 기금은 찬성인데 집행 감시를 조건으로 걸자" autocomplete="off"><button class="btn" id="chatSend">보내기</button></div>
+  </div>
+
+  <div class="panel">
+    <h3>팀 결정문</h3>
+    <p class="mute small">대화로 정한 것을 한 사람이 정리해 올립니다. 누가 올려도 되고, 다시 올리면 새 것으로 바뀝니다. 다음 시간 블록 협상에서 이 결정문으로 시작합니다.</p>
+    <div id="planNow"></div>
+    <label class="f">1. 우리 팀이 가장 밀어붙일 의제
+      <select class="f2" id="pAg"><option value="">고르세요</option></select></label>
+    <label class="f">2. 공동 요구 한 문장<small>합의문에 꼭 들어가야 할 문장을 그대로 씁니다.</small>
+      <textarea id="pDemand" style="min-height:70px" placeholder="예) 손실과 피해 기금의 분담금은 누적 배출량에 비례하여 정한다."></textarea></label>
+    <label class="f">3. 양보할 수 있는 선<small>“~를 보장하면 ~는 받아들인다”의 꼴로 씁니다.</small>
+      <textarea id="pGive" style="min-height:70px" placeholder="예) 집행 감시 위원회에 공여국 자리를 보장하면, 자발적 기여를 일부 섞는 것은 받아들인다."></textarea></label>
+    <label class="f">4. 가장 큰 상대와 대응<small>어느 나라(팀)가 가장 세게 막을지, 우리는 어떻게 맞설지.</small>
+      <textarea id="pRival" style="min-height:70px" placeholder="예) 미국·사우디가 '자발적 기여'로 버틸 것. 30년간 약속한 금액과 실제 낸 금액 차이로 반박."></textarea></label>
+    <div class="row"><button class="btn red" id="planSend">팀 결정문 올리기</button><button class="btn line" data-go="speech">반론 대비하러 가기</button></div>
+  </div>
 </div></section>
 
 <!-- 기조연설 -->
@@ -264,6 +311,19 @@ th{color:var(--mute);font-size:.84rem;white-space:nowrap}
     <span class="cnt" id="keyCnt"></span>
     <div class="row"><button class="btn" id="saveKey">저장</button><button class="btn line" data-go="floor">회의장으로</button></div>
   </div>
+  <div class="panel">
+    <h2>반론 대비</h2>
+    <p class="mute">회의에서 나를 가장 세게 공격할 대표를 한 명 고르고, 그 대표가 할 말과 내 대답을 미리 써 둡니다. 「14개 역할 카드 모두 보기」나 팀 대화를 참고하세요.</p>
+    <label class="f">나를 공격할 대표<select class="f2" id="rbWho"><option value="">고르세요</option></select></label>
+    <div id="rbHint"></div>
+    <label class="f">그 대표가 할 말<small>그 나라 입장에서 한 문장으로.</small>
+      <textarea id="rbAttack" style="min-height:70px"></textarea></label>
+    <label class="f">내 대답<small>근거를 하나 붙입니다. 이 문장이 다음 시간 토론 45초 발언이 됩니다.</small>
+      <textarea id="rbAnswer" style="min-height:90px"></textarea></label>
+    <div class="row"><button class="btn" id="rbSave">반론 대비 저장</button></div>
+    <div id="rbNow"></div>
+  </div>
+
   <div class="panel">
     <h3>내 역할 카드 요약</h3>
     <div id="miniCard"></div>
@@ -350,13 +410,19 @@ th{color:var(--mute);font-size:.84rem;white-space:nowrap}
     </div>
 
     <div class="panel">
+      <h3>팀 회의 현황 (2차시)</h3>
+      <p class="mute small">팀마다 마지막으로 올라온 결정문입니다. 다음 시간 블록 협상을 시작할 때 이 화면을 공유하면 됩니다.</p>
+      <div id="cTeams"></div>
+    </div>
+
+    <div class="panel">
       <h3>학생별 발언 기록</h3>
       <div style="overflow:auto"><table id="cTable"></table></div>
       <div class="row">
         <button class="btn line" id="cCsv">발언 기록 CSV 받기</button>
         <button class="btn line" id="cReset">회의 기록 초기화</button>
       </div>
-      <p class="mute small">초기화는 발언 기록과 대기 줄만 지웁니다. 학생이 쓴 기조연설 원고는 남습니다.</p>
+      <p class="mute small">초기화는 발언 기록, 블록 보드, 대기 줄만 지웁니다. 기조연설 원고, 팀 결정문, 반론 대비, 준비 완료 표시는 남습니다.</p>
     </div>
 
     <div class="panel">
@@ -458,8 +524,11 @@ function pick(p) {
     location.reload();
   };
   $("#tabs").hidden = false;
+  me.team = M.teamOf(p.def.role);
   renderRole();
+  renderTeam();
   loadKeynote();
+  loadRebut();
   go("how");
   startPolling();
 }
@@ -520,6 +589,91 @@ function saveKeynote(quiet) {
 }
 $("#keynote").addEventListener("input", () => { countKey(); clearTimeout(keyT); keyT = setTimeout(() => saveKeynote(true), 4000); });
 $("#saveKey").onclick = () => saveKeynote(false);
+
+/* ── 팀 회의 ── */
+const hm = iso => { const d = new Date(iso); return isNaN(d) ? "" : `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`; };
+const short = role => String(role || "").replace(/ 대표$/, "");
+const PLAN_KEYS = [["pAg", "우선 의제"], ["pDemand", "공동 요구"], ["pGive", "양보선"], ["pRival", "상대와 대응"]];
+const tagged = (text, lab) => { const m = String(text || "").match(new RegExp(`\\[${lab}\\] ([\\s\\S]*?)(?=\\n\\[|$)`)); return m ? m[1].trim() : ""; };
+$("#pAg").innerHTML += M.agendas.map(a => `<option value="${a.id}. ${esc(a.name)}">${a.id}. ${esc(a.name)}</option>`).join("");
+let planFilled = false;
+function renderTeam() {
+  const t = me.team;
+  if (!t) { $("#teamHead").innerHTML = `<h2>팀이 정해지지 않은 역할입니다</h2><p>선생님께 말씀드리세요.</p>`; return; }
+  $("#teamHead").style.background = t.color;
+  paintTeam();
+}
+function paintTeam() {
+  const t = me && me.team;
+  if (!t) return;
+  const seats = feed.seats || [];
+  const members = t.roles.map(rn => {
+    const r = M.roles.find(x => x.role === rn) || { flag: "" };
+    const who = seats.filter(s => s.role === rn).map(s => s.name).join(", ");
+    return `<span class="${who ? "" : "off"}">${r.flag} ${esc(short(rn))} · ${who ? esc(who) : "아직 입장 전"}</span>`;
+  }).join("");
+  $("#teamHead").innerHTML = `<span class="small" style="opacity:.85">우리 팀</span><h2>${esc(t.name)}</h2>
+    <div class="members">${members}</div><p class="small" style="margin-top:10px">${esc(t.hint)}</p>`;
+  const tm = feed.team || {};
+  const chat = $("#chat");
+  const atBottom = chat.scrollHeight - chat.scrollTop - chat.clientHeight < 40;
+  chat.innerHTML = (tm.msgs || []).map(m =>
+    `<div class="${m.sid === me.sid ? "mine" : ""}"><b>${esc(short(m.role))}</b> <span class="mute small">${esc(m.name)}</span><time>${hm(m.created_at)}</time><br>${esc(m.text)}</div>`).join("")
+    || `<p class="mute small">아직 대화가 없습니다. 먼저 “우리 팀은 어느 의제에 힘을 쏟을까?”를 물어보세요.</p>`;
+  if (atBottom) chat.scrollTop = chat.scrollHeight;
+  const pl = tm.plan;
+  $("#planNow").innerHTML = pl
+    ? `<div class="plan"><b>지금 올라온 결정문</b> <span class="mute small">— ${esc(pl.name)}(${esc(short(pl.role))}) · ${hm(pl.created_at)}</span>\n${esc(pl.text)}</div>`
+    : `<div class="warn">아직 팀 결정문이 없습니다.</div>`;
+  // 처음 한 번, 지금 결정문을 입력 칸에 채워 두어 고쳐 올리기 쉽게 합니다.
+  if (pl && !planFilled) {
+    if (!PLAN_KEYS.some(([id]) => $("#" + id).value.trim())) PLAN_KEYS.forEach(([id, lab]) => { $("#" + id).value = tagged(pl.text, lab); });
+    planFilled = true;
+  }
+  if (tm.rebut && !$("#rbAnswer").value.trim()) fillRebut(tm.rebut.text);
+  $("#rbNow").innerHTML = tm.rebut ? `<p class="mute small" style="margin-top:10px">${hm(tm.rebut.created_at)}에 저장한 내용이 선생님 화면에 있습니다.</p>` : "";
+}
+async function sendChat() {
+  if (!me || !me.team) return;
+  const t = $("#chatIn").value.trim();
+  if (!t) return;
+  $("#chatIn").value = "";
+  const r = await api({ action: "munNote", sid: me.sid, token: me.token, kind: "team:" + me.team.id, text: t }).catch(() => ({}));
+  if (!r.ok) { $("#chatIn").value = t; toast("보내지 못했습니다"); }
+  refresh();
+}
+$("#chatSend").onclick = sendChat;
+$("#chatIn").addEventListener("keydown", e => { if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); sendChat(); } });
+$("#planSend").onclick = async () => {
+  if (!me || !me.team) return;
+  const v = PLAN_KEYS.map(([id, lab]) => [lab, $("#" + id).value.trim()]);
+  if (v.some(([, x]) => !x)) { toast("네 칸을 모두 채우세요"); return; }
+  const text = v.map(([lab, x]) => `[${lab}] ${x}`).join("\n");
+  const r = await api({ action: "munNote", sid: me.sid, token: me.token, kind: "plan:" + me.team.id, text }).catch(() => ({}));
+  if (r.ok) { toast("팀 결정문을 올렸습니다"); refresh(); } else toast("올리지 못했습니다");
+};
+
+/* ── 반론 대비 ── */
+$("#rbWho").innerHTML += M.roles.map(r => `<option value="${esc(r.role)}">${r.flag} ${esc(r.role)}</option>`).join("");
+$("#rbWho").onchange = () => {
+  const r = M.roles.find(x => x.role === $("#rbWho").value);
+  $("#rbHint").innerHTML = r ? `<div class="warn small"><b>${esc(r.role)}의 입장</b><br>${Object.entries(r.stances).map(([k, v]) => `${k}. ${esc(v)}`).join("<br>")}</div>` : "";
+};
+function fillRebut(text) {
+  $("#rbWho").value = tagged(text, "상대"); $("#rbWho").onchange();
+  $("#rbAttack").value = tagged(text, "예상 공격"); $("#rbAnswer").value = tagged(text, "내 대답");
+}
+function loadRebut() {
+  try { const t = localStorage.getItem(KEY + ":rb:" + me.sid); if (t) fillRebut(t); } catch (e) {}
+}
+$("#rbSave").onclick = async () => {
+  if (!me) { toast("먼저 입장하세요"); return; }
+  if (!$("#rbWho").value || $("#rbAttack").value.trim().length < 5 || $("#rbAnswer").value.trim().length < 10) { toast("상대, 예상 공격, 내 대답을 모두 쓰세요"); return; }
+  const text = `[상대] ${$("#rbWho").value}\n[예상 공격] ${$("#rbAttack").value.trim()}\n[내 대답] ${$("#rbAnswer").value.trim()}`;
+  try { localStorage.setItem(KEY + ":rb:" + me.sid, text); } catch (e) {}
+  const r = await api({ action: "munNote", sid: me.sid, token: me.token, kind: "rebut", text }).catch(() => ({}));
+  if (r.ok) { toast("반론 대비를 저장했습니다"); refresh(); } else toast("저장하지 못했습니다");
+};
 
 /* ── 회의장 ── */
 $("#agSeg").innerHTML = M.agendas.map(a =>
@@ -606,9 +760,14 @@ function paintQueue() {
     || `<p class="mute small">아직 기록된 발언 요지가 없습니다.</p>`;
 }
 async function refresh() {
-  const auth = chairKey ? { key: chairKey } : (me ? { sid: me.sid, token: me.token } : null);
+  const auth = chairKey ? { key: chairKey } : (me ? { sid: me.sid, token: me.token, team: me.team ? me.team.id : "" } : null);
   if (!auth) return;
-  try { const r = await api(Object.assign({ action: "munFeed" }, auth)); if (r.ok) { feed = r; paintQueue(); paintStage(); paintChair(); } } catch (e) {}
+  try { const r = await api(Object.assign({ action: "munFeed" }, auth)); if (r.ok) { feed = r; paintQueue(); paintStage(); paintTeam(); paintChair(); } } catch (e) {}
+  // 의장석은 15초마다 전체 기록(반론 대비 포함)을 다시 받습니다.
+  if (chairKey && Date.now() - (refresh.rep || 0) > 15000) {
+    refresh.rep = Date.now();
+    try { const r = await api({ action: "munReport", key: chairKey }); if (r.ok) { report = r; paintChair(); } } catch (e) {}
+  }
 }
 function startPolling() {
   refresh();
@@ -672,19 +831,30 @@ function paintChair() {
   const byId = {};
   feed.counts.forEach(c => byId[c.sid] = c);
   const notesBy = {};
-  (report ? report.events : feed.notes).forEach(n => { (notesBy[n.sid] = notesBy[n.sid] || []).push(n.text); });
+  const rebutBy = {};
+  (report ? report.events : feed.notes).forEach(n => {
+    if (n.kind === "speech" || n.kind === "motion") (notesBy[n.sid] = notesBy[n.sid] || []).push(n.text);
+    if (n.kind === "rebut") rebutBy[n.sid] = n.text;
+  });
+  const P = feed.plans || { latest: [], counts: [] };
+  $("#cTeams").innerHTML = M.teams.map(t => {
+    const pl = P.latest.find(x => x.kind === "plan:" + t.id);
+    const n = (P.counts.find(x => x.kind === "team:" + t.id) || { n: 0 }).n;
+    return `<div class="plan" style="border-color:${t.color};background:#fff"><b style="color:${t.color}">${esc(t.name)}</b> <span class="mute small">대화 ${n}건${pl ? ` · ${esc(pl.name)} ${hm(pl.created_at)}` : ""}</span>\n${pl ? esc(pl.text) : `<span class="mute">아직 결정문이 없습니다</span>`}</div>`;
+  }).join("");
   const seats = feed.seats || [];
   const readySet = new Set(feed.ready || []);
-  $("#cTable").innerHTML = `<tr><th>학번</th><th>이름</th><th>역할</th><th>준비</th><th>발언</th><th>총 시간</th><th>요지</th><th></th></tr>` +
+  $("#cTable").innerHTML = `<tr><th>학번</th><th>이름</th><th>역할</th><th>준비</th><th>반론 대비</th><th>발언</th><th>총 시간</th><th>요지</th><th></th></tr>` +
     (seats.length ? seats.map(s => {
       const c = byId[s.sid] || { n: 0, secs: 0 };
       const notes = (notesBy[s.sid] || []).slice(-2).join(" / ");
       return `<tr><td class="small mute">${esc(s.sid)}</td><td><b>${esc(s.name)}</b></td><td class="small mute">${esc(s.role)}</td>
         <td>${readySet.has(s.sid) ? "<span style=\"color:var(--ok);font-weight:700\">완료</span>" : "<span class=\"mute\">—</span>"}</td>
+        <td class="small" style="white-space:pre-wrap;min-width:12em">${rebutBy[s.sid] ? esc(rebutBy[s.sid]) : "<span class=\"mute\">—</span>"}</td>
         <td${c.n === 0 ? ' style="color:var(--red);font-weight:700"' : ""}>${c.n}회</td><td>${fmt(c.secs || 0)}</td>
         <td class="small">${esc(notes)}</td>
         <td><button class="btn line" style="min-height:30px;padding:2px 10px;font-size:.82rem" data-release="${esc(s.sid)}">자리 풀기</button></td></tr>`;
-    }).join("") : `<tr><td colspan="8" class="mute small">아직 입장한 대표가 없습니다.</td></tr>`);
+    }).join("") : `<tr><td colspan="9" class="mute small">아직 입장한 대표가 없습니다.</td></tr>`);
   $$("#cTable [data-release]").forEach(b => b.onclick = async () => {
     if (!confirm("이 학생의 자리를 풀면 다른 기기에서 다시 입장할 수 있습니다. 계속할까요?")) return;
     await api({ action: "munChair", key: chairKey, op: "release", sid: b.dataset.release });
@@ -699,11 +869,15 @@ $("#cCsv").onclick = async () => {
     spoke[q.sid] = spoke[q.sid] || { n: 0, secs: 0 };
     spoke[q.sid].n++; spoke[q.sid].secs += q.seconds || 0;
   });
-  const head = ["학번", "이름", "역할", "발언 횟수", "총 발언 시간(초)", "기조연설 원고", "발언 요지와 수정안"];
+  const head = ["학번", "이름", "역할", "팀", "발언 횟수", "총 발언 시간(초)", "기조연설 원고", "반론 대비", "팀 대화·결정문", "발언 요지와 수정안"];
   const lines = [head].concat((r.students || []).map(x => {
     const sp = spoke[x.sid] || { n: 0, secs: 0 };
-    const ev = r.events.filter(e => e.sid === x.sid).map(e => (e.kind === "motion" ? "[수정안] " : "") + e.text).join(" || ");
-    return [x.sid, x.name, x.role, sp.n, sp.secs, x.keynote || "", ev];
+    const mine = r.events.filter(e => e.sid === x.sid);
+    const rb = mine.filter(e => e.kind === "rebut").map(e => e.text).pop() || "";
+    const tm = mine.filter(e => /^(team|plan):/.test(e.kind)).map(e => (e.kind.startsWith("plan:") ? "[결정문] " : "") + e.text).join(" || ");
+    const ev = mine.filter(e => e.kind === "speech" || e.kind === "motion").map(e => (e.kind === "motion" ? "[수정안] " : "") + e.text).join(" || ");
+    const t = M.teamOf(x.role);
+    return [x.sid, x.name, x.role, t ? t.name : "", sp.n, sp.secs, x.keynote || "", rb, tm, ev];
   }));
   const csv = lines.map(l => l.map(c => { c = String(c == null ? "" : c); if (/^[=+\-@]/.test(c)) c = "'" + c; return `"${c.replace(/"/g, '""')}"`; }).join(",")).join("\r\n");
   const a = document.createElement("a");
