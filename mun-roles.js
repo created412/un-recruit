@@ -279,10 +279,7 @@ window.MUN = {
   /* 2차시 퀴즈 「이 말, 누가 했을까?」: 역할 카드의 입장 문장을 그대로 씁니다. from은 A·B·C 또는 opening */
   quiz: [
     { role: "사우디아라비아 대표", from: "A" },
-    { role: "브라질 대표", from: "C" },
     { role: "러시아 대표", from: "C" },
-    { role: "독일 대표", from: "A" },
-    { role: "케냐 대표", from: "C" },
     { role: "유네스코(UNESCO) 대표", from: "opening" }
   ]
 };
