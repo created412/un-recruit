@@ -63,7 +63,7 @@ th{color:var(--mute);white-space:nowrap;width:7.5em}
 .slide.dark .hint{color:#8fa6c4}
 @media print{body{overflow:visible;background:#fff}.bar{display:none}.deck{display:block;padding:0}.slide{display:block!important;height:auto;page-break-after:always;box-shadow:none;border-radius:0}}
 /* 타이머 */
-.timer{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:#fff;border-radius:40px;padding:6px 8px 6px 20px;margin-top:1.5vh}
+.timer{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:#fff;border-radius:40px;padding:6px 8px 6px 20px;margin-top:1vh}
 .slide.dark .timer{background:#fff;color:var(--ink)}
 .timer .tt{font-family:var(--serif);font-weight:900;font-size:clamp(1.4rem,min(3vw,4.4vh),2.3rem);font-variant-numeric:tabular-nums;min-width:3.3em}
 .timer button{border:1px solid currentColor;background:transparent;border-radius:30px;padding:6px 14px;cursor:pointer;font-size:.95rem}
@@ -74,6 +74,16 @@ th{color:var(--mute);white-space:nowrap;width:7.5em}
 .qtext{font-family:var(--serif);font-weight:900;font-size:clamp(1.4rem,min(3.2vw,5vh),2.6rem);line-height:1.45;margin:2.5vh 0 1vh}
 .qtag{display:inline-block;background:var(--sky);color:var(--ink);border-radius:30px;padding:.2em .9em;font-size:clamp(.95rem,1.5vw,1.15rem);font-weight:700}
 .reveal{margin-top:1.5vh;border:0;background:var(--red);color:#fff;border-radius:40px;padding:.6em 1.6em;font-size:clamp(1rem,1.7vw,1.25rem);font-weight:700;cursor:pointer}
+.play{margin:1.5vh 8px 0 0;border:0;background:var(--ink);color:#fff;border-radius:40px;padding:.6em 1.6em;font-size:clamp(1rem,1.7vw,1.25rem);font-weight:700;cursor:pointer}
+.vbox{position:fixed;inset:0;z-index:50;background:rgba(5,12,26,.92);display:grid;place-items:center;padding:3vh 3vw}
+.vbox .in{width:min(1100px,94vw);color:#fff}
+.vbox .frame{position:relative;aspect-ratio:16/9;background:#000;border-radius:10px;overflow:hidden}
+.vbox iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vbox .top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.vbox .top b{font-family:var(--serif)}
+.vbox button{border:1px solid rgba(255,255,255,.4);background:transparent;color:#fff;border-radius:30px;padding:6px 16px;cursor:pointer}
+.vbox .top button:last-child{margin-left:auto}
+.vbox input{width:100%;padding:12px;border-radius:8px;border:0;font:inherit;margin:10px 0}
 .answer{margin-top:1.5vh;display:flex;align-items:center;gap:18px;background:var(--sky);border-radius:14px;padding:clamp(14px,2vw,24px)}
 .answer .fl{font-size:clamp(2.4rem,5vw,3.6rem);line-height:1}
 .answer b{font-family:var(--serif);font-size:clamp(1.4rem,2.8vw,2.1rem);display:block}
@@ -168,6 +178,7 @@ th{color:var(--mute);white-space:nowrap;width:7.5em}
   <span class="eyebrow">장면 1 · 기조연설 · 34:56 ~ 36:20</span>
   <h2>찾을 것: 근거를 어떻게 나눠 말했나?</h2>
   <p class="lead">1분 30초가 안 되는 연설입니다. 듣는 사람이 따라오기 쉬웠던 이유를 찾으세요.</p>
+  <button class="play" type="button" data-start="2094" data-end="2181">▶ 이 장면 재생</button>
   <button class="reveal" type="button">선배는 이렇게 했어요</button>
   <div class="answer" hidden><div>
     <b style="font-size:clamp(1.1rem,2vw,1.5rem)">“첫째, 안보 / 둘째, 경제 / 셋째, 외교”</b>
@@ -179,6 +190,7 @@ th{color:var(--mute);white-space:nowrap;width:7.5em}
   <span class="eyebrow">장면 2 · 질의응답 · 39:35 ~ 41:30</span>
   <h2>찾을 것: 선생님이 중간에 멈추고 고쳐 준 한마디는?</h2>
   <p class="lead">그리고 답하는 쪽이 <b>숫자 하나</b>로 반박하는 순간을 찾으세요.</p>
+  <button class="play" type="button" data-start="2375" data-end="2491">▶ 이 장면 재생</button>
   <button class="reveal" type="button">선배는 이렇게 했어요</button>
   <div class="answer" hidden><div>
     <b style="font-size:clamp(1.1rem,2vw,1.5rem)">“○○ 정부에 질문하겠습니다”로 시작하기</b>
@@ -189,13 +201,14 @@ th{color:var(--mute);white-space:nowrap;width:7.5em}
 <section class="slide">
   <span class="eyebrow">장면 3 · 협상 결과 · 1:49:35 ~ 1:51:15</span>
   <h2>찾을 것: 서로 반대하던 두 그룹이 똑같이 꺼낸 해법은?</h2>
-  <p class="lead">한·미·일 그룹과 북·중·러 그룹이 따로 협상하고 돌아와 결과를 발표합니다.</p>
+  <p class="lead">한·미·일과 북·중·러가 따로 협상하고 돌아와 발표합니다.</p>
+  <button class="play" type="button" data-start="6575" data-end="6676">▶ 이 장면 재생</button>
   <button class="reveal" type="button">선배는 이렇게 했어요</button>
   <div class="answer" hidden><div>
     <b style="font-size:clamp(1.1rem,2vw,1.5rem)">“레이더 탐지 범위를 제한한다”</b>
-    <span>찬성 쪽은 “항의가 있으면 범위를 공식적으로 제한한다”, 반대 쪽은 “범위를 제한하고 국경에서 먼 곳에 둔다면 조건부로 받아들인다”. 양쪽 모두 <b>전부 이기기 대신 조건을 걸었습니다</b>. → 오늘 쓸 팀 결정문의 <b>양보선</b>이 바로 이것입니다.</span>
+    <span>찬성 쪽은 “항의가 있으면 범위를 공식 제한”, 반대 쪽은 “범위를 제한하고 국경에서 먼 곳에 두면 조건부 수용”. 둘 다 <b>조건을 걸고 물러섰습니다</b>. → 팀 결정문의 <b>양보선</b>이 바로 이것입니다.</span>
   </div></div>
-  <div class="box" style="margin-top:2vh"><b>채팅에 쓰기</b> — 선배들한테서 훔칠 것 하나. 예) “근거에 번호 붙이기”</div>
+  <p class="lead" style="margin:1vh 0 0"><b>채팅에 쓰기</b> — 선배들한테서 훔칠 것 하나. 예) “근거에 번호 붙이기”</p>
 </section>
 
 <section class="slide">
@@ -241,7 +254,7 @@ th{color:var(--mute);white-space:nowrap;width:7.5em}
     </div>
     <div>
       <div class="box"><h3>이렇게 시작하세요</h3><p>첫 메시지는 “우리 팀은 어느 의제에 힘을 쏟을까?”</p></div>
-      <div class="box warn" style="margin-top:1.5vh"><h3>결정문은 누가?</h3><p>학번이 가장 빠른 사람이 올립니다. 누가 다시 올리면 새것으로 바뀝니다.</p></div>
+      <div class="box warn" style="margin-top:1vh"><h3>결정문은 누가?</h3><p>학번이 가장 빠른 사람이 올립니다. 누가 다시 올리면 새것으로 바뀝니다.</p></div>
       <div class="timer" data-sec="540"></div>
     </div>
   </div>
@@ -357,6 +370,11 @@ th{color:var(--mute);white-space:nowrap;width:7.5em}
   </span>
 </div>
 
+<div class="vbox" id="vbox" hidden><div class="in">
+  <div class="top"><b id="vTitle">선배들의 모의 회담</b><button type="button" id="vReset">영상 주소 바꾸기</button><button type="button" id="vClose">닫기 (Esc)</button></div>
+  <div id="vBody"></div>
+</div></div>
+
 <script src="mun-roles.js"></script>
 <script>
 const M = window.MUN;
@@ -407,6 +425,39 @@ document.querySelectorAll(".timer").forEach(el => {
   el.querySelector("[data-t=re]").onclick = () => { stop(); left = total; tt.textContent = fmt(total); el.classList.remove("end"); go.textContent = "시작"; };
 });
 
+/* 선배 영상: 주소는 공개 저장소에 두지 않고 이 브라우저에만 저장합니다 */
+const VKEY = "un-brief-video";
+const vid = () => { try { return localStorage.getItem(VKEY) || ""; } catch (e) { return ""; } };
+const parseId = u => { const m = String(u).match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/) || String(u).match(/^([\w-]{11})$/); return m ? m[1] : ""; };
+const vbox = document.getElementById("vbox");
+let scene = null;
+function openVideo(start, end) {
+  scene = { start, end };
+  vbox.hidden = false;
+  const id = vid();
+  const fmtT = s => `${Math.floor(s / 3600) ? Math.floor(s / 3600) + ":" : ""}${String(Math.floor(s % 3600 / 60)).padStart(Math.floor(s / 3600) ? 2 : 1, "0")}:${String(s % 60).padStart(2, "0")}`;
+  document.getElementById("vTitle").textContent = `선배들의 모의 회담 · ${fmtT(start)} ~ ${fmtT(end)}`;
+  const body = document.getElementById("vBody");
+  if (!id) {
+    body.innerHTML = `<p>처음 한 번만 영상 주소를 넣어 주세요. 이 컴퓨터의 브라우저에만 저장되고 사이트에는 올라가지 않습니다.</p>
+      <input id="vUrl" placeholder="https://youtu.be/..." autocomplete="off"><button type="button" id="vSave">저장하고 재생</button>
+      <p style="color:#9fb3cc;font-size:.9rem">영상이 ‘비공개’면 다른 사이트에서 재생되지 않습니다. ‘일부 공개’로 두세요.</p>`;
+    document.getElementById("vSave").onclick = () => {
+      const v = parseId(document.getElementById("vUrl").value.trim());
+      if (!v) { alert("유튜브 주소를 확인해 주세요."); return; }
+      try { localStorage.setItem(VKEY, v); } catch (e) {}
+      openVideo(scene.start, scene.end);
+    };
+    setTimeout(() => document.getElementById("vUrl").focus(), 50);
+    return;
+  }
+  body.innerHTML = `<div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?start=${start}&end=${end}&autoplay=1&rel=0" allow="autoplay; encrypted-media; fullscreen" allowfullscreen title="선배들의 모의 회담 장면"></iframe></div>`;
+}
+function closeVideo() { vbox.hidden = true; document.getElementById("vBody").innerHTML = ""; }
+document.querySelectorAll(".play").forEach(b => b.onclick = () => openVideo(+b.dataset.start, +b.dataset.end));
+document.getElementById("vClose").onclick = closeVideo;
+document.getElementById("vReset").onclick = () => { try { localStorage.removeItem(VKEY); } catch (e) {} openVideo(scene.start, scene.end); };
+
 /* 슬라이드 넘기기 */
 const slides = [...document.querySelectorAll(".slide")];
 let i = 0;
@@ -419,6 +470,7 @@ function show(n) {
 document.getElementById("next").onclick = () => show(i + 1);
 document.getElementById("prev").onclick = () => show(i - 1);
 document.addEventListener("keydown", e => {
+  if (!vbox.hidden) { if (e.key === "Escape") closeVideo(); return; }
   if (["ArrowRight", "PageDown", " ", "Enter"].includes(e.key)) { e.preventDefault(); show(i + 1); }
   if (["ArrowLeft", "PageUp", "Backspace"].includes(e.key)) { e.preventDefault(); show(i - 1); }
   if (e.key === "Home") show(0);

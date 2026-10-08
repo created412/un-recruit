@@ -161,6 +161,12 @@ th{color:var(--mute);font-size:.84rem;white-space:nowrap}
 .sendrow .btn{min-height:44px}
 .plan{border:1.5px solid var(--ok);background:#f2faf5;border-radius:8px;padding:12px 14px;margin-top:12px;font-size:.94rem;white-space:pre-wrap}
 select.f2{width:100%;margin-top:6px;padding:11px 12px;border:1px solid var(--line);border-radius:8px;background:#fbfcfe}
+/* 수업 슬라이드 */
+#v-slides{padding:0}
+#v-slides .sbar{display:flex;align-items:center;gap:10px;padding:8px 16px;background:var(--paper);border-bottom:1px solid var(--line);font-size:.88rem;color:var(--mute)}
+#v-slides .sbar button{margin-left:auto}
+#slideFrame{display:block;width:100%;height:calc(100vh - 150px);min-height:420px;border:0;background:#0b1830}
+.teachlink{border:0;background:none;color:var(--un);text-decoration:underline;cursor:pointer;padding:0;font-size:.9rem}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 20px;border-radius:30px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:50}
 .toast.on{opacity:1}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -182,6 +188,7 @@ select.f2{width:100%;margin-top:6px;padding:11px 12px;border:1px solid var(--lin
   <button data-go="speech">기조연설 준비</button>
   <button data-go="floor">회의장</button>
   <button data-go="chair">의장석</button>
+  <button data-go="slides" hidden id="slidesTab">수업 슬라이드</button>
 </nav>
 
 <main>
@@ -209,6 +216,7 @@ select.f2{width:100%;margin-top:6px;padding:11px 12px;border:1px solid var(--lin
       <div class="row" style="margin-top:10px"><button class="btn line" id="showAll">14개 역할 카드 모두 보기</button></div>
       <div id="allRoles"></div>
       <p class="mute small" style="margin-top:14px">한 번 입장하면 그 학번은 이 기기에 묶입니다. 다른 사람이 같은 학번으로 들어올 수 없고, 기기를 바꿔야 하면 선생님이 풀어 줍니다. 의장은 선생님이 맡습니다.</p>
+      <p style="margin-top:10px;text-align:right"><button class="teachlink" id="teachBtn" type="button">선생님 화면 (수업 슬라이드 · 의장석)</button></p>
     </div>
   </div>
 </section>
@@ -375,6 +383,12 @@ select.f2{width:100%;margin-top:6px;padding:11px 12px;border:1px solid var(--lin
     <div class="feed" id="feed"></div>
   </div>
 </div></section>
+
+<!-- 수업 슬라이드 (선생님 화면) -->
+<section class="view" id="v-slides">
+  <div class="sbar"><span>슬라이드를 한 번 클릭한 뒤 ← → 키로 넘깁니다. 미트에서는 이 탭을 공유하세요.</span><button class="btn line" id="slideFull" style="min-height:34px;padding:4px 14px">전체 화면</button></div>
+  <iframe id="slideFrame" title="수업 슬라이드" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
+</section>
 
 <!-- 의장석 -->
 <section class="view" id="v-chair"><div class="wrap">
@@ -784,6 +798,7 @@ $("#chairEnter").onclick = async () => {
   chairKey = k;
   try { sessionStorage.setItem("un-mun-key", k); } catch (e) {}
   $("#chairLogin").hidden = true; $("#chairMain").hidden = false;
+  showSlidesTab();
   report = r; paintChair(); startPolling();
 };
 $$(".seg [data-sec]").forEach(b => b.onclick = () => {
@@ -885,6 +900,21 @@ $("#cCsv").onclick = async () => {
   a.download = `모의UN_발언기록_${new Date().toISOString().slice(0, 10)}.csv`; a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 };
+
+/* ── 선생님 화면: 같은 주소에서 수업 슬라이드와 의장석을 엽니다 ── */
+function teacherMode() {
+  $("#tabs").hidden = false;
+  if (!me) $$("#tabs button").forEach(b => { if (b.dataset.go !== "chair" && b.dataset.go !== "slides") b.hidden = true; });
+  showSlidesTab();
+}
+function showSlidesTab() {
+  $("#slidesTab").hidden = false;
+  if (!$("#slideFrame").getAttribute("src")) $("#slideFrame").src = "brief.html";
+}
+$("#teachBtn").onclick = () => { teacherMode(); go("slides"); };
+$("#slideFull").onclick = () => { const f = $("#slideFrame"); (f.requestFullscreen || f.webkitRequestFullscreen || (() => {})).call(f); f.focus(); };
+$("#slideFrame").addEventListener("load", () => $("#slideFrame").focus());
+if (location.hash === "#teacher") { teacherMode(); go("slides"); }
 
 /* ── 시작 ── */
 (async () => {
