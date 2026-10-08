@@ -12,8 +12,8 @@ window.MUN = {
     { id: "C", name: "기후 재난과 평화유지", q: "물·식량 분쟁에 UN이 개입할 것인가" }
   ],
   rules: {
-    keynoteSeconds: 60,
-    speechSeconds: 45,
+    keynoteSeconds: 90,
+    speechSeconds: 60,
     minSpeeches: 2
   },
   roles: [

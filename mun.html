@@ -227,8 +227,8 @@ select.f2{width:100%;margin-top:6px;padding:11px 12px;border:1px solid var(--lin
     <h2>회의는 이렇게 진행됩니다</h2>
     <p class="mute">구글 미트에 모두 모인 채로 진행합니다. 발언 순서는 미트의 손들기가 아니라 <b>이 화면의 발언 신청</b>으로 관리합니다.</p>
     <ol style="padding-left:1.2em;margin-top:14px">
-      <li><b>기조연설</b> — 한 사람당 1분. 의장이 명단 순서대로 부릅니다. 신청하지 않아도 모두 한 번씩 합니다.</li>
-      <li><b>자유 토론</b> — 45초. 말하고 싶으면 이 화면에서 <b>발언 신청</b>을 누릅니다. 의장이 순서대로 호명합니다.</li>
+      <li><b>기조연설</b> — 한 사람당 1분 30초까지. 의장이 명단 순서대로 부릅니다. 신청하지 않아도 모두 한 번씩 합니다.</li>
+      <li><b>자유 토론</b> — 1분. 말하고 싶으면 이 화면에서 <b>발언 신청</b>을 누릅니다. 의장이 순서대로 호명합니다.</li>
       <li><b>블록 협상</b> — 같은 진영끼리 공동 제안을 만들어 이 화면의 <b>블록 보드</b>에 올립니다.</li>
       <li><b>표결</b> — 국가 대표만 표결합니다. 기구와 NGO 대표는 발언만 합니다.</li>
     </ol>
@@ -261,7 +261,7 @@ select.f2{width:100%;margin-top:6px;padding:11px 12px;border:1px solid var(--lin
       <li><b>내 역할</b> 카드를 끝까지 읽기</li>
       <li><b>팀 회의</b>에서 우리 팀의 작전 정하기 — 팀 결정문 올리기</li>
       <li><b>기조연설 준비</b> 탭에서 반론 대비 쓰기 — 누가 나를 공격할지, 나는 뭐라고 답할지</li>
-      <li>기조연설 1분 원고 쓰기 (300자 안팎)</li>
+      <li>기조연설 원고 쓰기 (300~450자)</li>
       <li>회의장 탭에서 발언 신청 버튼을 한 번 눌러 보고 취소하기</li>
     </ol>
     <div id="readyBox"></div>
@@ -305,10 +305,10 @@ select.f2{width:100%;margin-top:6px;padding:11px 12px;border:1px solid var(--lin
 <!-- 기조연설 -->
 <section class="view" id="v-speech"><div class="wrap">
   <div class="panel">
-    <h2>기조연설 원고 (1분)</h2>
-    <p class="mute">1분이면 300자 안팎입니다. 회의장에서 이 원고를 보며 읽을 수 있고, 쓰는 동안 자동 저장됩니다.</p>
+    <h2>기조연설 원고 (1분 30초까지)</h2>
+    <p class="mute">1분 30초면 450자 안팎입니다. 300자 원고에 근거나 사례를 하나 더 붙이면 맞습니다. 회의장에서 이 원고를 보며 읽을 수 있고, 쓰는 동안 자동 저장됩니다.</p>
     <div class="quote" id="openingLine"></div>
-    <h3 style="margin-top:18px">이 순서로 쓰면 1분에 맞습니다</h3>
+    <h3 style="margin-top:18px">이 순서로 쓰세요</h3>
     <ol class="small mute" style="margin:6px 0 0;padding-left:1.2em">
       <li>인사와 입장 한 줄 — "의장님, ○○ 대표단입니다. 우리는 이 의제를 ~로 봅니다."</li>
       <li>근거 한 가지 — 역할 카드의 사실 중 하나를 숫자와 함께</li>
@@ -326,7 +326,7 @@ select.f2{width:100%;margin-top:6px;padding:11px 12px;border:1px solid var(--lin
     <div id="rbHint"></div>
     <label class="f">그 대표가 할 말<small>그 나라 입장에서 한 문장으로.</small>
       <textarea id="rbAttack" style="min-height:70px"></textarea></label>
-    <label class="f">내 대답<small>근거를 하나 붙입니다. 이 문장이 다음 시간 토론 45초 발언이 됩니다.</small>
+    <label class="f">내 대답<small>근거를 하나 붙입니다. 이 문장이 다음 시간 토론 1분 발언이 됩니다.</small>
       <textarea id="rbAnswer" style="min-height:90px"></textarea></label>
     <div class="row"><button class="btn" id="rbSave">반론 대비 저장</button></div>
     <div id="rbNow"></div>
@@ -411,9 +411,9 @@ select.f2{width:100%;margin-top:6px;padding:11px 12px;border:1px solid var(--lin
         <button class="btn line" id="cEnd" style="color:#fff;border-color:#fff">발언 종료</button>
       </div>
       <div class="seg" style="justify-content:center;margin-top:12px">
-        <button data-sec="60" aria-pressed="false" style="color:#fff;background:transparent;border-color:rgba(255,255,255,.4)">기조연설 60초</button>
-        <button data-sec="45" aria-pressed="true" style="color:#fff;background:transparent;border-color:rgba(255,255,255,.4)">토론 45초</button>
-        <button data-sec="90" aria-pressed="false" style="color:#fff;background:transparent;border-color:rgba(255,255,255,.4)">답변 90초</button>
+        <button data-sec="90" aria-pressed="false" style="color:#fff;background:transparent;border-color:rgba(255,255,255,.4)">기조연설 1분 30초</button>
+        <button data-sec="60" aria-pressed="true" style="color:#fff;background:transparent;border-color:rgba(255,255,255,.4)">토론 1분</button>
+        <button data-sec="120" aria-pressed="false" style="color:#fff;background:transparent;border-color:rgba(255,255,255,.4)">답변 2분</button>
       </div>
     </div>
 
@@ -443,11 +443,11 @@ select.f2{width:100%;margin-top:6px;padding:11px 12px;border:1px solid var(--lin
       <h3>진행 순서 (50분, 구글 미트)</h3>
       <table>
         <tr><th>0~3분</th><td>개회 선언, 의제 확인. 전원 음소거 확인, 이 화면을 함께 띄우게 안내</td></tr>
-        <tr><th>3~16분</th><td>기조연설 1분씩 — 전원. 명단 순서대로 호명. 호명하면 학생이 직접 마이크를 켭니다</td></tr>
-        <tr><th>16~33분</th><td>의제별 자유 토론 45초. 발언 수가 적은 대표를 우선 호명</td></tr>
-        <tr><th>33~39분</th><td>블록 협상 — 블록 보드에 진영별 공동 제안을 올립니다. 소회의실을 쓸 수 있으면 함께 써도 됩니다</td></tr>
-        <tr><th>39~46분</th><td>블록 제안을 놓고 표결. 국가 대표만 표결, 기구·NGO는 발언만</td></tr>
-        <tr><th>46~50분</th><td>의장 정리, 발언 요지 입력 확인</td></tr>
+        <tr><th>3~22분</th><td>기조연설 1분 30초까지 — 전원. 명단 순서대로 호명. 호명하면 학생이 직접 마이크를 켭니다</td></tr>
+        <tr><th>22~36분</th><td>의제별 자유 토론 1분. 발언 수가 적은 대표를 우선 호명. 질문을 받은 대표의 답변은 2분</td></tr>
+        <tr><th>36~41분</th><td>블록 협상 — 팀 회의 대화방에서 의논하고 블록 보드에 진영별 공동 제안을 올립니다</td></tr>
+        <tr><th>41~47분</th><td>블록 제안을 놓고 표결. 국가 대표만 표결, 기구·NGO는 발언만</td></tr>
+        <tr><th>47~50분</th><td>의장 정리, 발언 요지 입력 확인</td></tr>
       </table>
       <div class="warn" style="margin-top:12px"><b>구글 미트 운영 메모</b><br>
         · 주최자는 학생 마이크를 켤 수 없습니다. 호명할 때 “마이크 켜세요”를 함께 말해 주세요.<br>
@@ -470,7 +470,7 @@ const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const KEY = "un-mun-v1";
-let me = null, agenda = "A", feed = { queue: [], counts: [], notes: [], speaking: null }, chairKey = "", chairSec = 45, poll = null, tick = null;
+let me = null, agenda = "A", feed = { queue: [], counts: [], notes: [], speaking: null }, chairKey = "", chairSec = 60, poll = null, tick = null;
 
 function toast(m) { const t = $("#toast"); t.textContent = m; t.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("on"), 2200); }
 async function api(payload) {
@@ -586,7 +586,7 @@ let keyT = null;
 function countKey() {
   const n = $("#keynote").value.trim().length;
   const c = $("#keyCnt");
-  c.textContent = `${n}자 — 1분 분량은 300자 안팎입니다`;
+  c.textContent = `${n}자 — 1분 30초 분량은 450자 안팎입니다`;
   c.classList.toggle("ok", n >= 250);
 }
 async function loadKeynote() {
