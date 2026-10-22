@@ -13,8 +13,7 @@ window.MUN = {
   ],
   rules: {
     keynoteSeconds: 90,
-    speechSeconds: 60,
-    minSpeeches: 2
+    speechSeconds: 60
   },
   roles: [
     {

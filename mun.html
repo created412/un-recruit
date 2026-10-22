@@ -161,6 +161,22 @@ th{color:var(--mute);font-size:.84rem;white-space:nowrap}
 .sendrow .btn{min-height:44px}
 .plan{border:1.5px solid var(--ok);background:#f2faf5;border-radius:8px;padding:12px 14px;margin-top:12px;font-size:.94rem;white-space:pre-wrap}
 select.f2{width:100%;margin-top:6px;padding:11px 12px;border:1px solid var(--line);border-radius:8px;background:#fbfcfe}
+/* 표결 */
+.vote{border:2px solid var(--un)}
+.vote .q{font-family:var(--serif);font-weight:900;font-size:1.15rem;background:var(--sky);border-radius:8px;padding:12px 14px;margin-top:8px;white-space:pre-wrap}
+.vbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.vbtns button{border:2px solid var(--line);background:var(--paper);border-radius:12px;padding:14px 6px;font-weight:700;font-size:1.1rem;cursor:pointer;min-height:56px}
+.vbtns button[data-v="찬성"][aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:#fff}
+.vbtns button[data-v="반대"][aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}
+.vbtns button[data-v="기권"][aria-pressed="true"]{background:var(--mute);border-color:var(--mute);color:#fff}
+.vbtns button:disabled{opacity:.5;cursor:not-allowed}
+.tally{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px;text-align:center}
+.tally div{border:1px solid var(--line);border-radius:10px;padding:8px 4px;background:#fbfcfe}
+.tally b{display:block;font-family:var(--serif);font-size:1.8rem;line-height:1.2}
+.tally span{font-size:.82rem;color:var(--mute)}
+.verdict{margin-top:10px;text-align:center;font-family:var(--serif);font-weight:900;font-size:1.4rem}
+.verdict.pass{color:var(--ok)}
+.verdict.fail{color:var(--red)}
 /* 수업 슬라이드 */
 #v-slides{padding:0}
 #v-slides .sbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:8px 16px;background:var(--paper);border-bottom:1px solid var(--line);font-size:.88rem;color:var(--mute)}
@@ -375,6 +391,8 @@ select.f2{width:100%;margin-top:6px;padding:11px 12px;border:1px solid var(--lin
   </div>
   <div id="myTurn"></div>
 
+  <div class="panel vote" id="votePanel" hidden></div>
+
   <div class="panel">
     <h3>발언 신청</h3>
     <p class="mute small">어느 의제로 발언할지 고르고 손을 드세요. 의장이 순서대로 호명합니다.</p>
@@ -405,7 +423,7 @@ select.f2{width:100%;margin-top:6px;padding:11px 12px;border:1px solid var(--lin
 
   <div class="panel">
     <h3>발언 현황</h3>
-    <p class="mute small">모든 대표가 최소 2회 발언하는 것이 목표입니다. 빨간색은 아직 한 번도 발언하지 않은 대표입니다.</p>
+    <p class="mute small">발언 횟수가 많을수록 점수가 올라갑니다. 발언을 마치면 바로 다시 신청할 수 있습니다.</p>
     <div class="counts" id="counts"></div>
     <div class="feed" id="feed"></div>
   </div>
@@ -473,9 +491,18 @@ select.f2{width:100%;margin-top:6px;padding:11px 12px;border:1px solid var(--lin
       </div>
     </div>
 
+    <div class="panel vote">
+      <h3>표결</h3>
+      <p class="mute small">안건을 올리면 학생 회의장 탭에 찬성·반대·기권 버튼이 뜹니다. 국가 대표만 표결하고, 결과는 마감한 뒤 학생 화면에 나옵니다. 새 안건을 올리면 이전 표결은 자동으로 마감됩니다.</p>
+      <label class="f">블록 보드에서 가져오기<select class="f2" id="vPick"><option value="">블록 제안을 고르면 아래 칸에 채워집니다</option></select></label>
+      <label class="f">안건<textarea id="vText" style="min-height:70px" placeholder="예) 손실과 피해 기금의 분담금은 누적 배출량에 비례하여 정한다."></textarea></label>
+      <div class="row"><button class="btn red" id="vOpen">안건 올리고 표결 시작</button><button class="btn line" id="vClose">표결 마감</button></div>
+      <div id="cVote"></div>
+    </div>
+
     <div class="panel">
       <h3>발언 대기 줄</h3>
-      <p class="mute small">아직 발언 횟수가 적은 대표를 먼저 호명하면 기회가 고르게 돌아갑니다.</p>
+      <p class="mute small">신청한 순서대로 호명합니다. 발언 횟수가 점수에 들어가므로 같은 대표가 여러 번 신청해도 됩니다.</p>
       <div id="cQueue"></div>
     </div>
 
@@ -500,7 +527,7 @@ select.f2{width:100%;margin-top:6px;padding:11px 12px;border:1px solid var(--lin
       <table>
         <tr><th>0~3분</th><td>개회 선언, 의제 확인. 전원 음소거 확인, 이 화면을 함께 띄우게 안내</td></tr>
         <tr><th>3~22분</th><td>기조연설 1분 30초까지 — 전원. 명단 순서대로 호명. 호명하면 학생이 직접 마이크를 켭니다</td></tr>
-        <tr><th>22~36분</th><td>의제별 자유 토론 1분. 발언 수가 적은 대표를 우선 호명. 질문을 받은 대표의 답변은 2분</td></tr>
+        <tr><th>22~36분</th><td>의제별 자유 토론 1분. 신청한 순서대로 호명. 질문을 받은 대표의 답변은 2분</td></tr>
         <tr><th>36~41분</th><td>블록 협상 — 팀 회의 대화방에서 의논하고 블록 보드에 진영별 공동 제안을 올립니다</td></tr>
         <tr><th>41~47분</th><td>블록 제안을 놓고 표결. 국가 대표만 표결, 기구·NGO는 발언만</td></tr>
         <tr><th>47~50분</th><td>의장 정리, 발언 요지 입력 확인</td></tr>
@@ -813,10 +840,10 @@ function paintQueue() {
 
   const byId = {};
   feed.counts.forEach(c => byId[c.sid] = c);
-  $("#counts").innerHTML = (feed.seats || []).map(s => {
-    const c = byId[s.sid], n = c ? c.n : 0;
-    return `<span class="chip ${n === 0 ? "zero" : n >= M.rules.minSpeeches ? "done" : ""}">${esc(s.name)} ${n}회</span>`;
-  }).join("") || `<p class="mute small">아직 입장한 대표가 없습니다.</p>`;
+  // 발언 횟수가 점수에 들어가므로 많이 한 대표부터 보여 줍니다.
+  $("#counts").innerHTML = (feed.seats || []).map(s => ({ s, n: byId[s.sid] ? byId[s.sid].n : 0 }))
+    .sort((a, b) => b.n - a.n).map(({ s, n }) =>
+      `<span class="chip ${n > 0 ? "done" : ""}">${esc(s.name)} ${n}회</span>`).join("") || `<p class="mute small">아직 입장한 대표가 없습니다.</p>`;
   const isReady = me && (feed.ready || []).includes(me.sid);
   $("#readyBox").innerHTML = isReady
     ? `<div class="warn" style="background:#e9f7ef;border-color:#bfe6cd"><b>준비 완료로 표시되었습니다.</b> 회의 시작 전까지 원고를 더 다듬어도 됩니다.</div>`
@@ -832,7 +859,7 @@ function paintQueue() {
 async function refresh() {
   const auth = chairKey ? { key: chairKey } : (me ? { sid: me.sid, token: me.token, team: me.team ? me.team.id : "" } : null);
   if (!auth) return;
-  try { const r = await api(Object.assign({ action: "munFeed" }, auth)); if (r.ok) { feed = r; paintQueue(); paintStage(); paintTeam(); paintChair(); } } catch (e) {}
+  try { const r = await api(Object.assign({ action: "munFeed" }, auth)); if (r.ok) { feed = r; paintQueue(); paintStage(); paintTeam(); paintVote(); paintChair(); } } catch (e) {}
   // 의장석은 15초마다 전체 기록(반론 대비 포함)을 다시 받습니다.
   if (chairKey && Date.now() - (refresh.rep || 0) > 15000) {
     refresh.rep = Date.now();
@@ -843,6 +870,65 @@ function startPolling() {
   refresh();
   clearInterval(poll); poll = setInterval(() => { if (document.visibilityState === "visible") refresh(); }, 3000);
   clearInterval(tick); tick = setInterval(paintStage, 500);
+}
+
+/* ── 표결 ── */
+const isState = role => !["국제기구", "시민사회"].includes((M.roles.find(r => r.role === role) || {}).bloc);
+function tallyHTML(v, voters) {
+  const t = v.tally, left = Math.max(0, voters - v.cast);
+  const verdict = v.open ? "" : t.찬성 > t.반대
+    ? `<div class="verdict pass">가결 — 찬성 ${t.찬성}, 반대 ${t.반대}</div>`
+    : `<div class="verdict fail">부결 — 찬성 ${t.찬성}, 반대 ${t.반대}</div>`;
+  return `<div class="tally"><div><b style="color:var(--ok)">${t.찬성}</b><span>찬성</span></div><div><b style="color:var(--red)">${t.반대}</b><span>반대</span></div>
+    <div><b>${t.기권}</b><span>기권</span></div><div><b class="mute">${left}</b><span>아직 안 함</span></div></div>${verdict}`;
+}
+function stateVoters() { return (feed.seats || []).filter(s => isState(s.role)).length; }
+function paintVote() {
+  const v = feed.vote, box = $("#votePanel");
+  if (!me || !v) { box.hidden = true; return; }
+  box.hidden = false;
+  const can = isState(me.def.role);
+  let body = `<h3>표결 ${v.open ? "— 지금 진행 중" : "— 마감"}</h3><div class="q">${esc(v.text)}</div>`;
+  if (!can) body += `<p class="mute small" style="margin-top:10px">${esc(me.def.role)}는 국가 대표가 아니어서 표결권이 없습니다. 결과는 마감 뒤 여기에 나옵니다.</p>`;
+  else body += `<div class="vbtns">${["찬성", "반대", "기권"].map(c =>
+      `<button type="button" data-v="${c}" aria-pressed="${v.mine === c}" ${v.open ? "" : "disabled"}>${c}</button>`).join("")}</div>
+    <p class="mute small" style="margin-top:8px">${v.open ? (v.mine ? `<b>${esc(v.mine)}</b>로 표결했습니다. 마감 전까지 바꿀 수 있습니다.` : "하나를 누르세요. 마감 전까지 바꿀 수 있습니다.") : v.mine ? `내 표: <b>${esc(v.mine)}</b>` : "표결하지 않았습니다."}</p>`;
+  body += v.tally ? tallyHTML(v, stateVoters()) : `<p class="mute small">지금까지 ${v.cast}명이 표결했습니다.</p>`;
+  box.innerHTML = body;
+  $$("#votePanel [data-v]").forEach(b => b.onclick = async () => {
+    const r = await api({ action: "munVote", sid: me.sid, token: me.token, agenda: v.id, choice: b.dataset.v }).catch(() => ({}));
+    if (r.ok) { toast(b.dataset.v + "로 표결했습니다"); refresh(); }
+    else toast(r.error === "closed" ? "표결이 마감되었습니다" : r.error === "nonState" ? "표결권이 없습니다" : "표결하지 못했습니다");
+  });
+}
+$("#vPick").onchange = () => { if ($("#vPick").value) $("#vText").value = $("#vPick").value.replace(/^\[[^\]]*\] /, ""); };
+$("#vOpen").onclick = async () => {
+  const t = $("#vText").value.trim();
+  if (t.length < 5) { toast("안건을 한 문장 이상 쓰세요"); return; }
+  if (feed.vote && feed.vote.open && !confirm("진행 중인 표결을 마감하고 새 안건을 올립니다. 계속할까요?")) return;
+  const r = await api({ action: "munChair", key: chairKey, op: "agenda", text: t }).catch(() => ({}));
+  if (r.ok) { toast("안건을 올렸습니다. 표결이 시작됐습니다"); refresh(); } else toast("올리지 못했습니다");
+};
+$("#vClose").onclick = async () => {
+  if (!feed.vote || !feed.vote.open) { toast("진행 중인 표결이 없습니다"); return; }
+  const r = await api({ action: "munChair", key: chairKey, op: "closeVote" }).catch(() => ({}));
+  if (r.ok) { toast("표결을 마감했습니다"); refresh(); } else toast("마감하지 못했습니다");
+};
+function paintChairVote() {
+  const pick = $("#vPick"), cur = pick.value, sig = (feed.blocs || []).map(n => n.text).join("|");
+  // 블록 제안이 바뀔 때만 다시 그려서, 고르는 도중 목록이 닫히지 않게 합니다.
+  if (pick.dataset.sig !== sig) pick.dataset.sig = sig, pick.innerHTML = `<option value="">블록 제안을 고르면 아래 칸에 채워집니다</option>` +
+    (feed.blocs || []).map(n => `<option value="${esc(n.text)}">${esc(n.text.slice(0, 60))}</option>`).join("");
+  pick.value = cur;
+  const v = feed.vote;
+  if (!v) { $("#cVote").innerHTML = `<p class="mute small" style="margin-top:12px">아직 올린 안건이 없습니다.</p>`; return; }
+  const byS = {};
+  (v.votes || []).forEach(x => byS[x.sid] = x.choice);
+  const rows = (feed.seats || []).filter(s => isState(s.role)).map(s =>
+    `<tr><td>${esc(s.role)}</td><td>${esc(s.name)}</td><td>${byS[s.sid] ? `<b style="color:${byS[s.sid] === "찬성" ? "var(--ok)" : byS[s.sid] === "반대" ? "var(--red)" : "var(--mute)"}">${byS[s.sid]}</b>` : `<span class="mute">—</span>`}</td></tr>`).join("");
+  $("#cVote").innerHTML = `<div class="plan" style="margin-top:14px;border-color:var(--un);background:#fff"><b>${v.open ? "진행 중" : "마감"}</b> · ${esc(v.text)}</div>
+    ${tallyHTML(v, stateVoters())}
+    <div style="overflow:auto"><table><tr><th>나라</th><th>대표</th><th>표</th></tr>${rows || `<tr><td colspan="3" class="mute small">입장한 국가 대표가 없습니다.</td></tr>`}</table></div>`;
 }
 
 /* ── 의장석 ── */
@@ -884,6 +970,7 @@ $("#cReset").onclick = async () => {
 let report = null;
 function paintChair() {
   if (!chairKey) return;
+  paintChairVote();
   $("#cQueue").innerHTML = feed.queue.length
     ? feed.queue.map((r, i) => `<div class="qrow"><span class="n">${i + 1}</span>
         <span><b>${esc(r.name)}</b> <span class="mute small">${esc(r.role)} · 의제 ${esc(r.agenda || "-")}</span></span>

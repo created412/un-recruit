@@ -60,6 +60,7 @@ export default {
       if (b.action === "munFeed") return json(await munFeed(env, b));
       if (b.action === "munChair") return json(await munChair(env, b));
       if (b.action === "munNote") return json(await munNote(env, b));
+      if (b.action === "munVote") return json(await munVote(env, b));
       if (b.action === "munReport") return json(await munReport(env, b));
       return json({ ok: false, error: "action" }, 400);
     } catch (err) {
@@ -269,8 +270,10 @@ async function munFeed(env, b) {
   // 블록 공동 제안과 준비 완료 체크 (구글 미트에서 소회의실 없이 협상 단계를 돌리기 위한 보드)
   const blocs = await env.DB.prepare("SELECT sid, name, role, text, created_at FROM mun_events WHERE kind = 'bloc' ORDER BY id DESC LIMIT 20").all();
   const ready = await env.DB.prepare("SELECT DISTINCT sid FROM mun_events WHERE kind = 'ready'").all();
+  const vote = await voteState(env, okSeat, okChair);
   return {
     ok: true,
+    vote,
     seats: seats.results,
     blocs: blocs.results,
     ready: ready.results.map(r => r.sid),
@@ -306,13 +309,25 @@ async function munChair(env, b) {
     await env.DB.prepare("DELETE FROM mun_queue").run();
     return { ok: true };
   }
+  if (b.op === "agenda") { // 표결 안건을 올립니다. role 칸에 open/closed 상태를 둡니다.
+    const t = text_(b.text);
+    if (!t) return { ok: false, error: "empty" };
+    await env.DB.prepare("UPDATE mun_events SET role = 'closed' WHERE kind = 'agenda' AND role = 'open'").run();
+    await env.DB.prepare("INSERT INTO mun_events (sid, name, role, kind, text, created_at) VALUES ('chair', '의장', 'open', 'agenda', ?, ?)")
+      .bind(t, now).run();
+    return { ok: true };
+  }
+  if (b.op === "closeVote") {
+    await env.DB.prepare("UPDATE mun_events SET role = 'closed' WHERE kind = 'agenda' AND role = 'open'").run();
+    return { ok: true };
+  }
   if (b.op === "release") { // 학생이 기기를 바꿨을 때 자리를 풀어 줍니다
     await env.DB.prepare("UPDATE mun_students SET token = '' WHERE sid = ?").bind(clean(b.sid)).run();
     return { ok: true };
   }
   if (b.op === "reset") { // 회의 기록만 초기화 (기조연설 원고, 준비 완료, 팀 회의, 반론 대비는 남김)
     await env.DB.prepare("DELETE FROM mun_queue").run();
-    await env.DB.prepare("DELETE FROM mun_events WHERE kind IN ('speech','motion','bloc','vote')").run();
+    await env.DB.prepare("DELETE FROM mun_events WHERE kind IN ('speech','motion','bloc','vote','agenda')").run();
     return { ok: true };
   }
   return { ok: false, error: "op" };
@@ -328,6 +343,36 @@ async function munNote(env, b) {
   await env.DB.prepare("INSERT INTO mun_events (sid, name, role, kind, text, created_at) VALUES (?, ?, ?, ?, ?, ?)")
     .bind(seat.sid, seat.name, seat.role, kind, t, new Date().toISOString()).run();
   return { ok: true };
+}
+
+// 표결: 국가 대표만, 열린 안건에 한 표. 다시 누르면 마지막 표로 바뀝니다.
+const NON_STATE = ["세계보건기구(WHO) 대표", "국제 NGO 연합 대표", "유네스코(UNESCO) 대표", "유엔 인권최고대표사무소(OHCHR) 대표"];
+const CHOICES = ["찬성", "반대", "기권"];
+async function munVote(env, b) {
+  const seat = await seat_(env, b);
+  if (!seat) return { ok: false, error: "seat" };
+  if (NON_STATE.includes(seat.role)) return { ok: false, error: "nonState" };
+  const choice = clean(b.choice);
+  if (!CHOICES.includes(choice)) return { ok: false, error: "choice" };
+  const ag = await env.DB.prepare("SELECT id, role FROM mun_events WHERE kind = 'agenda' ORDER BY id DESC LIMIT 1").first();
+  if (!ag || ag.role !== "open" || ag.id !== Number(b.agenda)) return { ok: false, error: "closed" };
+  await env.DB.prepare("DELETE FROM mun_events WHERE kind = 'vote' AND sid = ? AND text LIKE ?").bind(seat.sid, ag.id + "|%").run();
+  await env.DB.prepare("INSERT INTO mun_events (sid, name, role, kind, text, created_at) VALUES (?, ?, ?, 'vote', ?, ?)")
+    .bind(seat.sid, seat.name, seat.role, ag.id + "|" + choice, new Date().toISOString()).run();
+  return { ok: true };
+}
+async function voteState(env, okSeat, okChair) {
+  const ag = await env.DB.prepare("SELECT id, role, text, created_at FROM mun_events WHERE kind = 'agenda' ORDER BY id DESC LIMIT 1").first();
+  if (!ag) return null;
+  const rows = (await env.DB.prepare("SELECT sid, name, role, text FROM mun_events WHERE kind = 'vote' AND text LIKE ?")
+    .bind(ag.id + "|%").all()).results.map(r => ({ sid: r.sid, name: r.name, role: r.role, choice: r.text.split("|")[1] }));
+  const open = ag.role === "open";
+  const tally = { 찬성: 0, 반대: 0, 기권: 0 };
+  rows.forEach(r => { if (r.choice in tally) tally[r.choice]++; });
+  const mine = okSeat ? (rows.find(r => r.sid === okSeat.sid) || {}).choice || "" : "";
+  // 학생에게는 표결이 끝난 뒤에만 결과를 보여 줍니다. 의장은 언제나 나라별 표를 봅니다.
+  return { id: ag.id, text: ag.text, open, at: ag.created_at, cast: rows.length, mine,
+    tally: okChair || !open ? tally : null, votes: okChair ? rows : null, nonState: NON_STATE };
 }
 
 async function munReport(env, b) {
