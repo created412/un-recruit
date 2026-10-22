@@ -170,14 +170,15 @@ async function munJoin(env, b) {
   const sid = clean(b.sid), name = clean(b.name), role = clean(b.role);
   if (!sid || !name || !role) return { ok: false, error: "identity" };
   // 링크가 있으면 누구나 들어올 수 있고, 같은 학번으로 여러 기기에서 동시에 접속할 수 있습니다.
-  // 이미 자리가 있으면 그 자리의 토큰을 함께 쓰고, 마지막에 고른 이름·역할로 맞춥니다.
+  // 이미 자리가 있으면 그 자리의 토큰을 함께 씁니다. 이름·역할은 이미 그 자리 토큰을 가진 기기만 바꿀 수 있습니다.
   const row = await env.DB.prepare("SELECT token, name, role FROM mun_students WHERE sid = ?").bind(sid).first();
   if (row && row.token) {
-    if (role !== row.role || name !== row.name) {
+    if (clean(b.token) === row.token && (role !== row.role || name !== row.name)) {
       await env.DB.prepare("UPDATE mun_students SET role = ?, name = ?, updated_at = ? WHERE sid = ?")
         .bind(role, name, new Date().toISOString(), sid).run();
+      return { ok: true, token: row.token, role, name };
     }
-    return { ok: true, token: row.token, role, name };
+    return { ok: true, token: row.token, role: row.role, name: row.name };
   }
   const token = crypto.randomUUID();
   const now = new Date().toISOString();
