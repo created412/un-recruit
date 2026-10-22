@@ -923,9 +923,9 @@ function paintChairVote() {
   const v = feed.vote;
   if (!v) { $("#cVote").innerHTML = `<p class="mute small" style="margin-top:12px">아직 올린 안건이 없습니다.</p>`; return; }
   const byS = {};
-  (v.votes || []).forEach(x => byS[x.sid] = x.choice);
+  (v.votes || []).forEach(x => { if (["찬성", "반대", "기권"].includes(x.choice)) byS[x.sid] = x.choice; });
   const rows = (feed.seats || []).filter(s => isState(s.role)).map(s =>
-    `<tr><td>${esc(s.role)}</td><td>${esc(s.name)}</td><td>${byS[s.sid] ? `<b style="color:${byS[s.sid] === "찬성" ? "var(--ok)" : byS[s.sid] === "반대" ? "var(--red)" : "var(--mute)"}">${byS[s.sid]}</b>` : `<span class="mute">—</span>`}</td></tr>`).join("");
+    `<tr><td>${esc(s.role)}</td><td>${esc(s.name)}</td><td>${byS[s.sid] ? `<b style="color:${byS[s.sid] === "찬성" ? "var(--ok)" : byS[s.sid] === "반대" ? "var(--red)" : "var(--mute)"}">${esc(byS[s.sid])}</b>` : `<span class="mute">—</span>`}</td></tr>`).join("");
   $("#cVote").innerHTML = `<div class="plan" style="margin-top:14px;border-color:var(--un);background:#fff"><b>${v.open ? "진행 중" : "마감"}</b> · ${esc(v.text)}</div>
     ${tallyHTML(v, stateVoters())}
     <div style="overflow:auto"><table><tr><th>나라</th><th>대표</th><th>표</th></tr>${rows || `<tr><td colspan="3" class="mute small">입장한 국가 대표가 없습니다.</td></tr>`}</table></div>`;

@@ -339,19 +339,21 @@ async function munNote(env, b) {
   const t = text_(b.text);
   if (!t) return { ok: false, error: "empty" };
   const kind = clean(b.kind) || "speech";
-  if (!/^(speech|motion|bloc|vote|ready|rebut|(team|plan):[a-z]{1,20})$/.test(kind)) return { ok: false, error: "kind" };
+  if (!/^(speech|motion|bloc|ready|rebut|(team|plan):[a-z]{1,20})$/.test(kind)) return { ok: false, error: "kind" };
   await env.DB.prepare("INSERT INTO mun_events (sid, name, role, kind, text, created_at) VALUES (?, ?, ?, ?, ?, ?)")
     .bind(seat.sid, seat.name, seat.role, kind, t, new Date().toISOString()).run();
   return { ok: true };
 }
 
 // 표결: 국가 대표만, 열린 안건에 한 표. 다시 누르면 마지막 표로 바뀝니다.
-const NON_STATE = ["세계보건기구(WHO) 대표", "국제 NGO 연합 대표", "유네스코(UNESCO) 대표", "유엔 인권최고대표사무소(OHCHR) 대표"];
+// 표결권이 있는 국가 대표 (mun-roles.js의 국가 역할과 같아야 합니다)
+const STATES = ["투발루 대표", "미국 대표", "중국 대표", "사우디아라비아 대표", "프랑스 대표", "독일 대표",
+  "케냐 대표", "남아프리카공화국 대표", "브라질 대표", "러시아 대표"];
 const CHOICES = ["찬성", "반대", "기권"];
 async function munVote(env, b) {
   const seat = await seat_(env, b);
   if (!seat) return { ok: false, error: "seat" };
-  if (NON_STATE.includes(seat.role)) return { ok: false, error: "nonState" };
+  if (!STATES.includes(seat.role)) return { ok: false, error: "nonState" };
   const choice = clean(b.choice);
   if (!CHOICES.includes(choice)) return { ok: false, error: "choice" };
   const ag = await env.DB.prepare("SELECT id, role FROM mun_events WHERE kind = 'agenda' ORDER BY id DESC LIMIT 1").first();
@@ -364,15 +366,18 @@ async function munVote(env, b) {
 async function voteState(env, okSeat, okChair) {
   const ag = await env.DB.prepare("SELECT id, role, text, created_at FROM mun_events WHERE kind = 'agenda' ORDER BY id DESC LIMIT 1").first();
   if (!ag) return null;
+  // 표는 munVote로만 쌓이지만, 혹시 다른 값이 섞여도 세 가지 선택만 셉니다.
   const rows = (await env.DB.prepare("SELECT sid, name, role, text FROM mun_events WHERE kind = 'vote' AND text LIKE ?")
-    .bind(ag.id + "|%").all()).results.map(r => ({ sid: r.sid, name: r.name, role: r.role, choice: r.text.split("|")[1] }));
+    .bind(ag.id + "|%").all()).results.map(r => ({ sid: r.sid, name: r.name, role: r.role, choice: r.text.split("|")[1] }))
+    .filter(r => CHOICES.includes(r.choice) && STATES.includes(r.role))
+    .filter((r, i, a) => a.findLastIndex(x => x.sid === r.sid) === i); // 한 사람 한 표(마지막 표)
   const open = ag.role === "open";
   const tally = { 찬성: 0, 반대: 0, 기권: 0 };
   rows.forEach(r => { if (r.choice in tally) tally[r.choice]++; });
   const mine = okSeat ? (rows.find(r => r.sid === okSeat.sid) || {}).choice || "" : "";
   // 학생에게는 표결이 끝난 뒤에만 결과를 보여 줍니다. 의장은 언제나 나라별 표를 봅니다.
   return { id: ag.id, text: ag.text, open, at: ag.created_at, cast: rows.length, mine,
-    tally: okChair || !open ? tally : null, votes: okChair ? rows : null, nonState: NON_STATE };
+    tally: okChair || !open ? tally : null, votes: okChair ? rows : null };
 }
 
 async function munReport(env, b) {
