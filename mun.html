@@ -242,7 +242,7 @@ select.f2{width:100%;margin-top:6px;padding:11px 12px;border:1px solid var(--lin
       <div class="row"><button class="btn big" id="enterBtn">입장하기</button></div>
       <div class="row" style="margin-top:10px"><button class="btn line" id="showAll">14개 역할 카드 모두 보기</button></div>
       <div id="allRoles"></div>
-      <p class="mute small" style="margin-top:14px">노트북과 휴대폰처럼 여러 기기에서 같은 학번으로 들어와도 됩니다. 원고와 기록은 같은 자리로 모입니다. 의장은 선생님이 맡습니다.</p>
+      <p class="mute small" style="margin-top:14px">한 번 입장하면 그 학번은 이 기기에 묶입니다. 다른 사람이 같은 학번으로 들어올 수 없고, 기기를 바꿔야 하면 선생님이 풀어 줍니다. 의장은 선생님이 맡습니다.</p>
       <p style="margin-top:10px;text-align:right"><button class="teachlink" id="teachBtn" type="button">선생님 화면 (수업 슬라이드 · 의장석)</button></p>
     </div>
   </div>
@@ -558,11 +558,14 @@ $("#enterBtn").onclick = async () => {
   catch (e) { r = { ok: false, error: "network" }; }
   btn.disabled = false; btn.textContent = "입장하기";
   if (!r.ok) {
-    const msg = r.error === "network" ? "연결하지 못했습니다. 인터넷을 확인하고 다시 누르세요." : "입장하지 못했습니다.";
+    const msg = r.error === "taken"
+      ? `이 학번은 이미 다른 기기에서 <b>${esc(r.role || "")}</b> 자리로 입장했습니다. 본인이라면 선생님께 자리를 풀어 달라고 하세요.`
+      : r.error === "nameMismatch" ? "이 학번으로 지난 활동에 등록된 이름과 다릅니다. 이름을 확인하거나 선생님께 말씀드리세요."
+      : r.error === "network" ? "연결하지 못했습니다. 인터넷을 확인하고 다시 누르세요." : "입장하지 못했습니다.";
     $("#enterAlert").innerHTML = `<div class="warn">${msg}</div>`;
     return;
   }
-  // 서버가 돌려준 역할을 따릅니다.
+  // 서버가 기억하는 역할을 따릅니다(재입장 시 역할 변경 방지).
   const fixed = M.roles.find(x => x.role === r.role) || role;
   pick({ sid, name: r.name || name, token: r.token, def: fixed });
 };
@@ -586,7 +589,7 @@ function pick(p) {
   $("#reselect").onclick = () => { try { sessionStorage.setItem("un-mun-reselect", "1"); } catch (e) {} location.reload(); };
   // 나가기: 이 기기의 기록을 지웁니다. 자리를 넘기려면 선생님이 풀어 줘야 합니다.
   $("#logout").onclick = () => {
-    if (!confirm("이 기기에서 나갑니다. 같은 학번으로 언제든 다시 들어올 수 있습니다. 계속할까요?")) return;
+    if (!confirm("이 기기에서 나갑니다. 같은 학번으로 다시 들어오려면 선생님이 자리를 풀어 줘야 할 수 있습니다. 계속할까요?")) return;
     try { localStorage.removeItem(KEY); localStorage.removeItem(KEY + ":tok:" + p.sid); } catch (e) {}
     location.reload();
   };

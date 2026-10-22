@@ -169,15 +169,21 @@ const text_ = x => String(x ?? "").trim().slice(0, MAX_TEXT);
 async function munJoin(env, b) {
   const sid = clean(b.sid), name = clean(b.name), role = clean(b.role);
   if (!sid || !name || !role) return { ok: false, error: "identity" };
-  // 링크가 있으면 누구나 들어올 수 있고, 같은 학번으로 여러 기기에서 동시에 접속할 수 있습니다.
-  // 이미 자리가 있으면 그 자리의 토큰을 함께 쓰고, 마지막에 고른 이름·역할로 맞춥니다.
+  // 이전 활동 기록이 있는 학번이면 그때 쓴 이름과 같아야 합니다(다른 이름으로 선점하는 것을 막습니다).
+  const known = await env.DB.prepare("SELECT name FROM records WHERE sid = ?").bind(sid).first();
+  if (known && known.name && known.name !== name) return { ok: false, error: "nameMismatch" };
   const row = await env.DB.prepare("SELECT token, name, role FROM mun_students WHERE sid = ?").bind(sid).first();
   if (row && row.token) {
-    if (role !== row.role || name !== row.name) {
-      await env.DB.prepare("UPDATE mun_students SET role = ?, name = ?, updated_at = ? WHERE sid = ?")
-        .bind(role, name, new Date().toISOString(), sid).run();
+    if (clean(b.token) === row.token) {
+      // 본인 기기이면 회의 전에 역할을 바꿀 수 있습니다.
+      if (role && role !== row.role) {
+        await env.DB.prepare("UPDATE mun_students SET role = ?, name = ?, updated_at = ? WHERE sid = ?")
+          .bind(role, name, new Date().toISOString(), sid).run();
+        return { ok: true, token: row.token, role, name };
+      }
+      return { ok: true, token: row.token, role: row.role, name: row.name };
     }
-    return { ok: true, token: row.token, role, name };
+    return { ok: false, error: "taken", role: row.role };
   }
   const token = crypto.randomUUID();
   const now = new Date().toISOString();
@@ -263,18 +269,7 @@ async function munFeed(env, b) {
   // 블록 공동 제안과 준비 완료 체크 (구글 미트에서 소회의실 없이 협상 단계를 돌리기 위한 보드)
   const blocs = await env.DB.prepare("SELECT sid, name, role, text, created_at FROM mun_events WHERE kind = 'bloc' ORDER BY id DESC LIMIT 20").all();
   const ready = await env.DB.prepare("SELECT DISTINCT sid FROM mun_events WHERE kind = 'ready'").all();
-  // 의장이 수업 슬라이드에서 건 활동 타이머. 남은 초로 돌려주어 기기마다 시계가 달라도 맞습니다.
-  let timer = null;
-  const tr = await env.DB.prepare("SELECT text, created_at FROM mun_events WHERE kind = 'timer' ORDER BY id DESC LIMIT 1").first();
-  if (tr && Date.now() - new Date(tr.created_at).getTime() < 4 * 3600e3) {
-    try {
-      const t = JSON.parse(tr.text);
-      if (t.total > 0) timer = { label: t.label, total: t.total, running: t.running,
-        left: t.running ? (new Date(t.end).getTime() - Date.now()) / 1000 : t.left };
-    } catch {}
-  }
   return {
-    timer,
     ok: true,
     seats: seats.results,
     blocs: blocs.results,
@@ -309,15 +304,6 @@ async function munChair(env, b) {
   }
   if (b.op === "clear") {
     await env.DB.prepare("DELETE FROM mun_queue").run();
-    return { ok: true };
-  }
-  if (b.op === "timer") { // 활동 타이머를 학생 화면에 띄웁니다 (total 0이면 끄기)
-    const t = b.timer || {};
-    const total = Math.max(0, Math.min(7200, Number(t.total) || 0)), left = Math.max(-7200, Math.min(7200, Number(t.left) || 0));
-    const v = { label: clean(t.label).slice(0, 40), total, running: !!t.running, left, end: new Date(Date.now() + left * 1000).toISOString() };
-    await env.DB.prepare("DELETE FROM mun_events WHERE kind = 'timer'").run();
-    await env.DB.prepare("INSERT INTO mun_events (sid, name, role, kind, text, created_at) VALUES ('chair', '의장', '', 'timer', ?, ?)")
-      .bind(JSON.stringify(v), now).run();
     return { ok: true };
   }
   if (b.op === "release") { // 학생이 기기를 바꿨을 때 자리를 풀어 줍니다
